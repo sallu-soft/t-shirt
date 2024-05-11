@@ -3,8 +3,7 @@ import OrderList from '../components/OrderList';
 
 const getOrders = async ()=>{
     try{
-        const res = await fetch(`api/orders`,{
-            cache:"no-store",
+        const res = await fetch(`${process.env.NEXT_PUBLIC_CORS}/api/orders`,{
             revalidate: 10,
         })
         if(!res.ok){
