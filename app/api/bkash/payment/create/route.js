@@ -48,7 +48,7 @@ const bkash_auth = async () => {
         {
           mode: "0011",
           payerReference: name,
-          callbackURL: `api/bkash/payment/callback`,
+          callbackURL: `${process.env.NEXT_PUBLIC_CORS}/api/bkash/payment/callback`,
           amount: totalPrice,
           currency: "BDT",
           intent: "sale",

@@ -81,7 +81,7 @@ const Checkout = () => {
         // console.log(process.env.NEXT_PUBLIC_CORS)
         try {
           const  {data}  = await axios.post(
-            `api/bkash/payment/create`,
+            `${process.env.NEXT_PUBLIC_CORS}/api/bkash/payment/create`,
             { name: formData?.name,
             address: formData?.address,
             mobile_no: formData?.mobile_no,
