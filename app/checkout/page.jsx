@@ -39,7 +39,7 @@ const Checkout = () => {
         console.log(formData)
         try{
             const apiUrl = process.env.NEXT_PUBLIC_CORS;
-         const res = await fetch(`api/orders`,{
+         const res = await fetch(`${apiUrl}/api/orders`,{
             method: "POST",
             headers: {
               "Content-type": "application/json",

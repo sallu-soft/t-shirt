@@ -4,7 +4,9 @@ import OrderList from '../components/OrderList';
 const getOrders = async ()=>{
     try{
         const res = await fetch(`${process.env.NEXT_PUBLIC_CORS}/api/orders`,{
-            revalidate: 10,
+            revalidate:10,
+            cache:"no-store"
+
         })
         if(!res.ok){
             throw new Error("Failed to fetch Orders");
