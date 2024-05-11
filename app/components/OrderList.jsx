@@ -3,7 +3,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import DataTable from "react-data-table-component";
 import { toast } from "sonner";
 
 const OrderList = ({ Orders }) => {

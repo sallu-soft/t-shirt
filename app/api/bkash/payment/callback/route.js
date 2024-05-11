@@ -3,7 +3,6 @@ import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 import connectMongoDB from "@/db";
 import Order from "@/models/Orders";
-import { getSharedRequest } from "../create/route";
 
 const bkash_auth = async () => {
     try {
@@ -67,10 +66,14 @@ export async function GET(req,res) {
       console.log("hellow world from Exicute api"+data)
       if (data && data.statusCode === "0000") {
         // const data = getSharedRequest(); // retrieve the requestBody from the shared request object
-        const {data} = await axios.get(`${process.env.NEXT_PUBLIC_CORS}/api/bkash/payment/create`)
+        
         // const { name, address, mobile_no, whatsapp, childSizes, adultSizes, totalPrice, model } = requestBody;
-        // await connectMongoDB();
-        // await Order.create({name:data?.name,address:data?.address,mobile_no:data?.mobile_no, whatsapp_no:data?.whatsapp,total_price:data?.totalPrice,adult_sizes:data?.adultSizes,model:data?.model, child_sizes:data?.childSizes, payment_method:data?.paymentMethod,isPaid:true});
+        
+        const globalData = global.request;
+        console.log(globalData)
+        await connectMongoDB();
+        await Order.create({name:globalData?.name,address:globalData?.address,mobile_no:globalData?.mobile_no, whatsapp_no:globalData?.whatsapp,total_price:globalData?.totalPrice,adult_sizes:globalData?.adultSizes,model:globalData?.model, child_sizes:globalData?.childSizes, payment_method:globalData?.paymentMethod,isPaid:true});
+
         console.log(data)
         console.log("successfully exicute from Exicute")
         return NextResponse.redirect(`${process.env.NEXT_PUBLIC_CORS}/bkash_message/success`);

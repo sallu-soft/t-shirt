@@ -2,15 +2,6 @@ import axios from "axios";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
-let sharedRequest = {};
-
-
-
-// export function getSharedRequest() {
-  
-//   console.log(sharedRequest);
-//   return sharedRequest|| {};
-// }
 
 const bkash_auth = async () => {
     try {
@@ -50,8 +41,7 @@ const bkash_auth = async () => {
     const requestBody = await req.json();
     
     const { name, address, mobile_no, whatsapp, totalPrice, adultSizes, childSizes, paymentMethod } = requestBody;
-    sharedRequest =await requestBody;
-    const queryParams = new URLSearchParams();
+    global.request = requestBody;
     try {
       const { data } = await axios.post(
         process.env.NEXT_PUBLIC_BKASH_CREATE_PAYMENT_URL,
@@ -73,13 +63,4 @@ const bkash_auth = async () => {
     } catch (error) {
       return NextResponse.json({ error: error.message });
     }
-}
-export async function GET(req,res){
-  try {
-    const data = sharedRequest;
-  //   return res.status(200).json({ bkashURL: data.bkashURL, email: email });
-    return NextResponse.json(data);
-  } catch (error) {
-    return NextResponse.json({ error: error.message });
-  }
 }
