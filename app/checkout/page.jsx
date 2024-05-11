@@ -39,7 +39,7 @@ const Checkout = () => {
         console.log(formData)
         try{
             const apiUrl = process.env.NEXT_PUBLIC_CORS;
-         const res = await fetch(`${apiUrl}/api/orders`,{
+         const res = await fetch(`api/orders`,{
             method: "POST",
             headers: {
               "Content-type": "application/json",
@@ -81,7 +81,7 @@ const Checkout = () => {
         // console.log(process.env.NEXT_PUBLIC_CORS)
         try {
           const  {data}  = await axios.post(
-            `${process.env.NEXT_PUBLIC_CORS}/api/bkash/payment/create`,
+            `api/bkash/payment/create`,
             { name: formData?.name,
             address: formData?.address,
             mobile_no: formData?.mobile_no,
