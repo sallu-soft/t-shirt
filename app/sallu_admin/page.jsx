@@ -4,7 +4,7 @@ import OrderList from '../components/OrderList';
 const getOrders = async ()=>{
     try{
         const res = await fetch(`${process.env.NEXT_PUBLIC_CORS}/api/orders`,{
-            cache:"no-store",
+            
             revalidate: 10,
         })
         if(!res.ok){
@@ -27,3 +27,6 @@ const page = async () => {
 }
 
 export default page
+
+
+

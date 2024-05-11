@@ -44,7 +44,7 @@ const OrderList = ({ Orders }) => {
         const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
         // Search functionality
-        const filteredOrders = Orders.filter(order => 
+        const filteredOrders = Orders?.filter(order => 
           order.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           order.mobile_no.includes(searchTerm) || order?._id.substring(order._id.length - 5).includes(searchTerm)
         );
@@ -120,7 +120,7 @@ const OrderList = ({ Orders }) => {
      </thead>
 
      <tbody>
-       {filteredOrders.slice(indexOfFirstItem,indexOfLastItem).map((t) => {
+       {filteredOrders?.slice(indexOfFirstItem,indexOfLastItem).map((t) => {
          const paidStatus = t?.isPaid ? "Paid" : "Unpaid"; // Define constant variable inside map
          const mergedArray = Object.entries(t?.adult_sizes).concat(Object.entries(t?.child_sizes)).filter(([_, value]) => value > 0);
          return (
@@ -183,7 +183,7 @@ const OrderList = ({ Orders }) => {
 		</table>
     {/* Pagination */}
     <ul className="pagination flex p-3 justify-end">
-        {Array.from({ length: Math.ceil(filteredOrders.length / itemsPerPage) }).map((_, index) => (
+        {Array.from({ length: Math.ceil(filteredOrders?.length / itemsPerPage) }).map((_, index) => (
           <li onClick={() => paginate(index + 1)} key={index} className="page-item bg-white p-2 px-4 text-pink-800 m-2">
             <button  className="page-link">{index + 1}</button>
           </li>
