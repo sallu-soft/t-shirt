@@ -94,7 +94,7 @@ const Checkout = () => {
             },
             { withCredentials: true }
           );
-          console.log(data)
+          console.log(data.bkashURL)
           window.location.href = data.bkashURL;
         } catch (error) {
           console.log("Hellow Bkash"+error);
