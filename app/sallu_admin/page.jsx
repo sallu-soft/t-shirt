@@ -1,28 +1,28 @@
 import React from 'react'
 import OrderList from '../components/OrderList';
 
-// const getOrders = async ()=>{
-//     try{
-//         const res = await fetch(`${process.env.NEXT_PUBLIC_CORS}/api/orders`,{
-//             revalidate:10,
-//             cache:"no-store"
+const getOrders = async ()=>{
+    try{
+        const res = await fetch(`${process.env.NEXT_PUBLIC_CORS}/api/orders`,{
+            revalidate:10,
+            cache:"no-store"
 
-//         })
-//         if(!res.ok){
-//             throw new Error("Failed to fetch Orders");
+        })
+        if(!res.ok){
+            throw new Error("Failed to fetch Orders");
            
-//         }
-//         return res.json();
-//     }catch(error){
-//         console.log("Error While fetching Orders:" + error)
-//     }
-// }
+        }
+        return res.json();
+    }catch(error){
+        console.log("Error While fetching Orders:" + error)
+    }
+}
 const page = async () => {
-    // const {orders} = await getOrders();
+    const {orders} = await getOrders();
    return (
     <div>
-        {/* <OrderList Orders={orders}/> */}
-        jj
+        <OrderList Orders={orders}/>
+      
     </div>
   )
 }
