@@ -171,7 +171,7 @@ const OrderList = ({ Orders }) => {
                </svg></DropdownMenuTrigger>
                <DropdownMenuContent>
                  
-                 <DropdownMenuItem><Link href={{ pathname: '/invoice', query: { order: t } }} as={`/invoice/${t._id}`} className="">Invoice</Link></DropdownMenuItem>
+                 <DropdownMenuItem><Link href={{ pathname: '/Invoice', query: { order: t } }} as={`/Invoice/${t._id}`} className="">Invoice</Link></DropdownMenuItem>
                  <DropdownMenuItem>Delete</DropdownMenuItem>
                </DropdownMenuContent>
              </DropdownMenu>
