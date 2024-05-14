@@ -83,7 +83,7 @@ const SingleProduct = () => {
         </div>
         <div className="md:w-1/2 w-2/2 lg:pl-10 lg:py-6 mt-6 lg:mt-0">
           <h2 className="text-md title-font font-semibold text-orange-700 tracking-widest pb-2">
-            সাল্লু গার্মেন্টস 
+            ছাল্লু গার্মেন্টস 
           </h2>
           <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
             {title}
@@ -350,7 +350,7 @@ const SingleProduct = () => {
             </div>
           <div className="flex">
           
-          <Link href={'/checkout'} className="flex ml-auto" onClick={()=>handleOrder()}><button disabled={totalSizes>0?false:true} className=" text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
+          <Link href={'/checkout'} className="flex ml-auto" onClick={()=>handleOrder()}><button disabled={totalSizes>0?false:true} className={`text-white ${totalSizes>0?"bg-indigo-500":"bg-indigo-300 hover:bg-indigo-300"} cursor-pointer border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded`}>
               অর্ডার করুন</button></Link>
              
           </div>

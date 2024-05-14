@@ -10,9 +10,7 @@ const Navbar = () => {
   const [state, setState] = useState(false);
 
   const menus = [
-    { title: "হোম", path: "/your-path" },
-    { title: "আমাদের সম্পর্কে", path: "/your-path" },
-    { title: "যোগাযোগ", path: "/your-path" },
+    // { title: "হোম", path: "/" },
   ];
 
   return (
@@ -20,7 +18,7 @@ const Navbar = () => {
       <div className="items-center px-4 max-w-screen-xl mx-auto md:flex md:px-8 justify-between">
         <div className="flex items-center justify-between py-3 md:py-5 md:block">
           <Link href="/">
-            <h1 className="text-2xl font-semibold text-blue-800">সাল্লু গার্মেটস</h1>
+            <h1 className="text-2xl font-semibold text-blue-800">ছাল্লু গার্মেন্টস</h1>
           </Link>
           <div className="md:hidden">
             <button
