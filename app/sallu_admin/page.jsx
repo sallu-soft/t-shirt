@@ -52,7 +52,7 @@ const page = () => {
         console.log(err);
       }
     };
-    if(password === process.env.NEXT_PUBLIC_PAGE_PASSWORD){
+    if(password === process.env.NEXT_PUBLIC_PAGE_ROUTE){
       fetchData();
     }
     
@@ -64,7 +64,7 @@ const page = () => {
   return (
 
     <div>
-      {password===process.env.NEXT_PUBLIC_PAGE_PASSWORD?<OrderList Orders={orders} />:<div className="flex w-full mx-auto h-[80vh] max-w-sm items-center space-x-2">
+      {password===process.env.NEXT_PUBLIC_PAGE_ROUTE?<OrderList Orders={orders} />:<div className="flex w-full mx-auto h-[80vh] max-w-sm items-center space-x-2">
       <div className="w-full gap-2 flex flex-col"><lebel className="text-lg font-semibold text-center">Password</lebel> 
       <Input type="password" 
              placeholder="Password"
