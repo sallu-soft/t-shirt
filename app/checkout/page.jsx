@@ -49,12 +49,12 @@ const Checkout = () => {
           console.log(res)
           if(res.ok) {
             
-            router.push("/");
-            router.refresh();
+            router.push(`${process.env.NEXT_PUBLIC_CORS}/bkash_message/successcash`);
+            // router.refresh();
             toast({
               
               title: "Congratulations! Order Submited Successfully.",
-              description: "There was a problem with your request.",
+              
              
             })
           }else{
