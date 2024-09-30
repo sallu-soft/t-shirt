@@ -14,15 +14,15 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-white w-full border-b md:border-0 shadow-lg">
+    <nav className="bg-secondary_color w-full border-b md:border-0 shadow-lg sticky top-0 z-50 transition-all">
       <div className="items-center px-4 max-w-screen-xl mx-auto md:flex md:px-8 justify-between">
         <div className="flex items-center justify-between py-3 md:py-5 md:block">
           <Link href="/">
-            <h1 className="text-2xl font-semibold text-blue-800">ছাল্লু গার্মেন্টস</h1>
+            <h1 className="text-2xl font-semibold text-primary_color">ছাল্লু গার্মেন্টস</h1>
           </Link>
           <div className="md:hidden">
             <button
-              className="text-gray-700 outline-none p-2 rounded-md focus:border-gray-400 focus:border"
+              className="text-primary_color outline-none p-2 rounded-md focus:border-gray-400 focus:border"
               onClick={() => setState(!state)}
             >
               <Menu />
@@ -42,7 +42,7 @@ const Navbar = () => {
             ))}
           </ul>
         </div>
-        <div className="w-full md:w-3/12 md:flex justify-end gap-2 hidden">
+        <div className="w-full text-primary_color md:w-3/12 md:flex justify-end gap-2 hidden">
           <Search className="font-semibold text-3xl cursor-pointer" />
           <ShoppingCart className="font-semibold text-3xl cursor-pointer" />
         </div>

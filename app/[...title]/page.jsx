@@ -25,10 +25,10 @@ const SingleProduct = () => {
       xxL: 0,
   });
   const [childSizes, setChildSizes] = useState({
-      year4_5: 0,
-      year6_7: 0,
-      year8_10: 0,
-      year11_13: 0,
+      "(4-5) Years": 0,
+      "(6-7) Years": 0,
+      "(8-10) Years": 0,
+      "(11-13) Years": 0,
   });
   const [totalSizes, setTotalSizes] = useState(0);
   useEffect(() => {
@@ -88,7 +88,7 @@ const SingleProduct = () => {
           <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
             {title}
           </h1>
-          <p className="title-font text-2xl my-3 font-semibold text-gray-900">
+          <p className="title-font text-3xl my-3 text-red-700 font-bold ">
               ৳{price}
             </p>
           <div className="flex mb-4">
@@ -255,7 +255,7 @@ const SingleProduct = () => {
                     <div className="flex gap-2 flex-wrap">
                         {Object.entries(adultSizes).map(([size, value]) => (
                             <div className="rounded border appearance-none border-gray-300 py-2 text-base px-3 flex" key={size}>
-                                <p>{size.toUpperCase()} :</p>
+                                <p>{size?.toUpperCase()} :</p>
                                 <input
                                     className="ml-2 outline-none focus:outline-none w-10"
                                     type="number"
@@ -280,7 +280,7 @@ const SingleProduct = () => {
                     <div className="flex gap-2 flex-wrap">
                         {Object.entries(childSizes).map(([size, value]) => (
                             <div className="rounded border appearance-none border-gray-300 py-2 text-base px-3 flex" key={size}>
-                                <p>{size.replace('_', '-').toUpperCase()} :</p>
+                                <p>{size.replace('_', '-')} :</p>
                                 <input
                                     className="ml-2 outline-none focus:outline-none w-10"
                                     type="number"
