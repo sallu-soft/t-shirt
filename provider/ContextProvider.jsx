@@ -1,5 +1,6 @@
 'use client'
 
+import products from "@/product";
 import { createContext, useState } from "react";
 
 
@@ -15,7 +16,8 @@ const ContextProvider = ({children}) => {
         images:[]
     });
     return (
-        <Context.Provider value={{form, setForm}}>
+        <Context.Provider value={{form, setForm, products}}>
+            
             {children}
         </Context.Provider>
     )

@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import ContextProvider from "@/provider/ContextProvider";
 import { Toaster } from "@/components/ui/toaster";
 import Footer from "./components/Footer";
+import GlobalProvider from "./GlobalProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,13 +17,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-          <ContextProvider>
+          <GlobalProvider>
 
           <Navbar/>
-          
+          <div className="min-h-[60vh]">
           {children}
+          </div>
           <Footer/>
-          </ContextProvider>
+          </GlobalProvider>
           <Toaster />
         </body>
     </html>

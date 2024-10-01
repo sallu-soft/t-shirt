@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Link from "next/link";
 import { Menu, Search, ShoppingCart } from "lucide-react";
 import {MdOutlineShoppingCart} from "react-icons/md";
 import {IoSearch} from "react-icons/io";
+import { CartContext } from "@/provider/CartContext";
 
 const Navbar = () => {
   const [state, setState] = useState(false);
-
+  const {cart} = useContext(CartContext);
+  
   const menus = [
     // { title: "হোম", path: "/" },
   ];
@@ -44,7 +46,10 @@ const Navbar = () => {
         </div>
         <div className="w-full text-primary_color md:w-3/12 md:flex justify-end gap-2 hidden">
           <Search className="font-semibold text-3xl cursor-pointer" />
-          <ShoppingCart className="font-semibold text-3xl cursor-pointer" />
+          <Link href={'/cart'} className="relative">
+            <ShoppingCart className="font-semibold relative text-3xl cursor-pointer"/>
+            <p className="bg-primary_color rounded-full w-fit h-6 flex items-center justify-center p-2 absolute bottom-3 left-3  text-white">{cart?.cartItems?.length || 0}</p>
+          </Link>
         </div>
       </div>
     </nav>

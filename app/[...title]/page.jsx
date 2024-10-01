@@ -7,16 +7,23 @@ import InvoicePage from '../components/InvoicePage'
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import React, { useContext, useEffect, useState } from 'react'
+import { CartContext} from '@/provider/CartContext';
 
-const SingleProduct = () => {
-    const {form , setForm} = useContext(Context)
-    const searchParams = useSearchParams();
-    const description = searchParams?.get('description');
-    const model = searchParams?.get('model');
-    const images = JSON.parse(searchParams?.get('images'));
-    const price = parseInt(searchParams?.get('price') || '0');
-    const title = searchParams?.get('title');
-    const [myimg, setMyimg] = useState(images?.[0]);
+const SingleProduct = ({params}) => {
+    const {form , setForm, products} = useContext(Context);
+    const {addItemToCart} = useContext(CartContext);
+    const product = products.filter(product =>product.id === parseInt(params.title[0]))[0];
+    
+
+    const [myimg, setMyimg] = useState(product?.images?.[0]);
+    const [selectedSize, setSelectedSize] = useState('');
+    const [selectedColor, setSelectedColor] = useState('');
+    const handleSize = (size)=>{
+      setSelectedSize(size);
+    }
+    const handleColor = (color)=>{
+      setSelectedColor(color);
+    }
     const [adultSizes, setAdultSizes] = useState({
       s: 0,
       m: 0,
@@ -49,6 +56,15 @@ const SingleProduct = () => {
       model:model
     })
   };
+  const handleAddToCart = () => {
+    addItemToCart({
+      product:product.id,
+      title:product.title,
+      price:product.price,
+      image:product.images[0],
+      stock:product.stock,
+  })
+  }
   console.log(adultSizes, childSizes)
     // const router = useRouter();
     // const images = JSON.parse(router.query.images)
@@ -62,7 +78,7 @@ const SingleProduct = () => {
             <div className="gap-y-4 flex flex-col">
                 
                  {
-          images?.map((currImg,index)=>{
+          product?.images?.map((currImg,index)=>{
             return(
               <figure>
                 <Image onClick={()=>{setMyimg(currImg)}} src={currImg} alt={"sonot"} className="w-full md:h-[130px] h-20 object-cover object-center rounded" key={index} height={400}
@@ -85,11 +101,11 @@ const SingleProduct = () => {
           <h2 className="text-md title-font font-semibold text-orange-700 tracking-widest pb-2">
             ছাল্লু গার্মেন্টস 
           </h2>
-          <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
-            {title}
+          <h1 className="text-secondary_color text-3xl title-font font-medium mb-1">
+            {product?.title}
           </h1>
           <p className="title-font text-3xl my-3 text-red-700 font-bold ">
-              ৳{price}
+              ৳{product?.price}
             </p>
           <div className="flex mb-4">
             <span className="flex items-center">
@@ -99,7 +115,7 @@ const SingleProduct = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                className="w-4 h-4 text-indigo-500"
+                className="w-4 h-4 text-primary_color"
                 viewBox="0 0 24 24"
               >
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
@@ -110,7 +126,7 @@ const SingleProduct = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                className="w-4 h-4 text-indigo-500"
+                className="w-4 h-4 text-primary_color"
                 viewBox="0 0 24 24"
               >
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
@@ -121,7 +137,7 @@ const SingleProduct = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                className="w-4 h-4 text-indigo-500"
+                className="w-4 h-4 text-primary_color"
                 viewBox="0 0 24 24"
               >
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
@@ -132,7 +148,7 @@ const SingleProduct = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                className="w-4 h-4 text-indigo-500"
+                className="w-4 h-4 text-primary_color"
                 viewBox="0 0 24 24"
               >
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
@@ -143,7 +159,7 @@ const SingleProduct = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                className="w-4 h-4 text-indigo-500"
+                className="w-4 h-4 text-primary_color"
                 viewBox="0 0 24 24"
               >
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
@@ -190,66 +206,47 @@ const SingleProduct = () => {
             </span>
           </div>
           <p className="leading-relaxed">
-           {description}
+           {product?.description}
           </p>
-          {/* <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
-            
-            <div className="flex items-center">
-              <span className="mr-3">Adult:</span>
-              <div className="flex gap-2 flex-wrap">
-                <div className="rounded border appearance-none border-gray-300 py-2  text-base px-3 flex">
-                  <p>S :</p>
-                  <input className="ml-2 outline-none focus:outline-none w-10" type="number" name="small" id="small" defaultValue="0" />
+          {(product?.product_sizes && Object.keys(product.product_sizes).length > 0) && (<div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
+                <div className="flex items-center">
+                    <span className="mr-3">Size:</span>
+                    <div className="flex gap-2 flex-wrap">
+                        
+                        {Object.entries(product.product_sizes).map(([size, value]) => (
+                          <div 
+                            onClick={() => handleSize(size)} 
+                            className={`rounded border appearance-none border-gray-300 py-2 text-base px-3 flex cursor-pointer ${selectedSize === size ? 'bg-primary_color text-white' : 'bg-white text-black'}`} 
+                            key={size}
+                          >
+                            <p>{size?.toUpperCase()}</p>
+                          </div>
+                        ))}
+                    </div>
                 </div>
-                <div className="rounded border appearance-none border-gray-300 py-2  text-base px-3 flex">
-                  <p>M :</p>
-                  <input className="ml-2 outline-none focus:outline-none w-10" type="number" name="medium" id="medium" defaultValue="0" />
+            </div>)
+            }
+          {(product?.product_color && (product.product_color).length > 0) && (<div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
+                <div className="flex items-center">
+                    <span className="mr-3">Color:</span>
+                    <div className="flex gap-2 flex-wrap">
+                        
+                        {(product.product_color).map((color, value) => (
+                          <div 
+                            onClick={() => handleColor(color)} 
+                            className={`rounded border appearance-none border-gray-300 py-2 text-base px-3 flex cursor-pointer ${selectedColor === color ? 'bg-primary_color text-white' : 'bg-white text-black'}`} 
+                            key={color}
+                          >
+                            <p>{color?.toUpperCase()}</p>
+                          </div>
+                        ))}
+                    </div>
                 </div>
-                <div className="rounded border appearance-none border-gray-300 py-2  text-base px-3 flex">
-                  <p>L :</p>
-                  <input className="ml-2 outline-none focus:outline-none w-10" type="number" name="large" id="large" defaultValue="0" />
-                </div>
-                <div className="rounded border appearance-none border-gray-300 py-2  text-base px-3 flex">
-                  <p>XL :</p>
-                  <input className="ml-2 outline-none focus:outline-none w-10" type="number" name="x-large" id="sm" defaultValue="0" />
-                </div>
-                <div className="rounded border appearance-none border-gray-300 py-2  text-base px-3 flex">
-                  <p>XXL :</p>
-                  <input className="ml-2 outline-none focus:outline-none w-10" type="number" name="xx-large" id="sm" defaultValue="0" />
-                </div>
-                
-              </div>
-            </div>
-            
-            
-          </div>
-          <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
-          <div className="flex items-center">
-              <span className="mr-3">Child:</span>
-              <div className="flex gap-2 flex-wrap">
-                <div className="rounded border appearance-none border-gray-300 py-2  text-base px-3 flex">
-                  <p>4Y-5Y :</p>
-                  <input className="ml-2 outline-none focus:outline-none w-10" type="number" name="year4-5" id="year4-5" defaultValue="0" />
-                </div>
-                <div className="rounded border appearance-none border-gray-300 py-2  text-base px-3 flex">
-                  <p>6Y-7Y :</p>
-                  <input className="ml-2 outline-none focus:outline-none w-10" type="number" name="year6-7" id="year6-7" defaultValue="0" />
-                </div>
-                <div className="rounded border appearance-none border-gray-300 py-2  text-base px-3 flex">
-                  <p>8Y-10Y :</p>
-                  <input className="ml-2 outline-none focus:outline-none w-10" type="number" name="year8-10" id="year8-10" defaultValue="0" />
-                </div>
-                <div className="rounded border appearance-none border-gray-300 py-2  text-base px-3 flex">
-                  <p>11Y-13Y :</p>
-                  <input className="ml-2 outline-none focus:outline-none w-10" type="number" name="year-11-13" id="year11-13" defaultValue="0" />
-                </div>
-               
-                
-              </div>
-            </div>
-          </div> */}
-
-<div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
+            </div>)
+            }
+          
+{/* 
+            <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
                 <div className="flex items-center">
                     <span className="mr-3">Adult:</span>
                     <div className="flex gap-2 flex-wrap">
@@ -298,46 +295,8 @@ const SingleProduct = () => {
                         ))}
                     </div>
                 </div>
-            </div>
-          {/* <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
-            <div className="flex">
-              <span className="mr-3">Color</span>
-              <button className="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none"></button>
-              <button className="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none"></button>
-              <button className="border-2 border-gray-300 ml-1 bg-indigo-500 rounded-full w-6 h-6 focus:outline-none"></button>
-            </div>
-            <div className="flex ml-6 items-center">
-              <span className="mr-3">Size</span>
-              <div className="relative">
-                <select className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10">
-                  <option>SM</option>
-                  <option>M</option>
-                  <option>L</option>
-                  <option>XL</option>
-                </select>
-                <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="w-4 h-4"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M6 9l6 6 6-6"></path>
-                  </svg>
-                </span>
-              </div>
-            </div>
-            <div className="flex ml-6 items-center">
-              <span className="mr-3">QTY</span>
-              <div className="relative">
-                <input className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base w-[150px] pl-3 pr-3" type="number"/>
-                
-              </div>
-            </div>
-          </div> */}
+            </div> */}
+          
           <div className="flex mt-6 gap-x-4 items-center pb-5 border-b-2 border-gray-100 mb-5">
                 <div>
                   <span className="mr-3">Total Quantity:</span>
@@ -345,13 +304,13 @@ const SingleProduct = () => {
                 </div>
                 <div>
                   <span className="mr-3">Total Price:</span>
-                  <span>{totalSizes*price}</span>
+                  <span>{totalSizes*product?.price}</span>
                 </div>
             </div>
           <div className="flex">
           
-          <Link href={'/checkout'} className="flex ml-auto" onClick={()=>handleOrder()}><button disabled={totalSizes>0?false:true} className={`text-white ${totalSizes>0?"bg-indigo-500":"bg-indigo-300 hover:bg-indigo-300"} cursor-pointer border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded`}>
-              অর্ডার করুন</button></Link>
+          <Link href={'/cart'} className="flex ml-auto" onClick={()=>handleAddToCart()}><button className={`text-white ${totalSizes>0?"bg-primary_color":"bg-primary_color hover:bg-primary_color"} cursor-pointer border-0 py-2 px-6 focus:outline-none hover:bg-primary_color rounded`}>
+              ADD TO CART</button></Link>
              
           </div>
         </div>
