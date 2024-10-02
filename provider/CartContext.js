@@ -24,7 +24,7 @@ const CartContextProvider = ({children}) => {
         price,
         image,
         stock,
-        quantity=1,
+        quantity,
     }) =>{
         const item = {
             product,

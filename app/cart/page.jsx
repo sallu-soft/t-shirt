@@ -5,7 +5,6 @@ import React, { useContext } from 'react';
 
 const CartPage = () => {
     const { addItemToCart, deleteItemFromCart, cart } = useContext(CartContext);
-
     const increaseQty = (cartItem) => {
       const newQty = cartItem?.quantity + 1;
       const item = { ...cartItem, quantity: newQty };
@@ -41,7 +40,7 @@ const CartPage = () => {
     //     }
     //   </div>
     <>
-    <section className="py-5  sm:py-7 bg-blue-100">
+    <section className="py-3  sm:py-5 bg-orange-100">
       <div className="container max-w-screen-xl mx-auto px-4">
         <h2 className="text-3xl font-semibold mb-2">
           {cart?.cartItems?.length || 0} Item(s) in Cart
@@ -49,7 +48,7 @@ const CartPage = () => {
       </div>
     </section>
 
-    {cart?.cartItems?.length > 0 && (
+    {cart?.cartItems?.length > 0 ? (
       <section className="py-10">
         <div className="container max-w-screen-xl  mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-4">
@@ -146,7 +145,7 @@ const CartPage = () => {
                   </li>
                   <li className="flex justify-between text-gray-600  mb-1">
                     <span>Total Units:</span>
-                    <span className="text-green-500">
+                    <span className="text-primary_color">
                       {cart?.cartItems?.reduce(
                         (acc, item) => acc + item.quantity,
                         0
@@ -164,13 +163,13 @@ const CartPage = () => {
                   </li>
                 </ul>
 
-                <a className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 cursor-pointer">
+                <Link href={"/checkout"} className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium text-white bg-primary_color border border-transparent rounded-md hover:bg-orange-700 cursor-pointer">
                   Continue
-                </a>
+                </Link>
 
                 <Link
                   href="/"
-                  className="px-4 py-3 inline-block text-lg w-full text-center font-medium text-green-600 bg-white shadow-sm border border-gray-200 rounded-md hover:bg-gray-100"
+                  className="px-4 py-3 inline-block text-lg w-full text-center font-medium text-primary_color bg-white shadow-sm border border-gray-200 rounded-md hover:bg-gray-100"
                 >
                   Back to shop
                 </Link>
@@ -179,6 +178,12 @@ const CartPage = () => {
           </div>
         </div>
       </section>
+    ):(
+      <div className="justify-center items-center flex h-[55vh]">
+        <Link href="/" className="bg-primary_color px-4 py-3 rounded-md ">
+          Back To Shopping
+        </Link>
+      </div>
     )}
   </>
     );
