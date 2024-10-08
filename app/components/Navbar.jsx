@@ -12,7 +12,7 @@ const Navbar = () => {
   const {cart} = useContext(CartContext);
   
   const menus = [
-    // { title: "হোম", path: "/" },
+    { title: "Products", path: "/search/products" },
   ];
 
   return (
@@ -38,7 +38,7 @@ const Navbar = () => {
         >
           <ul className="justify-center items-center space-y-8 md:flex md:space-x-6 md:space-y-0">
             {menus.map((item, idx) => (
-              <li key={idx} className="text-gray-600 hover:text-indigo-600 font-semibold text-lg">
+              <li key={idx} className="text-primary_color hover:text-indigo-600 font-semibold text-lg">
                 <Link href={item.path}>{item.title}</Link>
               </li>
             ))}

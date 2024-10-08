@@ -231,7 +231,7 @@ const Checkout = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="font-semibold text-gray-700">৳60.00</div>
+                  <div className="font-semibold text-gray-700">৳80.00</div>
                 </label>
 
                 {/* Outside Dhaka */}
@@ -262,6 +262,34 @@ const Checkout = () => {
                     </div>
                   </div>
                   <div className="font-semibold text-gray-700">৳120.00</div>
+                </label>
+                <label
+                  className={`flex items-center justify-between p-4 ${
+                    selectedOption === "cumilla" ? "bg-gray-100" : ""
+                  }`}
+                >
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      name="shipping"
+                      value="cumilla"
+                      checked={selectedOption === "cumilla"}
+                      onChange={() => {
+                        setSelectedOption("cumilla");
+                        setDeliveryCharge(50);
+                      }}
+                      className="form-radio h-5 w-5 text-blue-600"
+                    />
+                    <div className="ml-3">
+                      <span className="block font-bold text-gray-700">
+                        CUMILLA
+                      </span>
+                      <span className="block text-sm text-gray-500">
+                        WITHIN 1 WORKING DAYS
+                      </span>
+                    </div>
+                  </div>
+                  <div className="font-semibold text-gray-700">৳50.00</div>
                 </label>
               </div>
             </div>

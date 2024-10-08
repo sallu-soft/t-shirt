@@ -2,9 +2,8 @@
 import React, { useState } from 'react';
 import Categories from './Categories';
 import Products from './Products';
-import products from '@/product';
-
-const Shop = () => {
+// import products from '@/product';
+const Shop = ({products}) => {
   const [selectedCategory, setSelectedCategory] = useState('All'); // Default to 'All' or any category
 
   const handleCategorySelect = (category) => {
@@ -13,7 +12,7 @@ const Shop = () => {
 
   return (
     <div>
-      <Categories onCategorySelect={handleCategorySelect} selectedCategory={selectedCategory}/>
+      <Categories onCategorySelect={handleCategorySelect} selectedCategory={selectedCategory} products={products}/>
       <Products products={products} selectedCategory={selectedCategory} />
     </div>
   );

@@ -1,3 +1,4 @@
+'use client'
 import { CartContext } from '@/provider/CartContext'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -7,7 +8,7 @@ const ProductCard = ({product}) => {
   const {addItemToCart, removeItemFromCart} = useContext(CartContext)
   const handleAddToCart = () => {
     addItemToCart({
-      product:product.id,
+      product:product._id,
       title:product.title,
       price:product.price,
       image:product.images[0],
@@ -15,7 +16,7 @@ const ProductCard = ({product}) => {
   })
   }
   return (
-    <Link href={`/${product?.id}`}  className="relative m-4 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-secondary_color shadow-md">
+    <Link href={`/${product?._id}`}  className="relative m-4 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-secondary_color shadow-md">
     
       <Image className="object-fit h-[280px]" src={product?.images[0]} alt="product image" width={400} height={200} />
       <span className="absolute top-0 left-0 m-2 rounded-full bg-primary_color px-2 text-center text-sm font-medium text-white">39% OFF</span>

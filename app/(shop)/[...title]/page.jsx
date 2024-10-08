@@ -10,7 +10,6 @@ import {
 import { Context } from "@/provider/ContextProvider";
 import Image from "next/image";
 import Link from "next/link";
-import InvoicePage from "../components/InvoicePage";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
@@ -19,9 +18,11 @@ import { CartContext } from "@/provider/CartContext";
 const SingleProduct = ({ params }) => {
   const { form, setForm, products } = useContext(Context);
   const { addItemToCart } = useContext(CartContext);
-  const product = products.filter(
-    (product) => product.id === parseInt(params.title[0])
+  console.log(products)
+  const product = products?.filter(
+    (product) => product._id === (params.title[0])
   )[0];
+  console.log(product)
 
   const [myimg, setMyimg] = useState(product?.images?.[0]);
   const [selectedSize, setSelectedSize] = useState("");
@@ -80,7 +81,6 @@ const SingleProduct = ({ params }) => {
       quantity: quantity,
     });
   };
-  console.log(adultSizes, childSizes);
   // const router = useRouter();
   // const images = JSON.parse(router.query.images)
 
