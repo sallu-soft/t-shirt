@@ -5,12 +5,16 @@ import connectMongoDB from '@/db';
 import Category from '@/models/Category';
 import Product from '@/models/Product'; // Import the Product model
 import fs from 'fs';
+import { writeFile } from 'fs/promises';
 import { revalidatePath } from 'next/cache';
 import path from 'path';
 
 // Create the uploads directory if it doesn't exist
 const uploadsDir = path.join(process.cwd(), 'public/uploads');
 
+
+// Helper to handle file writing with promises
+// const writeFile = promisify(fs.writeFile);
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
@@ -88,6 +92,118 @@ export const createProduct = async (formData) => {
     throw new Error('Error creating Product');
   }
 };
+export const editProduct = async (formData, id) => {
+  console.log('Server action: editProduct function called');
+  console.log('Received formData:', formData);
+
+  try {
+    await connectMongoDB();
+
+    // Find the product by its ID
+    const product = await Product.findById(id);
+    if (!product) {
+      throw new Error('Product not found');
+    }
+
+    // Extract form fields from formData
+    const title = formData.get('title') || product.title;
+    const description = formData.get('description') || product.description;
+    const price = parseFloat(formData.get('price')) || product.price;
+    const category = formData.get('category') || product.category;
+    const discount = formData.get('discount') || product.discount;
+    const purchase_price = formData.get('purchase_price') || product.purchase_price;
+    const stock = formData.get('stock') || product.stock;
+
+    // Parse sizes and colors (sent as JSON strings)
+    const sizesString = formData.get('sizes');
+    const colorsString = formData.get('colors');
+
+    const sizes = sizesString ? JSON.parse(sizesString) : product.sizes;
+    const colors = colorsString ? JSON.parse(colorsString) : product.colors;
+
+    // Handle image uploads
+    const images = formData.getAll('images'); // Retrieve all image files from formData
+    let imageUrls = [...product.images]; // Start with existing images
+
+    // Create a Set to track existing images
+    const existingImageSet = new Set(imageUrls);
+
+    // Track images to be removed
+    const removedImages = formData.removedImages || [];
+
+    if (images && images.length > 0) {
+      // If new images are provided, process them
+      for (const image of images) {
+        // Check if image is a File object
+        if (image instanceof File) {
+          // Create a unique file name
+          const fileName = `${Date.now()}-${image.name}`;
+          const filePath = path.join(uploadsDir, fileName);
+
+          // Read the file data as a buffer directly
+          const buffer = Buffer.from(await image.arrayBuffer());
+
+          // Write the buffer to a file on the local filesystem
+          await writeFile(filePath, buffer);
+
+          // Store the image URL (relative path)
+          imageUrls.push(`/uploads/${fileName}`);
+        } else {
+          // This is an existing image, just add its URL
+          if (typeof image === 'string') {
+            imageUrls.push(image); // Add the existing image path
+          }
+        }
+      }
+    }
+
+    // Remove specified images
+    removedImages.forEach(async (removedImage) => {
+      // Remove from imageUrls array
+      imageUrls = imageUrls.filter((url) => url !== removedImage);
+
+      // Delete the image from the filesystem
+      const filePath = path.join(uploadsDir, path.basename(removedImage));
+      try {
+        await unlink(filePath); // Delete the file
+        console.log(`Deleted removed image: ${filePath}`);
+      } catch (err) {
+        console.error(`Error deleting image: ${filePath}`, err);
+      }
+    });
+
+    // Prepare the updated product data
+    const updatedProductData = {
+      title,
+      description,
+      price,
+      images: imageUrls, // Use the URLs of the saved or updated images
+      category,
+      sizes,
+      colors,
+      stock,
+      discount,
+      purchase_price,
+    };
+
+    // Update the product in MongoDB
+    const updatedProduct = await Product.findByIdAndUpdate(id, updatedProductData, { new: true });
+    console.log('Product updated:', updatedProduct);
+
+    revalidatePath("/sallu_admin/product_list"); // Revalidate the product list page after the update
+
+    // Convert the Mongoose document to a plain object before returning
+    const plainProduct = updatedProduct.toObject();
+
+    // Optionally remove any non-serializable properties, like __v or _id if needed
+    const { __v, _id, createdAt, ...returnableProduct } = plainProduct;
+
+    return returnableProduct; // Return the plain product object without Mongoose properties
+  } catch (error) {
+    console.error('Error editing product:', error);
+    throw new Error('Error editing Product');
+  }
+};
 export const fetchProducts = async (page = 1, limit = 12) => {
   await connectMongoDB();
   
@@ -102,6 +218,15 @@ export const fetchProducts = async (page = 1, limit = 12) => {
   const totalPages = Math.ceil(totalProducts / limit);
   
   return { products, totalPages };
+};
+export const fetchSingleProduct = async (id) => {
+  await connectMongoDB();
+  
+  // Fetch paginated products
+  const product = await Product.findById(id)
+  console.log(id)
+  
+  return {product};
 };
 export const fetchProduct = async () => {
   await connectMongoDB();

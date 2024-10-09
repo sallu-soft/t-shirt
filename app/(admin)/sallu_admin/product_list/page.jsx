@@ -6,6 +6,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";// Adjust import for editing products
 import { deleteProduct, fetchProducts } from "../actions";
 import { MdDeleteOutline } from "react-icons/md";
+import { BiEdit } from "react-icons/bi";
 // Import the fetchProducts function
 
 export default async function ProductList({ searchParams }) {
@@ -39,15 +40,16 @@ export default async function ProductList({ searchParams }) {
                    {products.map((product) => (
                      <tr key={product._id.toString()} className="hover:bg-gray-100">
                        <td className="border border-gray-300 px-4 py-2">{product.title}</td>
-                       <td className="border border-gray-300 px-4 py-2">{product.description}</td>
+                       <td className="border border-gray-300 px-4 py-2">{product.description.slice(0,50)}...</td>
                        <td className="border border-gray-300 px-4 py-2">${product.price}</td>
                        <td className="border border-gray-300 px-4 py-2">{product.category}</td>
                        <td className="border border-gray-300 px-4 py-2">{product.sizes.join(', ')}</td>
                        <td className="border border-gray-300 px-4 py-2">{product.colors.join(', ')}</td>
-                       <td className="border border-gray-300 px-4 py-2 flex space-x-2">
-                         {/* <Link href={`/edit-product/${product._id.toString()}`}>
-                           <Button className="font-bold bg-green-600 rounded-lg">Edit</Button>
-                         </Link> */}
+                       <td className="border justify-center border-gray-300 px-4 py-2 flex space-x-2">
+                         <Link href={`/sallu_admin/edit-product/${product._id.toString()}`} className="">
+                         <Button variant="" type="submit" className="text-white text-2xl bg-green-500 p-2"><BiEdit/></Button>
+                           
+                         </Link>
                          <form action={deleteProduct}>
                            <input type="hidden" name="id" value={product._id.toString()} />
                            <Button variant="destructive" type="submit" className="text-white text-2xl p-2">

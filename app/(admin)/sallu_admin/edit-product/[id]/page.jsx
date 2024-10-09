@@ -4,9 +4,10 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { RxCross2 } from 'react-icons/rx'
 import { toast } from '@/components/ui/use-toast'
-import { createProduct, getCategories } from '../actions'
+// import { createProduct, getCategories } from '../actions'
+import { editProduct, fetchSingleProduct, getCategories } from '../../actions'
 
-const AddProduct = () => {
+const EditProduct = ({params}) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -20,6 +21,7 @@ const AddProduct = () => {
     colors: ''
   })
   const [categories, setCategories] = useState([]);
+  const [imagesToRemove, setImagesToRemove] = useState([]);
   useEffect(() => {
     async function fetchCategories() {
       try {
@@ -32,7 +34,19 @@ const AddProduct = () => {
 
     fetchCategories();
   }, []);
-  console.log()
+  useEffect(() => {
+    async function getSingleProduct() {
+      try {
+        const {product} = await fetchSingleProduct(params.id);
+        setFormData(product); // Set the fetched categories
+        
+      } catch (error) {
+        console.error('Failed to fetch categories:', error);
+      }
+    }
+
+    getSingleProduct();
+  }, []);
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({
@@ -57,91 +71,74 @@ const AddProduct = () => {
     }))
   }
   const handleRemoveImage = (indexToRemove) => {
+    setImagesToRemove((prev) => [
+      ...prev,
+      formData.images[indexToRemove], // Add the image URL to the removal list
+    ]);
     setFormData((prev) => ({
       ...prev,
-      images: prev.images.filter((_, index) => index !== indexToRemove)
-    }))
-  }
+      images: prev.images.filter((_, index) => index !== indexToRemove),
+    }));
+  };
 
   
     console.log(formData);
-  //   const handleSubmit = async (e) => {
-  //   e.preventDefault()
-  //   try {
-  //     console.log("beforeSubmit")
-  //     await createProduct(formData);
-  //     console.log("afterSubmit")
-  //     setFormData({
-  //       title: "",
-  //       description: "",
-  //       price: '',
-  //       images: [],
-  //       category: '',
-  //       sizes: [],
-  //       colors: []
-  //     });
-  //     toast({
-  //       title: "Post Product successfully!",
-  //       description: "Your Product has been added.",
-  //     });
-  //   } catch (error) {
-  //     toast({
-  //       title: "Error",
-  //       description: "Failed to create Product.",
-  //     });
-  //   }
-  //   // Handle form submission logic here
-  // }
+  
     // Form submission logic
     const handleSubmit = async (e) => {
-      e.preventDefault();
-  
-      // Constructing FormData object
-      const formDataToSubmit = new FormData();
-      formDataToSubmit.append('title', formData.title);
-      formDataToSubmit.append('description', formData.description);
-      formDataToSubmit.append('price', formData.price);
-      formDataToSubmit.append('category', formData.category);
-      formDataToSubmit.append('purchage_price', formData.purchase_price);
-      formDataToSubmit.append('stock', formData.stock);
-      formDataToSubmit.append('discount', formData.discount);
-      formDataToSubmit.append('product_price', formData.product_price);
-  
-      // Append sizes and colors as JSON strings
-      formDataToSubmit.append('sizes', JSON.stringify(formData.sizes));
-      formDataToSubmit.append('colors', JSON.stringify(formData.colors));
-  
-      // Append each image file
-      formData.images.forEach((image) => {
-        formDataToSubmit.append('images', image);
-      });
+        e.preventDefault();
+
+        // Constructing FormData object
+        const formDataToSubmit = new FormData();
+        formDataToSubmit.append('title', formData.title);
+        formDataToSubmit.append('description', formData.description);
+        formDataToSubmit.append('price', formData.price);
+        formDataToSubmit.append('category', formData.category);
+        formDataToSubmit.append('stock', formData.stock);
+        formDataToSubmit.append('discount', formData.discount);
+        formDataToSubmit.append('purchase_price', formData.purchase_price);
+      
+        // Append sizes and colors as JSON strings
+        formDataToSubmit.append('sizes', JSON.stringify(formData.sizes));
+        formDataToSubmit.append('colors', JSON.stringify(formData.colors));
+      
+        // Append each image file
+        formData.images.forEach((image) => {
+          formDataToSubmit.append('images', image);
+        });
+      
+        // Append images to be removed
+        imagesToRemove.forEach((image) => {
+          formDataToSubmit.append('imagesToRemove', image);
+        });
+      
   
       try {
         // Send formDataToSubmit to server action
-        await createProduct(formDataToSubmit);
+        await editProduct(formDataToSubmit ,params.id);
   
         setFormData({
           title: '',
           description: '',
           price: '',
-          discount: '',
-          purchase_price: '',
+          purchase_price:'',
+          discount:'',
           stock: '',
           images: [],
           category: '',
           sizes: '',
-          colors: ''
+          colors: '',
         });
   
         toast({
-          title: 'Product added!',
-          description: 'Your product has been successfully added.',
+          title: 'Product Edited!',
+          description: 'Your Product has been Successfully Edited.',
         });
       } catch (error) {
         console.error(error);
         toast({
           title: 'Error',
-          description: 'Failed to add product.',
+          description: 'Failed to Edit Product.',
         });
       }
     };
@@ -159,7 +156,7 @@ const AddProduct = () => {
             <select
               id="category"
               name="category"
-              value={formData.category}
+              value={formData?.category}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md p-2 border-gray-200 border"
               required
@@ -181,7 +178,7 @@ const AddProduct = () => {
           name="title"
           type="text"
           placeholder="Product Name"
-          value={formData.title}
+          value={formData?.title}
           onChange={handleChange}
           className="mt-1 block w-full"
           required
@@ -201,7 +198,7 @@ const AddProduct = () => {
           name="price"
           type="number"
           placeholder="Product Price"
-          value={formData.price}
+          value={formData?.price}
           onChange={handleChange}
           className="mt-1 block w-full"
           required
@@ -217,7 +214,7 @@ const AddProduct = () => {
           name="purchase_price"
           type="number"
           placeholder="Product Purchase Price"
-          value={formData.purchase_price}
+          value={formData?.purchase_price}
           onChange={handleChange}
           className="mt-1 block w-full"
         />
@@ -232,7 +229,7 @@ const AddProduct = () => {
           name="discount"
           type="number"
           placeholder="Product Discount"
-          value={formData.discount}
+          value={formData?.discount}
           onChange={handleChange}
           className="mt-1 block w-full"
         />
@@ -251,7 +248,7 @@ const AddProduct = () => {
           name="stock"
           type="number"
           placeholder="Product Stock"
-          value={formData.stock}
+          value={formData?.stock}
           onChange={handleChange}
           className="mt-1 block w-full"
         />
@@ -266,7 +263,7 @@ const AddProduct = () => {
           name="sizes"
           type="text"
           placeholder="Comma-separated sizes (e.g., S,M,L,XL)"
-          value={formData.sizes}
+          value={formData?.sizes}
           onChange={handleArrayChange}
           className="mt-1 block w-full"
         />
@@ -282,7 +279,7 @@ const AddProduct = () => {
           name="colors"
           type="text"
           placeholder="Comma-separated colors (e.g., Red,Blue,Green)"
-          value={formData.colors}
+          value={formData?.colors}
           onChange={handleArrayChange}
           className="mt-1 block w-full"
         />
@@ -296,7 +293,7 @@ const AddProduct = () => {
           id="description"
           name="description"
           placeholder="Product Description"
-          value={formData.description}
+          value={formData?.description}
           onChange={handleChange}
           className="mt-1 block w-full rounded-md p-2 border-gray-200 border"
           rows={2}
@@ -305,37 +302,38 @@ const AddProduct = () => {
       </div>
       {/* Product Images */}
       <div>
-        <label htmlFor="images" className="block text-sm font-medium text-gray-700">
-          Product Images
-        </label>
-        <Input
-          id="images"
-          name="images"
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleImagesChange}
-          className="mt-1 block w-full"
-        />
-        {formData.images.length > 0 && (
-          <div className="mt-2 text-sm text-gray-600">
-            <ul className="flex gap-x-2">
-              {formData.images.map((image, index) => (
-                <li className="bg-primary_color text-white p-1 rounded-lg flex items-center" key={index}>
-                  <span>Image {index + 1}</span>
-                  <button
-                    type="button"
-                    className="ml-2 text-white hover:text-red-700"
-                    onClick={() => handleRemoveImage(index)}
-                  >
-                    <RxCross2 />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
+  <label htmlFor="images" className="block text-sm font-medium text-gray-700">
+    Product Images
+  </label>
+  <Input
+    id="images"
+    name="images"
+    type="file"
+    multiple
+    accept="image/*"
+    onChange={handleImagesChange}
+    className="mt-1 block w-full"
+  />
+  {formData?.images?.length > 0 && (
+    <div className="mt-2 text-sm text-gray-600">
+      <ul className="flex gap-x-2">
+        {formData?.images.map((image, index) => (
+          <li className="bg-primary_color text-white p-1 rounded-lg flex items-center" key={index}>
+            <span>Image {index + 1}</span>
+            <button
+              type="button"
+              className="ml-2 text-white hover:text-red-700"
+              onClick={() => handleRemoveImage(index)}
+            >
+              <RxCross2 />
+            </button>
+           
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+</div>
       </div>
 
       {/* Submit Button */}
@@ -348,4 +346,4 @@ const AddProduct = () => {
   )
 }
 
-export default AddProduct
+export default EditProduct
