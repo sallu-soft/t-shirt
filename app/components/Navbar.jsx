@@ -24,21 +24,13 @@ const Navbar = () => {
     Cookies.remove('session', { path: '/' });
     setUser(null); // Reset the user state
   };
-  // useEffect(() => {
-  //   // Get the cookie data using js-cookie
-  //   const userCookie = Cookies.get('session');
-  //   console.log(userCookie)
-  //   if (userCookie) {
-  //     setUser(JSON.parse(userCookie));
-  //   }
-  // }, []);
-  console.log(user)
+  
   return (
     <nav className="bg-secondary_color w-full border-b md:border-0 shadow-lg sticky top-0 z-50 transition-all">
       <div className="items-center px-4 max-w-screen-2xl mx-auto md:flex md:px-8 justify-between">
         <div className="flex items-center justify-between py-3 md:py-5 md:block">
           <Link href="/">
-            <h1 className="text-2xl font-semibold text-primary_color">ছাল্লু গার্মেন্টস</h1>
+            <h1 className="text-2xl font-semibold text-primary_color">Sallu.com.bd</h1>
           </Link>
           <div className="md:hidden">
             <button

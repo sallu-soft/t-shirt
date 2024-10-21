@@ -315,7 +315,7 @@ export const getOrder = async (id) => {
   
   // Fetch paginated products
   const order = await Order.findById(id)
-  console.log(order)
+  
   return {
     _id: order._id.toString(), // Convert ObjectId to string
     name: order.name,
@@ -422,14 +422,24 @@ export async function createUserAction(formData) {
   // Convert the Mongoose document to a plain object before returning
   return savedUser.toObject(); // Return the plain user object
 }
-export const fetchProduct = async () => {
+// export const fetchProduct = async () => {
+//   await connectMongoDB();
+  
+  
+//   const products = await Product.find().lean();
+  
+//   return { products };
+// };
+export async function fetchProduct() {
   await connectMongoDB();
   
-  // Fetch all products from the database
-  const products = await Product.find().lean();
+  const products = await Product.find();
   
-  return { products };
-};
+  // Manually convert to plain objects
+  const plainProducts = products.map(product => product.toObject());
+
+  return { products: plainProducts };
+}
 export const fetchProductByCategory = async (category) => {
   await connectMongoDB();
   
@@ -512,7 +522,6 @@ export const createCategory = async (formData) => {
     console.log(categoryData)
     // Create and save the category in MongoDB
     const newCategory = await Category.create(categoryData);
-    console.log('Category created:', newCategory);
 
     // Convert the Mongoose document to a plain object before returning
     const plainCategory = newCategory.toObject(); // Convert to a plain object

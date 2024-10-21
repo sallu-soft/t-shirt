@@ -10,26 +10,27 @@ const AllProducts = () => {
   const [hasMore, setHasMore] = useState(true);
 
   // Fetch products for the current page
-  const loadMoreProducts = async () => {
-    setLoading(true);
-    try {
-      const { products: newProducts, totalPages } = await fetchProducts(page);
-
-      // Filter out duplicate products using product ID
-      setProducts(prevProducts => {
-        const productIds = prevProducts.map(product => product._id);
-        const uniqueProducts = newProducts.filter(product => !productIds.includes(product._id));
-        return [...prevProducts, ...uniqueProducts];
-      });
-
-      setHasMore(page < totalPages);
-    } catch (error) {
-      console.error('Failed to fetch products:', error);
-    }
-    setLoading(false);
-  };
+ 
 
   useEffect(() => {
+    const loadMoreProducts = async () => {
+      setLoading(true);
+      try {
+        const { products: newProducts, totalPages } = await fetchProducts(page);
+  
+        // Filter out duplicate products using product ID
+        setProducts(prevProducts => {
+          const productIds = prevProducts.map(product => product._id);
+          const uniqueProducts = newProducts.filter(product => !productIds.includes(product._id));
+          return [...prevProducts, ...uniqueProducts];
+        });
+  
+        setHasMore(page < totalPages);
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+      }
+      setLoading(false);
+    };
     // Load products when component mounts or page changes
     loadMoreProducts();
   }, [page]);

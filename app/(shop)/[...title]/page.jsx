@@ -18,7 +18,7 @@ import { CartContext } from "@/provider/CartContext";
 const SingleProduct = ({ params }) => {
   const { form, setForm, products } = useContext(Context);
   const { addItemToCart } = useContext(CartContext);
-  console.log(products)
+  
   const product = products?.filter(
     (product) => product._id === (params.title[0])
   )[0];

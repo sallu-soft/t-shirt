@@ -22,7 +22,6 @@ const CartPage = () => {
       }
     };
     const { user } = useContext(UserContext);
-    console.log(cart?.cartItems)
     // const increaseQty = (cartItem) => {
     //   const newQty = cartItem?.quantity + 1;
     //   const item = { ...cartItem, quantity: newQty };
