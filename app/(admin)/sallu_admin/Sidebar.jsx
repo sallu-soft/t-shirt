@@ -12,10 +12,16 @@ import { BiCategory } from "react-icons/bi";
 const Sidebar = () => {
     const [isOpen,setIsOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Controls the product dropdown menu
+    const [isDropdownOpenOrder, setIsDropdownOpenOrder] = useState(false); // Controls the product dropdown menu
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };
+    const toggleDropdownOrder = () => {
+        
+        setIsDropdownOpenOrder(!isDropdownOpenOrder);
+    };
+
   return (
     <aside className="w-[300px] shadow-primary_color h-screen shadow-md flex flex-col justify-between">
      <div className="p-6">
@@ -57,6 +63,37 @@ const Sidebar = () => {
                         <BiCategory className="text-gray-700 text-xl"/>
                             <span className="block">
                                 Create Category
+                            </span>
+                        </Link>
+                        <Link href="/sallu_admin/orders_list" className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded">
+                        <BiCategory className="text-gray-700 text-xl"/>
+                            <span className="block">
+                                Orders
+                            </span>
+                        </Link>
+                        
+                    </div>
+                )}
+            </div>
+            <div>
+                <button 
+                    className="flex items-center w-full p-2 text-gray-700 hover:bg-gray-100 rounded"
+                    onClick={toggleDropdownOrder} // Toggles the dropdown
+                >
+                    <span className="mr-3">
+                        <MdOutlineProductionQuantityLimits />
+                    </span>
+                    <span>Orders</span>
+                </button>
+
+                {/* Dropdown menu (submenus) */}
+                {isDropdownOpenOrder && (
+                    <div className="ml-8 my-1">
+                       
+                        <Link href="/sallu_admin/orders_list" className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded">
+                        <BiCategory className="text-gray-700 text-xl"/>
+                            <span className="block">
+                                Orders List
                             </span>
                         </Link>
                         

@@ -6,9 +6,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useContext, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { CartContext } from "@/provider/CartContext";
+import { createOrder } from "@/app/(admin)/sallu_admin/actions";
+import { UserContext } from "@/provider/userContext";
 
 const Checkout = () => {
-  const { cart } = useContext(CartContext);
+  const { cart, emptyCart } = useContext(CartContext);
+  const { user } = useContext(UserContext);
   const totalAmount = cart?.cartItems?.reduce(
     (acc, item) => acc + item.quantity * item.price,
     0
@@ -22,16 +25,17 @@ const Checkout = () => {
   const { childSizes, totalSizes, title, price, images, adultSizes, model } =
     form;
   const [formData, setFormData] = useState({
-    name: "",
-    address: "",
-    mobile_no: "",
+    name: user?.name,
+    address: user?.address,
+    mobile_no: user?.phone,
     whatsapp: "",
-    childSizes: childSizes,
-    adultSizes: adultSizes,
-    totalPrice: price * totalSizes,
+    cart: cart?.cartItems,
+    delivery_charge: deliveryCharge,
+    totalPrice: totalAmount,
     paymentMethod: "Cash",
-    model: model,
+    user:user?._id,
   });
+  console.log(formData);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -40,39 +44,38 @@ const Checkout = () => {
     });
   };
   const handleSubmit = async (e) => {
-    if (!formData.name || !formData.mobile_no) {
-      alert("please provide required information");
-      return;
-    }
-    console.log(formData);
+  
+    // Create FormData object and append fields
+    const formDataToSubmit = new FormData();
+    formDataToSubmit.append('name', formData.name);
+    formDataToSubmit.append('address', formData.address);
+    formDataToSubmit.append('mobile_no', formData.mobile_no);
+    formDataToSubmit.append('whatsapp', formData.whatsapp);
+    formDataToSubmit.append('delivery_charge', formData.delivery_charge);
+    formDataToSubmit.append('totalPrice', formData.totalPrice);
+    formDataToSubmit.append('paymentMethod', formData.paymentMethod);
+    formDataToSubmit.append('user', formData.user);
+    
+    // Assuming cart is an array of objects, we need to stringify it before appending
+    formDataToSubmit.append('cart', JSON.stringify(formData.cart));
+    console.log(formDataToSubmit)
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_CORS;
-      const res = await fetch(`api/orders`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      // Call the server action to handle order submission or update
+      await createOrder(formDataToSubmit); // Assuming `submitOrder` is the function handling the request
+      emptyCart();
+      
+      toast({
+        title: 'Order submitted!',
+        description: 'Your order has been successfully submitted.',
       });
-      console.log(res);
-      if (res.ok) {
-        router.push(
-          `${process.env.NEXT_PUBLIC_CORS}/bkash_message/successcash`
-        );
-        // router.refresh();
-        toast({
-          title: "Congratulations! Order Submited Successfully.",
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: "There was a problem with your request.",
-        });
-        throw new Error("Failed to Submit An Order");
-      }
+      router.push("/")
+      // Optionally redirect or update the UI as needed
     } catch (error) {
-      console.log(error);
+      console.error('Error submitting order:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to submit order.',
+      });
     }
   };
   const handlePaymentMethodChange = (e) => {
@@ -106,7 +109,7 @@ const Checkout = () => {
       console.log("Hellow Bkash" + error);
     }
   };
-
+  if(user?.name){
   return (
     <div className="w-[70%] mx-auto mt-10">
       <div className="flex flex-wrap gap-x-5">
@@ -376,10 +379,10 @@ const Checkout = () => {
                                 {cartItem.title}
                               </a>
                             </p>
-                            {/* <p className="mt-1 text-gray-400">
+                            <p className="mt-1 text-gray-400">
                               {" "}
-                              Seller: {cartItem.seller}
-                            </p> */}
+                              size & color: {cartItem.size} X {cartItem.color}
+                            </p>
                           </figcaption>
                         </figure>
                       </div>
@@ -479,7 +482,9 @@ const Checkout = () => {
         </div>
       </div>
     </div>
-  );
+  )}else{
+    router.push('/login')
+  };
 };
 
 export default Checkout;

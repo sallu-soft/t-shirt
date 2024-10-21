@@ -1,28 +1,69 @@
 'use client';
+import { toast } from '@/components/ui/use-toast';
 import { CartContext } from '@/provider/CartContext';
+import { UserContext } from '@/provider/userContext';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useContext } from 'react';
 
 const CartPage = () => {
-    const { addItemToCart, deleteItemFromCart, cart } = useContext(CartContext);
-    const increaseQty = (cartItem) => {
-      const newQty = cartItem?.quantity + 1;
-      const item = { ...cartItem, quantity: newQty };
-  
-      if (newQty > Number(cartItem.stock)) return;
-  
-      addItemToCart(item);
+    const router = useRouter();
+    const { addItemToCart, deleteItemFromCart, increaseQty,decreaseQty, cart } = useContext(CartContext);
+    const handleContinue = () => {
+      if (user) {
+        router.push('/checkout'); // Navigate to checkout if user exists
+      } else {
+        toast({
+          variant:"destructive",
+          title: "Please Login",
+          description: "Please Login First to Checkout",
+        });
+        router.push('/login'); // Redirect to login page
+      }
     };
+    const { user } = useContext(UserContext);
+    console.log(cart?.cartItems)
+    // const increaseQty = (cartItem) => {
+    //   const newQty = cartItem?.quantity + 1;
+    //   const item = { ...cartItem, quantity: newQty };
   
-    const decreaseQty = (cartItem) => {
-      const newQty = cartItem?.quantity - 1;
-      const item = { ...cartItem, quantity: newQty };
+    //   if (newQty > Number(cartItem.stock)) return;
   
-      if (newQty <= 0) return;
+    //   addItemToCart(item);
+    // };
   
-      addItemToCart(item);
-    };
+    // const decreaseQty = (cartItem) => {
+    //   const newQty = cartItem?.quantity - 1;
+    //   const item = { ...cartItem, quantity: newQty };
   
+    //   if (newQty <= 0) return;
+  
+    //   addItemToCart(item);
+    // };
+    // const increaseQty = (cartItem) => {
+    //   const newQty = cartItem?.quantity + 1;
+      
+    //   if (newQty > Number(cartItem.stock)) return; // Don't exceed stock
+    
+    //   // Call addItemToCart to update the quantity of the existing item
+    //   addItemToCart({
+    //     ...cartItem, // Spread the existing item details
+    //     quantity: newQty // Update the quantity
+    //   });
+    // };
+    
+    // const decreaseQty = (cartItem) => {
+    //   const newQty = cartItem?.quantity - 1;
+    
+    //   if (newQty <= 0) return; // Prevent quantity from going below 1
+    
+    //   // Call addItemToCart to update the quantity of the existing item
+    //   addItemToCart({
+    //     ...cartItem, // Spread the existing item details
+    //     quantity: newQty // Update the quantity
+    //   });
+    // };
+    
     const amountWithoutTax = cart?.cartItems?.reduce(
       (acc, item) => acc + item.quantity * item.price,
       0
@@ -70,40 +111,36 @@ const CartPage = () => {
                                 {cartItem.title}
                               </a>
                             </p>
-                            {/* <p className="mt-1 text-gray-400">
+                            <p className="mt-1 text-gray-400">
                               {" "}
-                              Seller: {cartItem.seller}
-                            </p> */}
+                              size & color: {cartItem.size} X {cartItem.color}
+                            </p>
                           </figcaption>
                         </figure>
                       </div>
                       <div className="w-24">
                         <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
-                          <button
+                        <button
                             data-action="decrement"
-                            className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
+                            className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
                             onClick={() => decreaseQty(cartItem)}
-                          >
-                            <span className="m-auto text-2xl font-thin">
-                              −
-                            </span>
-                          </button>
-                          <input
+                            >
+                            <span className="m-auto text-2xl font-thin">−</span>
+                            </button>
+                            <input
                             type="number"
-                            className="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-900  custom-input-number"
+                            className="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-900 custom-input-number"
                             name="custom-input-number"
                             value={cartItem.quantity}
                             readOnly
-                          ></input>
-                          <button
+                            />
+                            <button
                             data-action="increment"
                             className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
                             onClick={() => increaseQty(cartItem)}
-                          >
-                            <span className="m-auto text-2xl font-thin">
-                              +
-                            </span>
-                          </button>
+                            >
+                            <span className="m-auto text-2xl font-thin">+</span>
+                            </button>
                         </div>
                       </div>
                       <div>
@@ -117,6 +154,7 @@ const CartPage = () => {
                           </small>
                         </div>
                       </div>
+                     
                       <div className="flex-auto">
                         <div className="float-right">
                           <a
@@ -163,9 +201,9 @@ const CartPage = () => {
                   </li>
                 </ul>
 
-                <Link href={"/checkout"} className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium text-white bg-primary_color border border-transparent rounded-md hover:bg-orange-700 cursor-pointer">
-                  Continue
-                </Link>
+                <button onClick={()=>handleContinue()} className="px-4 py-3 mb-2 inline-block text-lg w-full text-center font-medium text-white bg-primary_color border border-transparent rounded-md hover:bg-orange-700 cursor-pointer">
+                  Continue 
+                </button>
 
                 <Link
                   href="/"

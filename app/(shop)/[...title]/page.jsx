@@ -73,12 +73,14 @@ const SingleProduct = ({ params }) => {
   };
   const handleAddToCart = () => {
     addItemToCart({
-      product: product.id,
+      product: product._id,
       title: product.title,
       price: product.price,
       image: product.images[0],
       stock: product.stock,
       quantity: quantity,
+      size: selectedSize,
+      color: selectedColor,
     });
   };
   // const router = useRouter();
@@ -225,14 +227,13 @@ const SingleProduct = ({ params }) => {
             </span>
           </div>
           <p className="leading-relaxed">{product?.description}</p>
-          {product?.product_sizes &&
-            Object.keys(product.product_sizes).length > 0 && (
+          {(product?.sizes[0] !=="")  && product?.sizes?.length>0 &&( 
               <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
                 <div className="flex items-center">
                   <span className="mr-3">Size:</span>
                   <div className="flex gap-2 flex-wrap">
-                    {Object.entries(product.product_sizes).map(
-                      ([size, value]) => (
+                    {product?.sizes.map(
+                      (size) => (
                         <div
                           onClick={() => handleSize(size)}
                           className={`rounded border appearance-none border-gray-300 py-2 text-base px-3 flex cursor-pointer ${
@@ -250,12 +251,12 @@ const SingleProduct = ({ params }) => {
                 </div>
               </div>
             )}
-          {product?.product_color && product.product_color.length > 0 && (
+          {product?.colors[0] !== '' && product?.colors.length > 0 && (
             <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
               <div className="flex items-center">
                 <span className="mr-3">Color:</span>
                 <div className="flex gap-2 flex-wrap">
-                  {product.product_color.map((color, value) => (
+                  {product?.colors.map((color) => (
                     <div
                       onClick={() => handleColor(color)}
                       className={`rounded border appearance-none border-gray-300 py-2 text-base px-3 flex cursor-pointer ${

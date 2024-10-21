@@ -12,11 +12,12 @@ const Products = ({products}) => {
         {selectedCategory === 'All' ? 'All Products' : `Our Products`}
         Featured Products
       </h2> */}
-      <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-col-1 gap-3">
+      {products?<div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-col-1 gap-3">
         {products?.map((product,ind) => (
           <ProductCard key={ind} product={product} />
         ))}
-      </div>
+      </div>:<div className="flex justify-center items-center w-full h-[80vh]">Loading...</div>}
+      
     </div>
   );
 };

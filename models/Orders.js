@@ -7,15 +7,23 @@ const orderSchema = new Schema(
         address:String,
         mobile_no:String,
         whatsapp_no:String,
-        adult_sizes:Object,
-        child_sizes:Object,
+        ordered_items:[{
+            color:String,
+            image:String,
+            price:Number,
+            product:String,
+            quantity:Number,
+            size:String,
+            stock:Number,
+            title:String
+        }],
+        user:String,
         total_price:Number,
-        isPaid:Boolean,
-        model:String,
-        payment_method:String,
-        status: {
+        is_paid:Boolean,
+        payment_method: { type: String, enum: ['Cash', 'Card', 'Online'], required: true },
+        payment_status: {
             type: String,
-            enum : ['Pending','Shipped','Delivered'],
+            enum : ['Pending','Shipped','Delivered','Cancelled'],
             default: 'Pending'
         },
     },

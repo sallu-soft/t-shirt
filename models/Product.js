@@ -41,11 +41,11 @@ const productSchema = new Schema({
     },
     sizes: {
       type: [String], // Array of strings for product sizes, e.g., ['S', 'M', 'L', 'XL']
-      required: true,
+      
     },
     colors: {
       type: [String], // Array of strings for product colors, e.g., ['Red', 'Green', 'Blue']
-      required: true,
+      
     },
     createdAt: {
       type: Date,

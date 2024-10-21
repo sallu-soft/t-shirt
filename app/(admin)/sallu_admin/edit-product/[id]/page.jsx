@@ -9,16 +9,8 @@ import { editProduct, fetchSingleProduct, getCategories } from '../../actions'
 
 const EditProduct = ({params}) => {
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    price: '',
-    discount: '',
-    purchase_price: '',
-    stock: '',
-    images: [],
-    category: '',
-    sizes: '',
-    colors: ''
+    category_name: '',
+    category_image: '',
   })
   const [categories, setCategories] = useState([]);
   const [imagesToRemove, setImagesToRemove] = useState([]);
@@ -70,16 +62,15 @@ const EditProduct = ({params}) => {
       [name]: arrayValues,
     }))
   }
-  const handleRemoveImage = (indexToRemove) => {
-    setImagesToRemove((prev) => [
-      ...prev,
-      formData.images[indexToRemove], // Add the image URL to the removal list
-    ]);
-    setFormData((prev) => ({
-      ...prev,
-      images: prev.images.filter((_, index) => index !== indexToRemove),
-    }));
-  };
+  // Example handleRemoveImage function in your React component:
+const handleRemoveImage = (index) => {
+  const removedImage = formData.images[index]; // Get the image URL that is being removed
+  setImagesToRemove((prev) => [...prev, removedImage]); // Track this image as removed
+  setFormData((prev) => ({
+    ...prev,
+    images: prev.images.filter((_, i) => i !== index), // Remove from the displayed images
+  }));
+};
 
   
     console.log(formData);
@@ -98,37 +89,35 @@ const EditProduct = ({params}) => {
         formDataToSubmit.append('discount', formData.discount);
         formDataToSubmit.append('purchase_price', formData.purchase_price);
       
-        // Append sizes and colors as JSON strings
+        // Add sizes and colors as JSON
         formDataToSubmit.append('sizes', JSON.stringify(formData.sizes));
         formDataToSubmit.append('colors', JSON.stringify(formData.colors));
       
-        // Append each image file
+        // Append each new image file
         formData.images.forEach((image) => {
           formDataToSubmit.append('images', image);
         });
-      
-        // Append images to be removed
+        // Append the images to be removed
         imagesToRemove.forEach((image) => {
-          formDataToSubmit.append('imagesToRemove', image);
+          formDataToSubmit.append('removedImages', image);
         });
-      
   
       try {
         // Send formDataToSubmit to server action
         await editProduct(formDataToSubmit ,params.id);
   
-        setFormData({
-          title: '',
-          description: '',
-          price: '',
-          purchase_price:'',
-          discount:'',
-          stock: '',
-          images: [],
-          category: '',
-          sizes: '',
-          colors: '',
-        });
+        // setFormData({
+        //   title: '',
+        //   description: '',
+        //   price: '',
+        //   purchase_price:'',
+        //   discount:'',
+        //   stock: '',
+        //   images: [],
+        //   category: '',
+        //   sizes: '',
+        //   colors: '',
+        // });
   
         toast({
           title: 'Product Edited!',

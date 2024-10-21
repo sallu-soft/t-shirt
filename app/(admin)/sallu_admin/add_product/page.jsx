@@ -65,86 +65,35 @@ const AddProduct = () => {
 
   
     console.log(formData);
-  //   const handleSubmit = async (e) => {
-  //   e.preventDefault()
-  //   try {
-  //     console.log("beforeSubmit")
-  //     await createProduct(formData);
-  //     console.log("afterSubmit")
-  //     setFormData({
-  //       title: "",
-  //       description: "",
-  //       price: '',
-  //       images: [],
-  //       category: '',
-  //       sizes: [],
-  //       colors: []
-  //     });
-  //     toast({
-  //       title: "Post Product successfully!",
-  //       description: "Your Product has been added.",
-  //     });
-  //   } catch (error) {
-  //     toast({
-  //       title: "Error",
-  //       description: "Failed to create Product.",
-  //     });
-  //   }
-  //   // Handle form submission logic here
-  // }
-    // Form submission logic
     const handleSubmit = async (e) => {
-      e.preventDefault();
-  
-      // Constructing FormData object
-      const formDataToSubmit = new FormData();
-      formDataToSubmit.append('title', formData.title);
-      formDataToSubmit.append('description', formData.description);
-      formDataToSubmit.append('price', formData.price);
-      formDataToSubmit.append('category', formData.category);
-      formDataToSubmit.append('purchage_price', formData.purchase_price);
-      formDataToSubmit.append('stock', formData.stock);
-      formDataToSubmit.append('discount', formData.discount);
-      formDataToSubmit.append('product_price', formData.product_price);
-  
-      // Append sizes and colors as JSON strings
-      formDataToSubmit.append('sizes', JSON.stringify(formData.sizes));
-      formDataToSubmit.append('colors', JSON.stringify(formData.colors));
-  
-      // Append each image file
-      formData.images.forEach((image) => {
-        formDataToSubmit.append('images', image);
+    e.preventDefault()
+    try {
+      console.log("beforeSubmit")
+      await createProduct(formData);
+      console.log("afterSubmit")
+      setFormData({
+        title: "",
+        description: "",
+        price: '',
+        images: [],
+        category: '',
+        sizes: [],
+        colors: []
       });
-  
-      try {
-        // Send formDataToSubmit to server action
-        await createProduct(formDataToSubmit);
-  
-        setFormData({
-          title: '',
-          description: '',
-          price: '',
-          discount: '',
-          purchase_price: '',
-          stock: '',
-          images: [],
-          category: '',
-          sizes: '',
-          colors: ''
-        });
-  
-        toast({
-          title: 'Product added!',
-          description: 'Your product has been successfully added.',
-        });
-      } catch (error) {
-        console.error(error);
-        toast({
-          title: 'Error',
-          description: 'Failed to add product.',
-        });
-      }
-    };
+      toast({
+        title: "Post Product successfully!",
+        description: "Your Product has been added.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create Product.",
+      });
+    }
+    // Handle form submission logic here
+  }
+    //Form submission logic
+   
   return (
     <form onSubmit={handleSubmit} className="space-y-6 p-6 border border-primary_color bg-white shadow-lg rounded-lg mx-auto">
       <h2 className="text-2xl font-bold mb-4 text-primary_color">Add Product</h2>

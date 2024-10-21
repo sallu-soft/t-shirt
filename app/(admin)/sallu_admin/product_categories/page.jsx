@@ -4,7 +4,10 @@ import React, { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
-import { createCategory, getCategories } from '../actions'; // Import server actions
+import { createCategory, deleteCategory, getCategories } from '../actions'; // Import server actions
+import Link from 'next/link';
+import { BiEdit } from 'react-icons/bi';
+import { MdDeleteOutline } from 'react-icons/md';
 
 const ProductCategrory = () => {
   const [formData, setFormData] = useState({
@@ -151,6 +154,7 @@ const ProductCategrory = () => {
                 <tr>
                   <th className="py-2 text-start px-4 border-b">Category Name</th>
                   <th className="py-2 px-4 text-start border-b">Category Image</th>
+                  <th className="py-2 px-4 text-start border-b">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -168,6 +172,18 @@ const ProductCategrory = () => {
                         height={200}
                       />
                     </td>
+                    <td className=" justify-center items-center flex gap-2 py-4">
+                         <Link href={`/sallu_admin/edit-category/${category?._id.toString()}`} className="">
+                         <Button variant="" type="submit" className="text-white text-2xl bg-green-500 p-2"><BiEdit/></Button>
+                           
+                         </Link>
+                         <form action={deleteCategory}>
+                           <input type="hidden" name="id" value={category?._id.toString()} />
+                           <Button variant="destructive" type="submit" className="text-white text-2xl p-2">
+                             <MdDeleteOutline/>
+                           </Button>
+                         </form>
+                       </td>
                   </tr>
                 ))}
               </tbody>
