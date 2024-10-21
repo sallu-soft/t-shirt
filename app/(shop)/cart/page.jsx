@@ -9,6 +9,7 @@ import React, { useContext } from 'react';
 const CartPage = () => {
     const router = useRouter();
     const { addItemToCart, deleteItemFromCart, increaseQty,decreaseQty, cart } = useContext(CartContext);
+    const { user } = useContext(UserContext);
     const handleContinue = () => {
       if (user) {
         router.push('/checkout'); // Navigate to checkout if user exists
@@ -21,47 +22,7 @@ const CartPage = () => {
         router.push('/login'); // Redirect to login page
       }
     };
-    const { user } = useContext(UserContext);
-    // const increaseQty = (cartItem) => {
-    //   const newQty = cartItem?.quantity + 1;
-    //   const item = { ...cartItem, quantity: newQty };
-  
-    //   if (newQty > Number(cartItem.stock)) return;
-  
-    //   addItemToCart(item);
-    // };
-  
-    // const decreaseQty = (cartItem) => {
-    //   const newQty = cartItem?.quantity - 1;
-    //   const item = { ...cartItem, quantity: newQty };
-  
-    //   if (newQty <= 0) return;
-  
-    //   addItemToCart(item);
-    // };
-    // const increaseQty = (cartItem) => {
-    //   const newQty = cartItem?.quantity + 1;
-      
-    //   if (newQty > Number(cartItem.stock)) return; // Don't exceed stock
-    
-    //   // Call addItemToCart to update the quantity of the existing item
-    //   addItemToCart({
-    //     ...cartItem, // Spread the existing item details
-    //     quantity: newQty // Update the quantity
-    //   });
-    // };
-    
-    // const decreaseQty = (cartItem) => {
-    //   const newQty = cartItem?.quantity - 1;
-    
-    //   if (newQty <= 0) return; // Prevent quantity from going below 1
-    
-    //   // Call addItemToCart to update the quantity of the existing item
-    //   addItemToCart({
-    //     ...cartItem, // Spread the existing item details
-    //     quantity: newQty // Update the quantity
-    //   });
-    // };
+   
     
     const amountWithoutTax = cart?.cartItems?.reduce(
       (acc, item) => acc + item.quantity * item.price,
