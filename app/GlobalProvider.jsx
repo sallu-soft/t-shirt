@@ -1,6 +1,6 @@
 import CartContextProvider from '@/provider/CartContext'
 import ContextProvider from '@/provider/ContextProvider'
-import UserContextProvider from '@/provider/userContext'
+import UserContextProvider from '@/provider/UsersContext'
 import React from 'react'
 
 const GlobalProvider = ({children}) => {

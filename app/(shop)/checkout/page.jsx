@@ -7,7 +7,7 @@ import React, { useContext, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { CartContext } from "@/provider/CartContext";
 import { createOrder } from "@/app/(admin)/sallu_admin/actions";
-import { UserContext } from "@/provider/userContext";
+import { UserContext } from "@/provider/UsersContext";
 
 const Checkout = () => {
   const { cart, emptyCart } = useContext(CartContext);

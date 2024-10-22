@@ -6,11 +6,11 @@ import { Menu, Search, ShoppingCart } from "lucide-react";
 import {MdOutlineShoppingCart} from "react-icons/md";
 import {IoSearch} from "react-icons/io";
 import { CartContext } from "@/provider/CartContext";
-import { UserContext } from "@/provider/userContext";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { RxAvatar } from "react-icons/rx";
 import { Button } from "@/components/ui/button";
 import Cookies from "js-cookie";
+import { UserContext } from "@/provider/UsersContext";
 
 const Navbar = () => {
   const [state, setState] = useState(false);

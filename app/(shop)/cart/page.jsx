@@ -1,7 +1,7 @@
 'use client';
 import { toast } from '@/components/ui/use-toast';
 import { CartContext } from '@/provider/CartContext';
-import { UserContext } from '@/provider/userContext';
+import { UserContext } from '@/provider/UsersContext';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useContext } from 'react';
