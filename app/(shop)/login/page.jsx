@@ -12,7 +12,7 @@ const loginSchema = z.object({
  
   phone: z.string().min(11, 'Phone number must be at least 11 digits').max(11, 'Phone number is too long').regex(/^\d+$/, 'Phone number must contain only digits'),
   
-  password: z.string().min(6, 'Password must be at least 6 characters long').regex(/\d/, 'Password must contain at least one number'),
+  password: z.string().min(6, 'Password must be at least 6 characters long'),
 });
 
 const LoginForm = () => {

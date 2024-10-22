@@ -22,6 +22,43 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
+export async function editUserAction(userId, formData) {
+  await connectMongoDB(); // Ensure the database is connected
+
+  // Fetch the existing user by ID
+  const existingUser = await User.findById(userId);
+
+  if (!existingUser) {
+    throw new Error('User not found');
+  }
+
+  // Extract user fields from formData (same as in createUserAction)
+  const name = formData.get('name') || existingUser.name; // Use the existing name if not provided
+  const email = formData.get('email') || existingUser.email;
+  const password = formData.get('password'); // Optional, check below
+  const phone = formData.get('phone') || existingUser.phone;
+  const address = formData.get('address') || existingUser.address;
+  const avatar = formData.get('avatar') || existingUser.avatar; // Optional avatar field
+
+  // Check if a new password is provided
+  if (password && password !== existingUser.password) {
+    // If the password is changed, hash the new password
+    existingUser.password = await bcrypt.hash(password, 10);
+  }
+
+  // Update the user's other fields
+  existingUser.name = name;
+  existingUser.email = email;
+  existingUser.phone = phone;
+  existingUser.address = address;
+  existingUser.avatar = avatar;
+
+  // Save the updated user back to the database
+  const updatedUser = await existingUser.save();
+
+  // Convert the Mongoose document to a plain object before returning
+  return updatedUser.toObject(); // Return the updated user object
+}
 export const createProduct = async (formData) => {
   console.log('Server action: createProduct function called');
   console.log('Received formData:', formData);
@@ -95,6 +132,7 @@ export const createProduct = async (formData) => {
     throw new Error('Error creating Product');
   }
 };
+
 export const createOrder = async (formData) => {
   console.log('Server action: createOrder function called');
   console.log('Received formData:', formData);
@@ -285,12 +323,36 @@ export const fetchOrders = async (page = 1, limit = 12) => {
   
   return { orders, totalPages };
 };
+export const fetchUsers = async (page = 1, limit = 12) => {
+  await connectMongoDB();
+  
+  // Count total products for pagination
+  const totalUser = await User.countDocuments();
+  
+  // Fetch paginated products
+  const users = await User.find()
+    .skip((page - 1) * limit)
+    .limit(limit);
+  
+  const totalPages = Math.ceil(totalUser / limit);
+  
+  return { users, totalPages };
+};
 export const ordersList = async (userId) => {
   await connectMongoDB();
   // Fetch paginated products
   const orders = await Order.find({user:userId}).lean();
   
   return { orders };
+};
+export const fetchSingleUser = async (id) => {
+  await connectMongoDB();
+  
+  // Fetch paginated products
+  const user = await User.findById(id)
+  console.log(id)
+  
+  return {user};
 };
 export const getCategoryById = async (id) => {
   await connectMongoDB();
@@ -418,7 +480,7 @@ export async function createUserAction(formData) {
 
   // Save the user to the database
   const savedUser = await newUser.save();
-
+  revalidatePath("/sallu_admin/users_list")
   // Convert the Mongoose document to a plain object before returning
   return savedUser.toObject(); // Return the plain user object
 }

@@ -13,6 +13,7 @@ const Sidebar = () => {
     const [isOpen,setIsOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Controls the product dropdown menu
     const [isDropdownOpenOrder, setIsDropdownOpenOrder] = useState(false); // Controls the product dropdown menu
+    const [isDropdownOpenUser, setIsDropdownOpenUser] = useState(false); // Controls the product dropdown menu
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -20,6 +21,10 @@ const Sidebar = () => {
     const toggleDropdownOrder = () => {
         
         setIsDropdownOpenOrder(!isDropdownOpenOrder);
+    };
+    const toggleDropdownUser = () => {
+        
+        setIsDropdownOpenUser(!isDropdownOpenUser);
     };
 
   return (
@@ -100,14 +105,39 @@ const Sidebar = () => {
                     </div>
                 )}
             </div>
-            
-            <Link href="#" className="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded">
-                <span className="mr-3">
+            <div>
+                <button 
+                    className="flex items-center w-full p-2 text-gray-700 hover:bg-gray-100 rounded"
+                    onClick={toggleDropdownUser} // Toggles the dropdown
+                >
+                    <span className="mr-3">
                     <User/>
-                </span>
-                <span>Users</span>
-            </Link>
-             {/* Products Dropdown */}
+                    </span>
+                    <span>Users</span>
+                </button>
+
+                {/* Dropdown menu (submenus) */}
+                {isDropdownOpenUser && (
+                    <div className="ml-8 my-1">
+                       
+                        <Link href="/sallu_admin/users_list" className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded">
+                        <BiCategory className="text-gray-700 text-xl"/>
+                            <span className="block">
+                                Users List
+                            </span>
+                        </Link>
+                        <Link href="/sallu_admin/create_user" className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded">
+                        <BiCategory className="text-gray-700 text-xl"/>
+                            <span className="block">
+                                Create User
+                            </span>
+                        </Link>
+                        
+                    </div>
+                )}
+            </div>
+            
+            
             
             
         </div>
