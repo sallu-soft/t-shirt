@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useContext, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { CartContext } from "@/provider/CartContext";
-import { createOrder } from "@/app/(admin)/sallu_admin/actions";
+import { createOrder, reduceProductStock } from "@/app/(admin)/sallu_admin/actions";
 import { UserContext } from "@/provider/UsersContext";
 
 const Checkout = () => {
@@ -17,7 +17,6 @@ const Checkout = () => {
     0
   );
   const [deliveryCharge, setDeliveryCharge] = useState(80);
-  console.log(cart?.cartItems);
   const { toast } = useToast();
   const { form } = useContext(Context);
   const router = useRouter();
@@ -35,7 +34,7 @@ const Checkout = () => {
     paymentMethod: "Cash",
     user:user?._id,
   });
-  console.log(formData);
+  console.log(formData?.cart)
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -61,7 +60,10 @@ const Checkout = () => {
     console.log(formDataToSubmit)
     try {
       // Call the server action to handle order submission or update
-      await createOrder(formDataToSubmit); // Assuming `submitOrder` is the function handling the request
+      await createOrder(formDataToSubmit);
+      for (const item of formData?.cart) {
+        await reduceProductStock(item.product, item.quantity);
+      } // Assuming `submitOrder` is the function handling the request
       emptyCart();
       
       toast({

@@ -171,7 +171,7 @@ export const createOrder = async (formData) => {
       payment_method:paymentMethod,
       user
     };
-
+    
     // Create and save the order in MongoDB
     const newOrder = await Order.create(orderData);
     console.log('Order created:', newOrder);
@@ -186,6 +186,36 @@ export const createOrder = async (formData) => {
   } catch (error) {
     console.error('Error creating order:', error);
     throw new Error('Error creating Order');
+  }
+};
+export const reduceProductStock = async (productId, quantityToSubtract) => {
+  try {
+    await connectMongoDB();
+
+    // Find the product by its ID
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      throw new Error('Product not found');
+    }
+
+    // Ensure there is enough stock to subtract
+    if (product.stock < quantityToSubtract) {
+      throw new Error('Insufficient stock for this product');
+    }
+
+    // Subtract the quantity from the current stock
+    product.stock -= quantityToSubtract;
+
+    // Save the updated product back to the database
+    const updatedProduct = await product.save();
+
+    console.log('Product stock updated:', updatedProduct);
+
+    return updatedProduct.toObject(); // Return the updated product object
+  } catch (error) {
+    console.error('Error updating product stock:', error);
+    throw new Error('Error updating product stock');
   }
 };
 export const editProduct = async (formData, id) => {
