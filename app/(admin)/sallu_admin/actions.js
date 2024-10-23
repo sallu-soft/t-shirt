@@ -402,6 +402,18 @@ export const fetchSingleProduct = async (id) => {
   
   return {product};
 };
+export const fetchProductByTitle = async (title) => {
+  await connectMongoDB();
+
+  try {
+    // Use a case-insensitive search with regex for more flexibility
+    const products = await Product.find({ title: { $regex: title, $options: 'i' } });
+    return { products };
+  } catch (error) {
+    console.error('Error fetching products by title:', error);
+    return { products: [] }; // Return an empty array on error
+  }
+};
 export const getOrder = async (id) => {
   await connectMongoDB();
   

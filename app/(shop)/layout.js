@@ -9,8 +9,8 @@ import GlobalProvider from "../GlobalProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "এক দিনের কসাই ।। টিশার্ট ",
-  description: "একটি টিশার্ট ব্রান্ড ",
+  title: "Sallu.com.bd",
+  description: "একটি ই-কমার্স ব্রান্ড ",
 };
 
 export default function RootLayout({ children }) {

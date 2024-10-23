@@ -19,7 +19,7 @@ const ProductCard = ({product}) => {
     <Link href={`/${product?._id}`}  className="relative m-4 flex w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-secondary_color shadow-md">
     
       <Image className="object-fit h-[280px]" src={product?.images[0]} alt="product image" width={400} height={200} />
-      <span className="absolute top-0 left-0 m-2 rounded-full bg-primary_color px-2 text-center text-sm font-medium text-white">39% OFF</span>
+      <span className="absolute top-0 left-0 m-2 rounded-full bg-primary_color px-2 text-center text-sm font-medium text-white">{product.discount} tk OFF</span>
    
     <div className="mt-4 px-5 pb-5">
       
@@ -27,8 +27,8 @@ const ProductCard = ({product}) => {
       
       <div className="mt-2 mb-5 flex items-center justify-between">
         <p>
-          <span className="text-3xl font-bold text-primary_color">{product.price}</span>
-          <span className="text-sm text-slate-900 line-through">$699</span>
+          <span className="text-3xl font-bold text-primary_color">{product.price-product.discount}</span>
+          <span className="text-sm text-slate-900 line-through">{product.price }</span>
         </p>
         {/* <div className="flex items-center">
           <svg aria-hidden="true" className="h-5 w-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
