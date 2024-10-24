@@ -1,4 +1,4 @@
-'use client'
+
 import Sidebar from './sallu_admin/Sidebar'
 import Admin from '../components/Admin'
 import { Input } from '@/components/ui/input'
@@ -6,46 +6,38 @@ import Footer from '../components/Footer'
 import { Toaster } from '@/components/ui/toaster'
 import { Inter } from 'next/font/google'
 import "../globals.css"
-import Navbar from '../components/Navbar'
 import AdminNavbar from './sallu_admin/components/AdminNavbar'
+import Cookies from 'js-cookie'
+import { cookies } from 'next/headers'
+import { getSession } from '@/lib/session'
+import { fetchSingleUser } from './sallu_admin/actions'
+import { redirect } from 'next/navigation'
 const inter = Inter({ subsets: ["latin"] });
 
 
 
-const AdminLayout = ({children}) => {
-    // const [password,setPassword] = useState('')
-    // const [orders,setOrders] = useState([])
-    // useEffect(() => {
-    //   const fetchData = async () => {
-    //     try {
-    //       const res = await fetch(`${process.env.NEXT_PUBLIC_CORS}/api/orders`, {
-    //         revalidate: 20,
-    //         cache: "no-store",
-    //       });
-  
-    //       if (!res.ok) {
-    //         console.log("Fetching Failed");
-    //         return;
-    //       }
-  
-    //       const data = await res.json();
-    //       setOrders(data.orders);
-    //     } catch (err) {
-    //       console.log(err);
-    //     }
-    //   };
-    //   if(password === process.env.NEXT_PUBLIC_PAGE_ROUTE){
-    //     fetchData();
-    //   }
-      
-    // }, [password]);
+const AdminLayout =async ({children}) => {
+  const session =await getSession()
+  if (!session) {
+    // If no session, redirect to the login page
+    redirect('/login');
+  }
+
+  const { user } = await fetchSingleUser(session.id);
+
+  if (!user || user.role !== "admin" || user.phone !== session.phone) {
+    // If no user or the user is not an admin, redirect to the login page
+    redirect('/login');
+  }
+  const serializableUser = JSON.stringify(user);
+  console.log()
   return (
     <html lang="en">
     <body className={inter.className}>
     <div className="flex">
         <Sidebar/>
         <div className="w-full">
-          <AdminNavbar/>
+          <AdminNavbar user={serializableUser}/>
           <div className="m-4">
           {children}
           </div>
@@ -54,12 +46,7 @@ const AdminLayout = ({children}) => {
     </div>
         <Toaster />
       </body>
-  </html>
-     
-      
-    
-     
-        
+  </html>      
   )
 }
 

@@ -29,7 +29,7 @@ const Navbar = () => {
   ];
   const logoutUser = () => {
     localStorage.removeItem("user"); // Remove user data from localStorage
-    Cookies.remove('session', { path: '/' });
+    Cookies.remove('session');
     setUser(null); // Reset the user state
   };
   const handleSearch = (e) => {
@@ -128,7 +128,7 @@ const Navbar = () => {
                 <Link
                   key={item._id}
                   className="w-full border-b-[1px] border-b-gray-400 flex items-center gap-4"
-                  href={`/${item._id}`}
+                  href={`products/${item._id}`}
                   onClick={() => setSearchQuery("")}
                 >
                   <SearchProducts item={item} />
@@ -152,7 +152,7 @@ const Navbar = () => {
             <ShoppingCart className="font-semibold relative text-3xl cursor-pointer"/>
             <p className="bg-primary_color rounded-full w-fit h-6 flex items-center justify-center p-2 absolute bottom-3 left-3  text-white">{cart?.cartItems?.length || 0}</p>
           </Link>
-          {user?._id?<>
+          {user?._id && user?.role=="user" ?<>
           <h2 className="text-primary_color text-lg ml-2 font-semibold">{user?.name}</h2>
           <DropdownMenu>
       <DropdownMenuTrigger asChild>

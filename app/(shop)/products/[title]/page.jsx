@@ -33,7 +33,7 @@ const SingleProduct = ({ params }) => {
 useEffect(() => {
     async function fetchProducts() {
       try {
-        const {product} = await fetchSingleProduct(params.title[0]);
+        const {product} = await fetchSingleProduct(params.title);
         setProduct(product); 
         setMyimg(product?.images?.[0])// Set the fetched categories
       } catch (error) {

@@ -23,6 +23,7 @@ const RegisterForm = () => {
     password: '',
     address: '',
     phone: '',
+    role: '',
   });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState(''); // State for storing errors
@@ -43,6 +44,7 @@ const RegisterForm = () => {
     formDataToSubmit.append('phone', formData.phone);
     formDataToSubmit.append('address', formData.address);
     formDataToSubmit.append('password', formData.password);
+    formDataToSubmit.append('role', formData.role);
   
     // Client-side Zod validation
     const userData = Object.fromEntries(formDataToSubmit.entries()); // Convert FormData to an object for validation
@@ -65,6 +67,7 @@ const RegisterForm = () => {
           password: '',
           address: '',
           phone: '',
+          role: '',
         });
   
         toast({
@@ -161,6 +164,34 @@ const RegisterForm = () => {
               onChange={handleChange}
             />
             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password._errors[0]}</p>}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Role</label>
+            <div className="mt-1 flex items-center space-x-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="role"
+                  value="user"
+                  checked={formData.role === 'user'}
+                  onChange={handleChange}
+                  className="mr-2"
+                />
+                User
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="role"
+                  value="admin"
+                  checked={formData.role === 'admin'}
+                  onChange={handleChange}
+                  className="mr-2"
+                />
+                Admin
+              </label>
+            </div>
+            {errors.role && <p className="text-red-500 text-sm mt-1">{errors.role._errors[0]}</p>}
           </div>
           <button
             type="submit"

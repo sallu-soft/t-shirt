@@ -104,7 +104,13 @@ const LoginForm = () => {
           });
           
           // Redirect user after successful login
-          router.push('/'); // or wherever you want to redirect
+          if(response?.user?.role === 'admin'){
+            router.push('/sallu_admin')
+          }else{
+            router.push('/'); // or wherever you want to redirect
+          }
+          
+
         } else {
           toast({
             title: 'Error',

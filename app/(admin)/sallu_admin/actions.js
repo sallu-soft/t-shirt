@@ -499,6 +499,7 @@ export async function createUserAction(formData) {
   const password = formData.get('password');
   const phone = formData.get('phone');
   const address = formData.get('address');
+  const role = formData.get('role');
   const avatar = formData.get('avatar'); // Optional avatar field
 
   // Check if the user with the email already exists
@@ -517,6 +518,7 @@ export async function createUserAction(formData) {
     password: hashedPassword,
     phone,
     address,
+    role,
     avatar, // If the user has an avatar URL
   });
 
