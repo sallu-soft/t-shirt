@@ -8,10 +8,7 @@ import { toast } from '@/components/ui/use-toast'
 import { editProduct, fetchSingleProduct, getCategories } from '../../actions'
 
 const EditProduct = ({params}) => {
-  const [formData, setFormData] = useState({
-    category_name: '',
-    category_image: '',
-  })
+  const [formData, setFormData] = useState([])
   const [categories, setCategories] = useState([]);
   const [imagesToRemove, setImagesToRemove] = useState([]);
   useEffect(() => {
@@ -85,14 +82,16 @@ const handleRemoveImage = (index) => {
         formDataToSubmit.append('description', formData.description);
         formDataToSubmit.append('price', formData.price);
         formDataToSubmit.append('category', formData.category);
-        formDataToSubmit.append('stock', formData.stock);
         formDataToSubmit.append('discount', formData.discount);
         formDataToSubmit.append('purchase_price', formData.purchase_price);
       
         // Add sizes and colors as JSON
-        formDataToSubmit.append('sizes', JSON.stringify(formData.sizes));
-        formDataToSubmit.append('colors', JSON.stringify(formData.colors));
-      
+        
+        const skusWithGeneratedSku = formData?.skus?.map((skuItem) => ({
+          ...skuItem,
+          sku: `${skuItem.size}-${skuItem.color}-${Date.now()}`
+        }));
+        formDataToSubmit.append("skus", JSON.stringify(skusWithGeneratedSku));
         // Append each new image file
         formData.images.forEach((image) => {
           formDataToSubmit.append('images', image);
@@ -130,6 +129,27 @@ const handleRemoveImage = (index) => {
           description: 'Failed to Edit Product.',
         });
       }
+    };
+    const handleAddSKU = () => {
+      setFormData((prev) => ({
+        ...prev,
+        skus: [...(prev?.skus || []), { size: '', color: '', stock: 0 }],
+      }));
+    };
+  
+    const handleSKUChange = (index, field, value) => {
+      setFormData((prev) => {
+        const newSkus = [...prev.skus];
+        newSkus[index] = { ...newSkus[index], [field]: value };
+        return { ...prev, skus: newSkus };
+      });
+    };
+  
+    const handleRemoveSKU = (indexToRemove) => {
+      setFormData((prev) => ({
+        ...prev,
+        skus: prev?.skus?.filter((_, index) => index !== indexToRemove),
+      }));
     };
   return (
     <form onSubmit={handleSubmit} className="space-y-6 p-6 border border-primary_color bg-white shadow-lg rounded-lg mx-auto">
@@ -228,51 +248,7 @@ const handleRemoveImage = (index) => {
       
 
       {/* Product Stock */}
-      <div>
-        <label htmlFor="stock" className="block text-sm font-medium text-gray-700">
-          Product Stock
-        </label>
-        <Input
-          id="stock"
-          name="stock"
-          type="number"
-          placeholder="Product Stock"
-          value={formData?.stock}
-          onChange={handleChange}
-          className="mt-1 block w-full"
-        />
-      </div>
-      {/* Product Sizes */}
-      <div>
-        <label htmlFor="sizes" className="block text-sm font-medium text-gray-700">
-          Product Sizes
-        </label>
-        <Input
-          id="sizes"
-          name="sizes"
-          type="text"
-          placeholder="Comma-separated sizes (e.g., S,M,L,XL)"
-          value={formData?.sizes}
-          onChange={handleArrayChange}
-          className="mt-1 block w-full"
-        />
-      </div>
-
-      {/* Product Colors */}
-      <div>
-        <label htmlFor="colors" className="block text-sm font-medium text-gray-700">
-          Product Colors
-        </label>
-        <Input
-          id="colors"
-          name="colors"
-          type="text"
-          placeholder="Comma-separated colors (e.g., Red,Blue,Green)"
-          value={formData?.colors}
-          onChange={handleArrayChange}
-          className="mt-1 block w-full"
-        />
-      </div>
+     
       {/* Product Description */}
       <div>
         <label htmlFor="description" className="block text-sm font-medium text-gray-700">
@@ -322,6 +298,38 @@ const handleRemoveImage = (index) => {
       </ul>
     </div>
   )}
+</div>
+<div className="col-span-3">
+  <h3 className="text-lg font-semibold mt-4">Product Variants (SKU)</h3>
+  <Button type="button" onClick={handleAddSKU} className="mt-2">Add Variant</Button>
+  {formData?.skus?.map((sku, index) => (
+    <div key={index} className="flex items-center space-x-4 mt-2">
+      <Input
+        type="text"
+        placeholder="Size"
+        value={sku.size}
+        onChange={(e) => handleSKUChange(index, 'size', e.target.value)}
+        required
+      />
+      <Input
+        type="text"
+        placeholder="Color"
+        value={sku.color}
+        onChange={(e) => handleSKUChange(index, 'color', e.target.value)}
+        required
+      />
+      <Input
+        type="number"
+        placeholder="Stock"
+        value={sku.stock}
+        onChange={(e) => handleSKUChange(index, 'stock', parseInt(e.target.value))}
+        required
+      />
+      <button type="button" onClick={() => handleRemoveSKU(index)}>
+        <RxCross2 />
+      </button>
+    </div>
+  ))}
 </div>
       </div>
 

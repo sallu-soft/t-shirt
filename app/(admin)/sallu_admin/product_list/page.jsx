@@ -31,8 +31,6 @@ export default async function ProductList({ searchParams }) {
                      <th className="border border-gray-300 px-4 py-2">Description</th>
                      <th className="border border-gray-300 px-4 py-2">Price</th>
                      <th className="border border-gray-300 px-4 py-2">Category</th>
-                     <th className="border border-gray-300 px-4 py-2">Sizes</th>
-                     <th className="border border-gray-300 px-4 py-2">Colors</th>
                      <th className="border border-gray-300 px-4 py-2">Actions</th>
                    </tr>
                  </thead>
@@ -43,8 +41,6 @@ export default async function ProductList({ searchParams }) {
                        <td className="border border-gray-300 px-4 py-2">{product.description.slice(0,50)}...</td>
                        <td className="border border-gray-300 px-4 py-2">${product.price}</td>
                        <td className="border border-gray-300 px-4 py-2">{product.category}</td>
-                       <td className="border border-gray-300 px-4 py-2">{product.sizes.join(', ')}</td>
-                       <td className="border border-gray-300 px-4 py-2">{product.colors.join(', ')}</td>
                        <td className="border justify-center border-gray-300 px-4 py-2 flex space-x-2">
                          <Link href={`/sallu_admin/edit-product/${product._id.toString()}`} className="">
                          <Button variant="" type="submit" className="text-white text-2xl bg-green-500 p-2"><BiEdit/></Button>

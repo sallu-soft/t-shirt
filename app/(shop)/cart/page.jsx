@@ -11,7 +11,7 @@ const CartPage = () => {
     const { addItemToCart, deleteItemFromCart, increaseQty,decreaseQty, cart } = useContext(CartContext);
     const { user } = useContext(UserContext);
     const handleContinue = () => {
-      if (user) {
+      if (user && user.role === "user") {
         router.push('/checkout'); // Navigate to checkout if user exists
       } else {
         toast({
@@ -31,7 +31,7 @@ const CartPage = () => {
   
     const taxAmount = (amountWithoutTax * 0.15).toFixed(2);
   
-    const totalAmount = (Number(amountWithoutTax) + Number(taxAmount)).toFixed(2);
+    const totalAmount = (Number(amountWithoutTax)).toFixed(2);
     return (
     //   <div className="min-h-[70vh] lg:w-[60%] md:w-[80%] w-[95%] mx-auto">
     //     {
@@ -106,11 +106,11 @@ const CartPage = () => {
                       <div>
                         <div className="leading-5">
                           <p className="font-semibold not-italic">
-                            ${cartItem.price * cartItem.quantity.toFixed(2)}
+                            ৳{cartItem.price * cartItem.quantity.toFixed(2)}
                           </p>
                           <small className="text-gray-400">
                             {" "}
-                            ${cartItem.price} / per item{" "}
+                            ৳{cartItem.price} / per item{" "}
                           </small>
                         </div>
                       </div>
@@ -138,8 +138,8 @@ const CartPage = () => {
               <article className="border border-gray-200 bg-white shadow-sm rounded mb-5 p-3 lg:p-5">
                 <ul className="mb-5">
                   <li className="flex justify-between text-gray-600  mb-1">
-                    <span>Amount before Tax:</span>
-                    <span>${amountWithoutTax}</span>
+                    <span>Amount :</span>
+                    <span>৳{amountWithoutTax}</span>
                   </li>
                   <li className="flex justify-between text-gray-600  mb-1">
                     <span>Total Units:</span>
@@ -151,13 +151,13 @@ const CartPage = () => {
                       (Units)
                     </span>
                   </li>
-                  <li className="flex justify-between text-gray-600  mb-1">
+                  {/* <li className="flex justify-between text-gray-600  mb-1">
                     <span>TAX:</span>
                     <span>${taxAmount}</span>
-                  </li>
+                  </li> */}
                   <li className="text-lg font-bold border-t flex justify-between mt-3 pt-3">
                     <span>Total price:</span>
-                    <span>${totalAmount}</span>
+                    <span>৳{totalAmount}</span>
                   </li>
                 </ul>
 

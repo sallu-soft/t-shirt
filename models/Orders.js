@@ -18,6 +18,7 @@ const orderSchema = new Schema(
             title:String
         }],
         user:String,
+        delivery_charge:Number,
         total_price:Number,
         is_paid:Boolean,
         payment_method: { type: String, enum: ['Cash', 'Card', 'Online'], required: true },

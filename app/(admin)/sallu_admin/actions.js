@@ -65,7 +65,7 @@ export const createProduct = async (formData) => {
 
   try {
     await connectMongoDB();
-
+    console.log('Server action: createProduct function called');
     // Extract form fields from formData
     const title = formData.get('title');
     const description = formData.get('description');
@@ -73,14 +73,11 @@ export const createProduct = async (formData) => {
     const category = formData.get('category');
     const discount = formData.get('discount');
     const purchase_price = formData.get('purchase_price');
-    const stock = formData.get('stock');
-
+    
+    const stockByVariantString = formData.get('skus');
+    const stockByVariant = stockByVariantString ? JSON.parse(stockByVariantString) : [];
     // Parse sizes and colors (sent as JSON strings)
-    const sizesString = formData.get('sizes');
-    const colorsString = formData.get('colors');
-
-    const sizes = sizesString ? JSON.parse(sizesString) : [];
-    const colors = colorsString ? JSON.parse(colorsString) : [];
+   
 
     // Handle image uploads
     const images = formData.getAll('images'); // Retrieve all image files from formData
@@ -109,13 +106,12 @@ export const createProduct = async (formData) => {
       price,
       images: imageUrls, // Use the URLs of the saved images
       category,
-      sizes,
-      colors,
-      stock,
+     
       discount,
+      skus:stockByVariant,
       purchase_price
     };
-
+    console.log(productData);
     // Create and save the product in MongoDB
     const newProduct = await Product.create(productData);
     console.log('Product created:', newProduct);
@@ -149,7 +145,7 @@ export const createOrder = async (formData) => {
     const totalPrice = parseFloat(formData.get('totalPrice'));
     const paymentMethod = formData.get('paymentMethod');
     const user = formData.get('user');
-
+    
     // Parse cart (sent as a JSON string)
     const cartString = formData.get('cart');
     const cart = cartString ? JSON.parse(cartString) : [];
@@ -188,7 +184,38 @@ export const createOrder = async (formData) => {
     throw new Error('Error creating Order');
   }
 };
-export const reduceProductStock = async (productId, quantityToSubtract) => {
+// export const reduceProductStock = async (productId, quantityToSubtract) => {
+//   try {
+//     await connectMongoDB();
+
+   
+//     const product = await Product.findById(productId);
+
+//     if (!product) {
+//       throw new Error('Product not found');
+//     }
+
+    
+//     if (product.stock < quantityToSubtract) {
+//       throw new Error('Insufficient stock for this product');
+//     }
+
+    
+//     product.stock -= quantityToSubtract;
+
+    
+//     const updatedProduct = await product.save();
+
+//     console.log('Product stock updated:', updatedProduct);
+
+//     return updatedProduct.toObject(); // Return the updated product object
+//   } catch (error) {
+//     console.error('Error updating product stock:', error);
+//     throw new Error('Error updating product stock');
+//   }
+// };
+
+export const reduceProductStock = async (productId, skuData, quantityToSubtract) => {
   try {
     await connectMongoDB();
 
@@ -199,23 +226,32 @@ export const reduceProductStock = async (productId, quantityToSubtract) => {
       throw new Error('Product not found');
     }
 
-    // Ensure there is enough stock to subtract
-    if (product.stock < quantityToSubtract) {
-      throw new Error('Insufficient stock for this product');
+    // Find the SKU that matches the specified size and color
+    const sku = product.skus.find(
+      (sku) => sku.size === skuData.size && sku.color === skuData.color
+    );
+
+    if (!sku) {
+      throw new Error('SKU not found for this product');
     }
 
-    // Subtract the quantity from the current stock
-    product.stock -= quantityToSubtract;
+    // Ensure there is enough stock in the SKU
+    if (sku.stock < quantityToSubtract) {
+      throw new Error('Insufficient stock for this SKU');
+    }
+
+    // Subtract the quantity from the SKU stock
+    sku.stock -= quantityToSubtract;
 
     // Save the updated product back to the database
     const updatedProduct = await product.save();
 
-    console.log('Product stock updated:', updatedProduct);
+    console.log('SKU stock updated:', sku);
 
     return updatedProduct.toObject(); // Return the updated product object
   } catch (error) {
-    console.error('Error updating product stock:', error);
-    throw new Error('Error updating product stock');
+    console.error('Error updating SKU stock:', error);
+    throw new Error('Error updating SKU stock');
   }
 };
 export const editProduct = async (formData, id) => {
@@ -238,14 +274,14 @@ export const editProduct = async (formData, id) => {
     const category = formData.get('category') || product.category;
     const discount = formData.get('discount') || product.discount;
     const purchase_price = formData.get('purchase_price') || product.purchase_price;
-    const stock = formData.get('stock') || product.stock;
+   
 
     // Parse sizes and colors (sent as JSON strings)
-    const sizesString = formData.get('sizes');
-    const colorsString = formData.get('colors');
+   
+    const stockByVariantString = formData.get('skus');
+    const stockByVariant = stockByVariantString ? JSON.parse(stockByVariantString) : [];
 
-    const sizes = sizesString ? JSON.parse(sizesString) : product.sizes;
-    const colors = colorsString ? JSON.parse(colorsString) : product.colors;
+    
 
     // Handle image uploads
     const images = formData.getAll('images'); // Retrieve all image files from formData
@@ -298,9 +334,8 @@ export const editProduct = async (formData, id) => {
       price,
       images: imageUrls, // Updated images (kept ones + new ones)
       category,
-      sizes,
-      colors,
-      stock,
+     
+      skus:stockByVariant,
       discount,
       purchase_price,
     };
@@ -323,20 +358,42 @@ export const editProduct = async (formData, id) => {
     throw new Error('Error editing Product');
   }
 };
+// export const fetchProducts = async (page = 1, limit = 12) => {
+//   await connectMongoDB();
+  
+  
+//   const totalProducts = await Product.countDocuments();
+  
+  
+//   const products = await Product.find()
+//     .skip((page - 1) * limit)
+//     .limit(limit);
+  
+//   const totalPages = Math.ceil(totalProducts / limit);
+  
+//   return { products, totalPages };
+// };
 export const fetchProducts = async (page = 1, limit = 12) => {
-  await connectMongoDB();
-  
-  // Count total products for pagination
-  const totalProducts = await Product.countDocuments();
-  
-  // Fetch paginated products
-  const products = await Product.find()
-    .skip((page - 1) * limit)
-    .limit(limit);
-  
-  const totalPages = Math.ceil(totalProducts / limit);
-  
-  return { products, totalPages };
+  try {
+    await connectMongoDB();
+
+    // Count total products for pagination
+    const totalProducts = await Product.countDocuments();
+
+    // Fetch paginated products
+    const products = await Product.find()
+      .sort({ createdAt: -1 }) // Sort by most recent products
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean();
+
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    return { products, totalPages };
+  } catch (error) {
+    console.error("Error fetching products from database:", error);
+    throw error;
+  }
 };
 export const fetchOrders = async (page = 1, limit = 12) => {
   await connectMongoDB();
@@ -397,8 +454,8 @@ export const fetchSingleProduct = async (id) => {
   await connectMongoDB();
   
   // Fetch paginated products
-  const product = await Product.findById(id)
-  console.log(id)
+  const product = await Product.findById(id).lean()
+  console.log(product)
   
   return {product};
 };
@@ -436,6 +493,7 @@ export const getOrder = async (id) => {
       image: item.image,
       stock: item.stock,
     })),
+    delivery_charge: order.delivery_charge,
     total_price: order.total_price,
     payment_method: order.payment_method,
     payment_status: order.payment_status,
@@ -546,6 +604,18 @@ export async function fetchProduct() {
 
   return { products: plainProducts };
 }
+export async function fetch12Product() {
+  await connectMongoDB();
+  
+  const products = await Product.find()
+    .sort({ createdAt: -1 }) // Sort by creation date in descending order
+    .limit(12);               // Limit to the last 12 products
+  
+  // Manually convert to plain objects
+  const plainProducts = products.map(product => product.toObject());
+
+  return { products: plainProducts };
+}
 export const fetchProductByCategory = async (category) => {
   await connectMongoDB();
   
@@ -648,7 +718,14 @@ export const getCategories = async () => {
     // Fetch all categories
     const categories = await Category.find().lean(); // .lean() to get plain objects
 
-    return {categories};
+    return {
+      categories: categories.map(item => ({
+        _id: item._id.toString(), // Convert ObjectId to string
+        category_name: item.category_name,
+        category_image: item.category_image,
+        
+      })),
+    };
   } catch (error) {
     console.error('Error fetching categories:', error);
     throw new Error('Failed to fetch categories');

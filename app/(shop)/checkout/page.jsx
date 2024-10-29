@@ -3,7 +3,7 @@ import { Context } from "@/provider/ContextProvider";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { CartContext } from "@/provider/CartContext";
 import { createOrder, reduceProductStock } from "@/app/(admin)/sallu_admin/actions";
@@ -20,6 +20,7 @@ const Checkout = () => {
   const { toast } = useToast();
   const { form } = useContext(Context);
   const router = useRouter();
+  console.log(deliveryCharge)
   const [selectedOption, setSelectedOption] = useState("inside_dhaka");
   const { childSizes, totalSizes, title, price, images, adultSizes, model } =
     form;
@@ -34,7 +35,7 @@ const Checkout = () => {
     paymentMethod: "Cash",
     user:user?._id,
   });
-  console.log(formData?.cart)
+  console.log(formData)
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -42,6 +43,12 @@ const Checkout = () => {
       [name]: value,
     });
   };
+  useEffect(() => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      delivery_charge: deliveryCharge,
+    }));
+  }, [deliveryCharge]);
   const handleSubmit = async (e) => {
   
     // Create FormData object and append fields
@@ -57,12 +64,12 @@ const Checkout = () => {
     
     // Assuming cart is an array of objects, we need to stringify it before appending
     formDataToSubmit.append('cart', JSON.stringify(formData.cart));
-    console.log(formDataToSubmit)
+    
     try {
       // Call the server action to handle order submission or update
       await createOrder(formDataToSubmit);
       for (const item of formData?.cart) {
-        await reduceProductStock(item.product, item.quantity);
+        await reduceProductStock(item.product,item.sku, item.quantity);
       } // Assuming `submitOrder` is the function handling the request
       emptyCart();
       
@@ -220,6 +227,7 @@ const Checkout = () => {
                       type="radio"
                       name="shipping"
                       value="inside_dhaka"
+                      selected
                       checked={selectedOption === "inside_dhaka"}
                       onChange={() => {
                         setSelectedOption("inside_dhaka");
@@ -394,11 +402,11 @@ const Checkout = () => {
                       <div>
                         <div className="leading-5">
                           <p className="font-semibold not-italic">
-                            ${cartItem.price * cartItem.quantity.toFixed(2)}
+                            ৳{cartItem.price * cartItem.quantity.toFixed(2)}
                           </p>
                           <small className="text-gray-400">
                             {" "}
-                            ${cartItem.price} / per item{" "}
+                            ৳{cartItem.price} / per item{" "}
                           </small>
                         </div>
                       </div>

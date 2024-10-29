@@ -84,7 +84,7 @@ const ProductCategrory = () => {
   // Pagination logic
   const indexOfLastCategory = currentPage * itemsPerPage;
   const indexOfFirstCategory = indexOfLastCategory - itemsPerPage;
-  const currentCategories = categories?.slice(indexOfFirstCategory, indexOfLastCategory);
+  const currentCategories = categories?.slice?.(indexOfFirstCategory, indexOfLastCategory);
 
   const totalPages = Math.ceil(categories.length / itemsPerPage);
 

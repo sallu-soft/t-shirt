@@ -7,7 +7,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";// Adjust import 
 import { deleteProduct, fetchOrders } from "../actions";
 import { MdDeleteOutline } from "react-icons/md";
 import { BiEdit, BiSolidWatch } from "react-icons/bi";
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaFileInvoice } from "react-icons/fa";
 // Import the fetchProducts function
 
 export default async function OrdersList({ searchParams }) {
@@ -30,6 +30,7 @@ export default async function OrdersList({ searchParams }) {
                  <table className="min-w-full border-collapse border border-gray-200">
                  <thead>
                    <tr className="bg-gray-200">
+                     <th className="border border-gray-300 px-4 py-2">Order ID</th>
                      <th className="border border-gray-300 px-4 py-2">Name</th>
                      <th className="border border-gray-300 px-4 py-2">Phone</th>
                      <th className="border border-gray-300 px-4 py-2">Address</th>
@@ -43,6 +44,7 @@ export default async function OrdersList({ searchParams }) {
                    {orders.map((order) => (
                      <tr key={order._id.toString()} className="hover:bg-gray-100">
                        
+                       <td className="border border-gray-300 px-4 py-2">{order?._id?.toString()?.slice(0,8)}</td>
                        <td className="border border-gray-300 px-4 py-2">{order.name}</td>
                        <td className="border border-gray-300 px-4 py-2">{order.mobile_no}</td>
                        <td className="border border-gray-300 px-4 py-2">{order.address}</td>
@@ -52,16 +54,20 @@ export default async function OrdersList({ searchParams }) {
                        <td className="border justify-center border-gray-300 py-2 flex gap-x-2">
 
                          <Link href={`/sallu_admin/orders_list/${order._id.toString()}`} className="">
-                         <Button variant="" className="text-white text-2xl bg-orange-500 p-2"><FaEye /></Button>
+                         <Button variant="" className="text-white text-xl bg-orange-500 p-1"><FaEye /></Button>
                            
                          </Link>
                          <Link href={`/sallu_admin/edit-product/${order._id.toString()}`} className="">
-                         <Button variant="" type="submit" className="text-white text-2xl bg-green-500 p-2"><BiEdit/></Button>
+                         <Button variant="" type="submit" className="text-white text-xl bg-green-500 p-1"><BiEdit/></Button>
+                           
+                         </Link>
+                         <Link href={`/Invoice/${order._id.toString()}`} className="">
+                         <Button variant="" type="submit" className="text-white text-xl bg-yellow-500 p-1"><FaFileInvoice /></Button>
                            
                          </Link>
                          <form action={deleteProduct}>
                            <input type="hidden" name="id" value={order._id.toString()} />
-                           <Button variant="destructive" type="submit" className="text-white text-2xl p-2">
+                           <Button variant="destructive" type="submit" className="text-white text-xl p-1">
                              <MdDeleteOutline/>
                            </Button>
                          </form>
