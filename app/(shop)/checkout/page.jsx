@@ -120,7 +120,7 @@ const Checkout = () => {
   };
   if(user?.name){
   return (
-    <div className="w-[70%] mx-auto mt-10">
+    <div className="md:w-[70%] w-[95%] mx-auto mt-3 md:mt-10">
       <div className="flex flex-wrap gap-x-5">
         <div className="w-[100%] md:w-[48%] flex flex-col gap-y-2">
           <div className=" shadow-xl border border-primary_color p-6 rounded-lg">
@@ -156,12 +156,14 @@ const Checkout = () => {
                   আপনার ঠিকানা <span className="text-red-600">*</span>
                 </label>
                 <div class="mt-2">
-                  <input
+                  <textarea
+                    col="3"
+                    rows="3"
                     type="text"
                     name="address"
                     id="address"
                     autocomplete="given-name"
-                    class="block w-full rounded-md border-0 h-12 text-lg text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 px-3"
+                    class="block w-full rounded-md border-0 min:h-12 text-lg text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 px-3"
                     placeholder="আপনার সম্পূর্ন ঠিকানা লিখুন"
                     value={formData.address}
                     onChange={handleInputChange}

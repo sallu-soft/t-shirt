@@ -11,9 +11,9 @@ const RecentProducts = async () => {
   
   const {products} = await fetch12Product()
   return (
-    <div className="w-full">
+    <div className="w-full items-center flex justify-center">
      
-      <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-col-1 gap-3">
+      <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-col-2 gap-3">
         {products?.map((product, ind) => (
           <ProductCard key={product._id} product={product} /> 
         ))}

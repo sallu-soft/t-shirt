@@ -146,11 +146,10 @@ const Navbar = () => {
       )}
           {/* ========== Searchfield ========== */}
             </div>
-        <div className="w-full items-center text-primary_color md:w-3/12 md:flex justify-end gap-4 hidden">
-          <Search className="font-semibold text-3xl cursor-pointer" />
+        <div className={`w-full items-center text-primary_color md:w-3/12 md:flex justify-end gap-4 hidden ${state?'block':'hidden'}`}>
           <Link href={'/cart'} className="relative">
-            <ShoppingCart className="font-semibold relative text-3xl cursor-pointer"/>
-            <p className="bg-primary_color rounded-full w-fit h-6 flex items-center justify-center p-2 absolute bottom-3 left-3  text-white">{cart?.cartItems?.length || 0}</p>
+            <ShoppingCart className="font-semibold relative text-3xl cursor-pointer mr-3"/>
+            <p className="bg-primary_color rounded-full w-fit h-6 flex items-center justify-center p-2 absolute bottom-3 left-3 text-white">{cart?.cartItems?.length || 0}</p>
           </Link>
           {user?._id && user?.role=="user" ?<>
           <h2 className="text-primary_color text-lg ml-2 font-semibold">{user?.name}</h2>
@@ -182,7 +181,7 @@ const Navbar = () => {
           </Link>
           <Link href={'/login'} className="relative">
             
-            <p className=" rounded-full w-fit h-6 flex items-center justify-center p-4   text-white">Sign In</p>
+            <p className=" rounded-full w-fit h-6 flex items-center justify-center p-4   text-white border-2 border-primary_color ">Sign In</p>
           </Link></>}
           
         </div>
@@ -191,3 +190,179 @@ const Navbar = () => {
   );
 };
 export default Navbar;
+
+
+
+
+// "use client";
+
+// import { useContext, useEffect, useState } from "react";
+// import Link from "next/link";
+// import { Menu, ShoppingCart } from "lucide-react";
+// import { HiOutlineSearch } from "react-icons/hi";
+// import { RxAvatar } from "react-icons/rx";
+// import Cookies from "js-cookie";
+// import { CartContext } from "@/provider/CartContext";
+// import { UserContext } from "@/provider/UsersContext";
+// import { Context } from "@/provider/ContextProvider";
+// import SearchProducts from "./SearchProducts";
+// import { fetchProductByTitle } from "../(admin)/sallu_admin/actions";
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuLabel,
+//   DropdownMenuSeparator,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
+// import { Button } from "@/components/ui/button";
+
+// const Navbar = () => {
+//   const [state, setState] = useState(false);
+//   const { cart } = useContext(CartContext);
+//   const [searchQuery, setSearchQuery] = useState("");
+//   const [filteredProducts, setFilteredProducts] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const { user, setUser } = useContext(UserContext);
+//   const { products } = useContext(Context);
+
+//   const menus = [{ title: "Products", path: "/search/products" }];
+
+//   const logoutUser = () => {
+//     localStorage.removeItem("user");
+//     Cookies.remove("session");
+//     setUser(null);
+//   };
+
+//   const handleSearch = (e) => {
+//     setSearchQuery(e.target.value);
+//   };
+
+//   useEffect(() => {
+//     let isMounted = true;
+//     const debounceTimeout = setTimeout(() => {
+//       const fetchSearchedProducts = async () => {
+//         if (!searchQuery) return;
+//         setLoading(true);
+//         try {
+//           const { products } = await fetchProductByTitle(searchQuery);
+//           if (isMounted) setFilteredProducts(products);
+//         } catch (error) {
+//           console.error("Error fetching products:", error);
+//         } finally {
+//           if (isMounted) setLoading(false);
+//         }
+//       };
+
+//       if (searchQuery) fetchSearchedProducts();
+//       else setFilteredProducts([]);
+//     }, 300);
+
+//     return () => {
+//       clearTimeout(debounceTimeout);
+//       isMounted = false;
+//     };
+//   }, [searchQuery]);
+
+//   return (
+//     <nav className="bg-secondary_color w-full border-b shadow-lg sticky top-0 z-50">
+//       <div className="max-w-screen-2xl mx-auto flex items-center justify-between px-4 md:px-8">
+//         {/* Logo and Hamburger Menu */}
+//         <div className="flex items-center justify-between w-full md:w-auto py-3">
+//           <Link href="/">
+//             <h1 className="text-2xl font-semibold text-primary_color">Sallu.com.bd</h1>
+//           </Link>
+//           <button
+//             className="text-primary_color md:hidden p-2 focus:border-gray-400 rounded-md"
+//             onClick={() => setState(!state)}
+//           >
+//             <Menu />
+//           </button>
+//         </div>
+
+//         {/* Search Bar */}
+//         <div className={`flex items-center w-full md:w-2/5 bg-white rounded-md h-10 relative ${state ? 'block' : 'hidden md:flex'}`}>
+//           <input
+//             type="text"
+//             placeholder="Search your products"
+//             value={searchQuery}
+//             onChange={handleSearch}
+//             className="h-full w-full pl-2 pr-10 rounded-md text-base text-black border-transparent focus:border-amazon_yellow outline-none"
+//           />
+//           <span className="absolute right-2 text-2xl text-black bg-amazon_yellow p-1 rounded-md">
+//             <HiOutlineSearch />
+//           </span>
+//           {searchQuery && (
+//             <div className="absolute top-12 left-0 w-full max-h-96 bg-gray-200 rounded-lg overflow-y-auto">
+//               {loading ? (
+//                 <div className="flex items-center justify-center py-10">
+//                   <p className="text-xl font-semibold">Loading products...</p>
+//                 </div>
+//               ) : filteredProducts?.length ? (
+//                 filteredProducts.map((item) => (
+//                   <Link
+//                     key={item._id}
+//                     href={`products/${item._id}`}
+//                     className="flex items-center gap-4 border-b border-gray-400 p-2"
+//                     onClick={() => setSearchQuery("")}
+//                   >
+//                     <SearchProducts item={item} />
+//                   </Link>
+//                 ))
+//               ) : (
+//                 <div className="flex items-center justify-center py-10 bg-gray-50 rounded-lg shadow-lg">
+//                   <p className="text-xl font-semibold animate-bounce">
+//                     No products found, please try another search.
+//                   </p>
+//                 </div>
+//               )}
+//             </div>
+//           )}
+//         </div>
+
+//         {/* Right Side Icons and Dropdown */}
+//         <div className={`flex items-center ${state ? "block" : "hidden"} md:flex md:items-center`}>
+//           <Link href="/cart" className="relative text-3xl mr-3">
+//             <ShoppingCart className="text-primary_color"/>
+//             <span className="absolute bottom-3 left-3 bg-primary_color text-white text-xs rounded-full p-1">
+//               {cart?.cartItems?.length || 0}
+//             </span>
+//           </Link>
+//           {user ? (
+//             <>
+//               <h2 className="text-lg font-semibold text-primary_color">{user.name}</h2>
+//               <DropdownMenu>
+//                 <DropdownMenuTrigger asChild>
+//                   <Button variant="link">
+//                     <RxAvatar className="text-3xl text-primary_color" />
+//                   </Button>
+//                 </DropdownMenuTrigger>
+//                 <DropdownMenuContent className="w-56">
+//                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
+//                   <DropdownMenuSeparator />
+//                   <DropdownMenuItem>
+//                     <Link href="/my_orders">My Orders</Link>
+//                   </DropdownMenuItem>
+//                   <DropdownMenuSeparator />
+//                   <DropdownMenuItem onSelect={logoutUser}>Logout</DropdownMenuItem>
+//                 </DropdownMenuContent>
+//               </DropdownMenu>
+//             </>
+//           ) : (
+//             <>
+//               <Link href="/register" className="p-4 text-white bg-primary_color rounded-full">
+//                 Register
+//               </Link>
+//               <Link href="/login" className="p-4 text-primary_color border-2 border-primary_color rounded-full">
+//                 Sign In
+//               </Link>
+//             </>
+//           )}
+//         </div>
+//       </div>
+//     </nav>
+//   );
+// };
+
+// export default Navbar;
+

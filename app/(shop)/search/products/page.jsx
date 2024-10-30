@@ -20,7 +20,7 @@ export default async function ProductsPage({ searchParams }) {
     } else {
       return (
         <div className="w-full mt-2 mx-auto">
-           <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-col-1 gap-3">
+           <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-col-1 gap-3 justify-center">
          {products?.map((product, ind) => (
            <ProductCard key={product._id} product={product} /> 
          ))}

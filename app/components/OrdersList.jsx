@@ -24,7 +24,7 @@ const OrdersList = () => {
         };
 
         fetchedOrders(); // Make sure to call the async function
-    }, [user]); // Only re-run when the user changes
+    }, [user,orders]); // Only re-run when the user changes
     if (user && user?.name){
     return (
         <>

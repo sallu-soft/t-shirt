@@ -48,7 +48,7 @@ function Banner() {
     return () => clearInterval(interval); // Clean up on unmount
   }, [currentIndex]); 
   return (
-    <div className=' h-[520px] w-full m-auto object-contain relative group'>
+    <div className='h-[320px] md:h-[520px] w-full m-auto object-contain relative group'>
       <div
         style={{ backgroundImage: `url(${slides[currentIndex].url})` }}
         className='w-full h-full bg-center bg-cover duration-500'
