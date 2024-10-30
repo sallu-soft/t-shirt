@@ -78,7 +78,7 @@ export const createProduct = async (formData) => {
     const stockByVariant = stockByVariantString ? JSON.parse(stockByVariantString) : [];
     // Parse sizes and colors (sent as JSON strings)
    
-
+    
     // Handle image uploads
     const images = formData.getAll('images'); // Retrieve all image files from formData
     if (!images || images.length === 0) {
@@ -184,36 +184,6 @@ export const createOrder = async (formData) => {
     throw new Error('Error creating Order');
   }
 };
-// export const reduceProductStock = async (productId, quantityToSubtract) => {
-//   try {
-//     await connectMongoDB();
-
-   
-//     const product = await Product.findById(productId);
-
-//     if (!product) {
-//       throw new Error('Product not found');
-//     }
-
-    
-//     if (product.stock < quantityToSubtract) {
-//       throw new Error('Insufficient stock for this product');
-//     }
-
-    
-//     product.stock -= quantityToSubtract;
-
-    
-//     const updatedProduct = await product.save();
-
-//     console.log('Product stock updated:', updatedProduct);
-
-//     return updatedProduct.toObject(); // Return the updated product object
-//   } catch (error) {
-//     console.error('Error updating product stock:', error);
-//     throw new Error('Error updating product stock');
-//   }
-// };
 
 export const reduceProductStock = async (productId, skuData, quantityToSubtract) => {
   try {
@@ -254,6 +224,7 @@ export const reduceProductStock = async (productId, skuData, quantityToSubtract)
     throw new Error('Error updating SKU stock');
   }
 };
+
 export const editProduct = async (formData, id) => {
   console.log('Server action: editProduct function called');
   console.log('Received formData:', formData);
@@ -261,118 +232,83 @@ export const editProduct = async (formData, id) => {
   try {
     await connectMongoDB();
 
-    // Find the product by its ID
     const product = await Product.findById(id);
     if (!product) {
       throw new Error('Product not found');
     }
 
-    // Extract form fields from formData
     const title = formData.get('title') || product.title;
     const description = formData.get('description') || product.description;
     const price = parseFloat(formData.get('price')) || product.price;
     const category = formData.get('category') || product.category;
     const discount = formData.get('discount') || product.discount;
     const purchase_price = formData.get('purchase_price') || product.purchase_price;
-   
 
-    // Parse sizes and colors (sent as JSON strings)
-   
     const stockByVariantString = formData.get('skus');
-    const stockByVariant = stockByVariantString ? JSON.parse(stockByVariantString) : [];
+    console.log('stockByVariantString:', stockByVariantString);
 
-    
+    const stockByVariant = stockByVariantString ? JSON.parse(stockByVariantString) : product.skus || [];
 
-    // Handle image uploads
-    const images = formData.getAll('images'); // Retrieve all image files from formData
-    let imageUrls = [...product.images]; // Start with existing images
+    const images = formData.getAll('images');
+    let imageUrls = [...product.images];
+    const removedImages = formData.getAll('removedImages') || []; 
 
-    // Track images to be removed
-    const removedImages = formData.getAll('removedImages') || []; // Get removed images from formData
+    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
 
-    // Remove the images marked for deletion
     if (removedImages.length > 0) {
       for (const removedImage of removedImages) {
-        // Remove from imageUrls array
-        imageUrls = imageUrls.filter((url) => url !== removedImage);
+        if (typeof removedImage === 'string') {
+          imageUrls = imageUrls.filter((url) => url !== removedImage);
 
-        // Delete the image from the filesystem
-        const filePath = path.join(uploadsDir, path.basename(removedImage));
-        try {
-          await unlink(filePath); // Delete the file from filesystem
-          console.log(`Deleted removed image: ${filePath}`);
-        } catch (err) {
-          console.error(`Error deleting image: ${filePath}`, err);
+          const filePath = path.join(uploadsDir, path.basename(removedImage));
+          try {
+            await unlink(filePath);
+            console.log(`Deleted removed image: ${filePath}`);
+          } catch (err) {
+            console.error(`Error deleting image: ${filePath}`, err);
+          }
         }
       }
     }
 
-    // Process new images and add them
     if (images && images.length > 0) {
       for (const image of images) {
         if (image instanceof File) {
-          // Create a unique file name
           const fileName = `${Date.now()}-${image.name}`;
           const filePath = path.join(uploadsDir, fileName);
 
-          // Read the file data as a buffer
           const buffer = Buffer.from(await image.arrayBuffer());
-
-          // Write the buffer to a file on the local filesystem
           await writeFile(filePath, buffer);
-
-          // Store the image URL (relative path)
           imageUrls.push(`/uploads/${fileName}`);
         }
       }
     }
 
-    // Prepare the updated product data
     const updatedProductData = {
       title,
       description,
       price,
-      images: imageUrls, // Updated images (kept ones + new ones)
+      images: imageUrls,
       category,
-     
-      skus:stockByVariant,
+      skus: stockByVariant,
       discount,
       purchase_price,
     };
 
-    // Update the product in MongoDB
     const updatedProduct = await Product.findByIdAndUpdate(id, updatedProductData, { new: true });
     console.log('Product updated:', updatedProduct);
 
-    revalidatePath("/sallu_admin/product_list"); // Revalidate the product list page after the update
+    revalidatePath("/sallu_admin/product_list");
 
-    // Convert the Mongoose document to a plain object before returning
     const plainProduct = updatedProduct.toObject();
-
-    // Optionally remove any non-serializable properties, like __v or _id if needed
     const { __v, _id, createdAt, ...returnableProduct } = plainProduct;
 
-    return returnableProduct; // Return the plain product object without Mongoose properties
+    return returnableProduct;
   } catch (error) {
     console.error('Error editing product:', error);
     throw new Error('Error editing Product');
   }
 };
-// export const fetchProducts = async (page = 1, limit = 12) => {
-//   await connectMongoDB();
-  
-  
-//   const totalProducts = await Product.countDocuments();
-  
-  
-//   const products = await Product.find()
-//     .skip((page - 1) * limit)
-//     .limit(limit);
-  
-//   const totalPages = Math.ceil(totalProducts / limit);
-  
-//   return { products, totalPages };
-// };
 export const fetchProducts = async (page = 1, limit = 12) => {
   try {
     await connectMongoDB();
