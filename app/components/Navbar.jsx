@@ -128,7 +128,7 @@ const Navbar = () => {
                 <Link
                   key={item._id}
                   className="w-full border-b-[1px] border-b-gray-400 flex items-center gap-4"
-                  href={`products/${item._id}`}
+                  href={`/products/${item._id}`}
                   onClick={() => setSearchQuery("")}
                 >
                   <SearchProducts item={item} />

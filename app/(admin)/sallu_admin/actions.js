@@ -81,24 +81,24 @@ export const createProduct = async (formData) => {
     
     // Handle image uploads
     const images = formData.getAll('images'); // Retrieve all image files from formData
-    if (!images || images.length === 0) {
-      throw new Error('Images array cannot be empty');
-    }
-
-    // Save uploaded images locally
     const imageUrls = [];
-    for (const image of images) {
-      const fileName = `${Date.now()}-${image.name}`; // Create a unique file name
-      const filePath = path.join(uploadsDir, fileName); // Define the path to save the file
 
-      // Use the File API to read the file and write it to the local filesystem
-      const buffer = await image.arrayBuffer(); // Read the file as a buffer
-      fs.writeFileSync(filePath, Buffer.from(buffer)); // Write the buffer to a file
+    if (images && images.length > 0) {
+      const uploadsDir = '/path/to/uploads'; // Define your upload directory path
 
-      // Store the image URL (relative path)
-      imageUrls.push(`/uploads/${fileName}`);
+      for (const image of images) {
+        const fileName = `${Date.now()}-${image.name}`; // Create a unique file name
+        const filePath = path.join(uploadsDir, fileName); // Define the path to save the file
+
+        const buffer = await image.arrayBuffer(); // Read the file as a buffer
+        fs.writeFileSync(filePath, Buffer.from(buffer)); // Write the buffer to a file
+
+        // Store the image URL (relative path)
+        imageUrls.push(`/uploads/${fileName}`);
+      }
+    } else {
+      console.log("No images provided, skipping image upload.");
     }
-
     // Prepare the product data
     const productData = {
       title,
@@ -125,7 +125,7 @@ export const createProduct = async (formData) => {
     return returnableProduct; // Return the plain product object without Mongoose properties
   } catch (error) {
     console.error('Error creating product:', error);
-    throw new Error('Error creating Product');
+    throw new Error('Error creating Product', error);
   }
 };
 
@@ -225,6 +225,7 @@ export const reduceProductStock = async (productId, skuData, quantityToSubtract)
   }
 };
 
+
 export const editProduct = async (formData, id) => {
   console.log('Server action: editProduct function called');
   console.log('Received formData:', formData);
@@ -244,14 +245,24 @@ export const editProduct = async (formData, id) => {
     const discount = formData.get('discount') || product.discount;
     const purchase_price = formData.get('purchase_price') || product.purchase_price;
 
+    // const stockByVariantString = formData.get('skus');
+    // const stockByVariant = stockByVariantString ? JSON.parse(stockByVariantString) : product.skus || [];
     const stockByVariantString = formData.get('skus');
-    console.log('stockByVariantString:', stockByVariantString);
+let stockByVariant;
 
-    const stockByVariant = stockByVariantString ? JSON.parse(stockByVariantString) : product.skus || [];
-
+if (stockByVariantString && stockByVariantString.trim() !== "") {
+  try {
+    stockByVariant = JSON.parse(stockByVariantString);
+  } catch (error) {
+    console.error("Error parsing stockByVariantString:", error);
+    stockByVariant = product.skus || []; // Fallback to existing product skus if parsing fails
+  }
+} else {
+  stockByVariant = product.skus || []; // Default to existing skus if skus field is not provided
+}
     const images = formData.getAll('images');
     let imageUrls = [...product.images];
-    const removedImages = formData.getAll('removedImages') || []; 
+    const removedImages = formData.getAll('removedImages') || [];
 
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
 
@@ -306,9 +317,12 @@ export const editProduct = async (formData, id) => {
     return returnableProduct;
   } catch (error) {
     console.error('Error editing product:', error);
-    throw new Error('Error editing Product');
+    throw new Error('Error editing Product', error);
   }
 };
+
+
+
 export const fetchProducts = async (page = 1, limit = 12) => {
   try {
     await connectMongoDB();
