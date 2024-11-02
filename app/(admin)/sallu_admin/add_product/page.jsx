@@ -13,7 +13,7 @@ const AddProduct = () => {
     price: '',
     discount: '',
     purchase_price: '',
-    
+    stock:'',
     images: [],
     category: '',
     skus: [],
@@ -78,6 +78,7 @@ const AddProduct = () => {
     formDataToSubmit.append("category", formData.category);
     formDataToSubmit.append("discount", formData.discount);
     formDataToSubmit.append("purchase_price", formData.purchase_price);
+    formDataToSubmit.append("stock", formData.stock);
     
     // Convert sizes, colors, and stock_by_variant arrays to JSON strings before appending
    
@@ -223,6 +224,20 @@ const AddProduct = () => {
           type="number"
           placeholder="Product Discount"
           value={formData.discount}
+          onChange={handleChange}
+          className="mt-1 block w-full"
+        />
+      </div>
+      <div>
+        <label htmlFor="stock" className="block text-sm font-medium text-gray-700">
+          Product Stock
+        </label>
+        <Input
+          id="stock"
+          name="stock"
+          type="number"
+          placeholder="Product Stock"
+          value={formData.stock}
           onChange={handleChange}
           className="mt-1 block w-full"
         />

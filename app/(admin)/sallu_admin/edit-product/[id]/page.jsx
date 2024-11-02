@@ -6,6 +6,7 @@ import { RxCross2 } from 'react-icons/rx'
 import { toast } from '@/components/ui/use-toast'
 // import { createProduct, getCategories } from '../actions'
 import { editProduct, fetchSingleProduct, getCategories } from '../../actions'
+import Image from 'next/image'
 
 const EditProduct = ({params}) => {
   const [formData, setFormData] = useState([])
@@ -84,6 +85,7 @@ const handleRemoveImage = (index) => {
         formDataToSubmit.append('category', formData.category);
         formDataToSubmit.append('discount', formData.discount);
         formDataToSubmit.append('purchase_price', formData.purchase_price);
+        formDataToSubmit.append('stock', formData.stock);
       
         // Add sizes and colors as JSON
         
@@ -243,6 +245,20 @@ const handleRemoveImage = (index) => {
           className="mt-1 block w-full"
         />
       </div>
+      {/* <div>
+        <label htmlFor="stock" className="block text-sm font-medium text-gray-700">
+          Product Stock
+        </label>
+        <Input
+          id="stock"
+          name="stock"
+          type="number"
+          placeholder="Product Stock"
+          value={formData?.stock}
+          onChange={handleChange}
+          className="mt-1 block w-full"
+        />
+      </div> */}
       
 
       
@@ -284,7 +300,8 @@ const handleRemoveImage = (index) => {
       <ul className="flex gap-x-2">
         {formData?.images.map((image, index) => (
           <li className="bg-primary_color text-white p-1 rounded-lg flex items-center" key={index}>
-            <span>Image {index + 1}</span>
+          
+            <Image width="100" height="100" src={image} alt={index+image} />
             <button
               type="button"
               className="ml-2 text-white hover:text-red-700"
@@ -299,6 +316,7 @@ const handleRemoveImage = (index) => {
     </div>
   )}
 </div>
+  
 <div className="col-span-3">
   <h3 className="text-lg font-semibold mt-4">Product Variants (SKU)</h3>
   <Button type="button" onClick={handleAddSKU} className="mt-2">Add Variant</Button>
@@ -309,14 +327,14 @@ const handleRemoveImage = (index) => {
         placeholder="Size"
         value={sku.size}
         onChange={(e) => handleSKUChange(index, 'size', e.target.value)}
-        required
+        
       />
       <Input
         type="text"
         placeholder="Color"
         value={sku.color}
         onChange={(e) => handleSKUChange(index, 'color', e.target.value)}
-        required
+        
       />
       <Input
         type="number"

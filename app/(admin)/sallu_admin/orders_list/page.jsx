@@ -8,6 +8,7 @@ import { deleteProduct, fetchOrders } from "../actions";
 import { MdDeleteOutline } from "react-icons/md";
 import { BiEdit, BiSolidWatch } from "react-icons/bi";
 import { FaEye, FaFileInvoice } from "react-icons/fa";
+import OrderTable from "@/app/components/OrderTable";
 // Import the fetchProducts function
 
 export default async function OrdersList({ searchParams }) {
@@ -17,7 +18,30 @@ export default async function OrdersList({ searchParams }) {
   try {
     // Call the fetchProducts function
     const { orders, totalPages } = await fetchOrders(page, limit);
-    
+    const plainOrders = orders.map(order => ({
+      // Convert ObjectId to string for each field
+      _id: order._id.toString(),
+      name: order.name,
+      address: order.address,
+      mobile_no: order.mobile_no,
+      total_price: order.total_price,
+      payment_method: order.payment_method,
+      payment_status: order.payment_status,
+      createdAt: order.createdAt.toISOString(), // Ensure date is a string
+      updatedAt: order.updatedAt.toISOString(),
+      ordered_items: order.ordered_items.map(item => ({
+        _id: item._id.toString(), // Convert each item's ObjectId
+        title: item.title,
+        color: item.color,
+        size: item.size,
+        quantity: item.quantity,
+        price: item.price,
+        stock: item.stock,
+        image: item.image,
+        product: item.product.toString(), // Convert product ID if it's ObjectId
+      })),
+    }));
+    console.log(plainOrders)
     if (orders.length === 0) {
       return <h1 className="text-red-500 text-3xl font-bold flex items-center justify-center h-screen">No Orders</h1>;
     } else {
@@ -27,57 +51,8 @@ export default async function OrdersList({ searchParams }) {
             <h2 className="my-2 font-semibold text-2xl text-primary_color">Orders</h2>
           <div className="overflow-x-auto">
               
-                 <table className="min-w-full border-collapse border border-gray-200">
-                 <thead>
-                   <tr className="bg-gray-200">
-                     <th className="border border-gray-300 px-4 py-2">Order ID</th>
-                     <th className="border border-gray-300 px-4 py-2">Name</th>
-                     <th className="border border-gray-300 px-4 py-2">Phone</th>
-                     <th className="border border-gray-300 px-4 py-2">Address</th>
-                     <th className="border border-gray-300 px-4 py-2">Payment Method</th>
-                     <th className="border border-gray-300 px-4 py-2">Payment Status</th>
-                     
-                     <th className="border border-gray-300 px-4 py-2">Actions</th>
-                   </tr>
-                 </thead>
-                 <tbody>
-                   {orders.map((order) => (
-                     <tr key={order._id.toString()} className="hover:bg-gray-100">
-                       
-                       <td className="border border-gray-300 px-4 py-2">{order?._id?.toString()?.slice(0,8)}</td>
-                       <td className="border border-gray-300 px-4 py-2">{order.name}</td>
-                       <td className="border border-gray-300 px-4 py-2">{order.mobile_no}</td>
-                       <td className="border border-gray-300 px-4 py-2">{order.address}</td>
-                       <td className="border border-gray-300 px-4 py-2">{order.payment_method}</td>
-                       <td className="border border-gray-300 px-4 py-2">{order.payment_status}</td>
-                       
-                       <td className="border justify-center border-gray-300 py-2 flex gap-x-2">
-
-                         <Link href={`/sallu_admin/orders_list/${order._id.toString()}`} className="">
-                         <Button variant="" className="text-white text-xl bg-orange-500 p-1"><FaEye /></Button>
-                           
-                         </Link>
-                         <Link href={`/sallu_admin/edit-product/${order._id.toString()}`} className="">
-                         <Button variant="" type="submit" className="text-white text-xl bg-green-500 p-1"><BiEdit/></Button>
-                           
-                         </Link>
-                         <Link href={`/Invoice/${order._id.toString()}`} className="">
-                         <Button variant="" type="submit" className="text-white text-xl bg-yellow-500 p-1"><FaFileInvoice /></Button>
-                           
-                         </Link>
-                         <form action={deleteProduct}>
-                           <input type="hidden" name="id" value={order._id.toString()} />
-                           <Button variant="destructive" type="submit" className="text-white text-xl p-1">
-                             <MdDeleteOutline/>
-                           </Button>
-                         </form>
-                       </td>
-                       
-                     </tr>
-                   ))}
-                 </tbody>
-               </table>
-     
+                 
+                   <OrderTable orders={plainOrders}/>
             {/* Pagination controls */}
             <div className="gap-3 items-center flex justify-center py-4">
               {/* Previous Button */}
