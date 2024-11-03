@@ -132,14 +132,85 @@ export async function editUserAction(userId, formData) {
 //   }
 // };
 
+// export const createProduct = async (formData) => {
+//   console.log('Server action: createProduct function called');
+//   console.log('Received formData:', formData);
+
+//   try {
+//     await connectMongoDB();
+//     console.log('Connected to MongoDB');
+
+//     const title = formData.get('title');
+//     const description = formData.get('description');
+//     const price = parseFloat(formData.get('price'));
+//     const category = formData.get('category');
+//     const discount = formData.get('discount');
+//     const purchase_price = formData.get('purchase_price');
+//     const stockOnly = formData.get('stock');
+
+//     const stockByVariantString = formData.get('skus');
+//     const stockByVariant = stockByVariantString ? JSON.parse(stockByVariantString) : [];
+//     const stock = stockByVariant.length > 0 ? stockByVariant : [{ sku: 'default', stock: stockOnly }];
+
+//     const images = formData.getAll('images');
+//     const imageUrls = [];
+
+//     if (images && images.length > 0) {
+//       const uploadsDir = path.join(__dirname, 'uploads'); // Set a valid uploads directory path
+
+//       // Ensure the uploads directory exists
+//       if (!fs.existsSync(uploadsDir)) {
+//         fs.mkdirSync(uploadsDir, { recursive: true });
+//       }
+
+//       for (const image of images) {
+//         const fileName = `${Date.now()}-${image.name}`;
+//         const filePath = path.join(uploadsDir, fileName);
+
+//         const buffer = await image.arrayBuffer();
+//         await fs.promises.writeFile(filePath, Buffer.from(buffer));
+
+//         imageUrls.push(`/uploads/${fileName}`);
+//       }
+//     } else {
+//       console.log("No images provided, skipping image upload.");
+//     }
+
+//     const productData = {
+//       title,
+//       description,
+//       price,
+//       images: imageUrls,
+//       category,
+//       discount,
+//       skus: stock,
+//       purchase_price
+//     };
+//     console.log(productData);
+
+//     const newProduct = await Product.create(productData);
+//     console.log('Product created:', newProduct);
+
+//     const plainProduct = newProduct.toObject();
+//     const { __v, _id, createdAt, ...returnableProduct } = plainProduct;
+
+//     return returnableProduct;
+//   } catch (error) {
+//     console.error('Error creating product:', error);
+//     throw new Error('Error creating Product', error);
+//   }
+// };
+
 export const createProduct = async (formData) => {
   console.log('Server action: createProduct function called');
   console.log('Received formData:', formData);
 
   try {
+    // Connect to MongoDB
     await connectMongoDB();
     console.log('Connected to MongoDB');
 
+    // Extract form data fields
     const title = formData.get('title');
     const description = formData.get('description');
     const price = parseFloat(formData.get('price'));
@@ -152,30 +223,40 @@ export const createProduct = async (formData) => {
     const stockByVariant = stockByVariantString ? JSON.parse(stockByVariantString) : [];
     const stock = stockByVariant.length > 0 ? stockByVariant : [{ sku: 'default', stock: stockOnly }];
 
+    // Handle image uploads
     const images = formData.getAll('images');
     const imageUrls = [];
 
     if (images && images.length > 0) {
-      const uploadsDir = path.join(__dirname, 'uploads'); // Set a valid uploads directory path
+      // Set upload directory
+      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
 
       // Ensure the uploads directory exists
       if (!fs.existsSync(uploadsDir)) {
         fs.mkdirSync(uploadsDir, { recursive: true });
       }
 
+      // Process and save each image
       for (const image of images) {
-        const fileName = `${Date.now()}-${image.name}`;
-        const filePath = path.join(uploadsDir, fileName);
+        try {
+          const fileName = `${Date.now()}-${image.name}`;
+          const filePath = path.join(uploadsDir, fileName);
 
-        const buffer = await image.arrayBuffer();
-        await fs.promises.writeFile(filePath, Buffer.from(buffer));
+          // Convert image file to Buffer and save it to the file system
+          const buffer = Buffer.from(await image.arrayBuffer());
+          await fs.promises.writeFile(filePath, buffer);
 
-        imageUrls.push(`/uploads/${fileName}`);
+          // Store the relative URL for the saved image
+          imageUrls.push(`/uploads/${fileName}`);
+        } catch (error) {
+          console.error(`Error writing file ${image.name}:`, error);
+        }
       }
     } else {
       console.log("No images provided, skipping image upload.");
     }
 
+    // Prepare product data
     const productData = {
       title,
       description,
@@ -184,13 +265,16 @@ export const createProduct = async (formData) => {
       category,
       discount,
       skus: stock,
-      purchase_price
+      purchase_price,
     };
-    console.log(productData);
 
+    console.log('Product data to be saved:', productData);
+
+    // Create and save product in database
     const newProduct = await Product.create(productData);
     console.log('Product created:', newProduct);
 
+    // Return the new product excluding metadata fields
     const plainProduct = newProduct.toObject();
     const { __v, _id, createdAt, ...returnableProduct } = plainProduct;
 
@@ -459,7 +543,7 @@ export const fetchSingleUser = async (id) => {
   
   // Fetch paginated products
   const user = await User.findById(id)
-  
+  console.log(id)
   
   return {user};
 };

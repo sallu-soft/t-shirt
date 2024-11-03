@@ -228,7 +228,7 @@ const AddProduct = () => {
           className="mt-1 block w-full"
         />
       </div>
-      <div>
+      {/* <div>
         <label htmlFor="stock" className="block text-sm font-medium text-gray-700">
           Product Stock
         </label>
@@ -241,7 +241,7 @@ const AddProduct = () => {
           onChange={handleChange}
           className="mt-1 block w-full"
         />
-      </div>
+      </div> */}
       
 
       
@@ -307,14 +307,14 @@ const AddProduct = () => {
                 placeholder="Size"
                 value={sku.size}
                 onChange={(e) => handleSKUChange(index, 'size', e.target.value)}
-                required
+                
               />
               <Input
                 type="text"
                 placeholder="Color"
                 value={sku.color}
                 onChange={(e) => handleSKUChange(index, 'color', e.target.value)}
-                required
+                
               />
               <Input
                 type="number"
