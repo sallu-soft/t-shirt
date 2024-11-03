@@ -13,7 +13,7 @@ export default async function Home() {
     <>
       <Banner/>
       <CategoryList/>
-      <div className="lg:w-[70%] md:w-[90%] w-[95%] mx-auto" >
+      <div className="xl:w-[70%] lg:w-[90%] w-[95%] mx-auto" >
       <h2 className="text-center font-semibold text-2xl my-3 text-primary_color">Our Latest Products</h2>
       <RecentProducts />
       <div className="flex items-center justify-center">

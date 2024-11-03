@@ -19,8 +19,8 @@ export default async function ProductsPage({ searchParams }) {
       return <h1 className="text-red-500 text-3xl font-bold flex items-center justify-center h-screen">No Products</h1>;
     } else {
       return (
-        <div className="w-full mt-2 mx-auto">
-           <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-col-1 gap-3 justify-center">
+        <div className="w-full flex justify-center items-center mt-2 flex-col">
+           <div className="grid items-center lg:grid-cols-4 md:grid-cols-3 gap-3 sm:grid-cols-2 grid-cols-2 justify-center">
          {products?.map((product, ind) => (
            <ProductCard key={product._id} product={product} /> 
          ))}

@@ -41,7 +41,6 @@ export default async function OrdersList({ searchParams }) {
         product: item.product.toString(), // Convert product ID if it's ObjectId
       })),
     }));
-    console.log(plainOrders)
     if (orders.length === 0) {
       return <h1 className="text-red-500 text-3xl font-bold flex items-center justify-center h-screen">No Orders</h1>;
     } else {

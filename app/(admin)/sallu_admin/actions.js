@@ -459,7 +459,7 @@ export const fetchSingleUser = async (id) => {
   
   // Fetch paginated products
   const user = await User.findById(id)
-  console.log(id)
+  
   
   return {user};
 };
