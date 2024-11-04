@@ -40,11 +40,15 @@ const OrdersList = () => {
                             <div className="mb-4">
                                 <div className="flex justify-between">
                                     <span className="font-medium text-gray-700">Total Price:</span>
-                                    <span className="text-indigo-600 font-semibold">${orderData.total_price}</span>
+                                    <span className="text-indigo-600 font-semibold">{(orderData.total_price) + (orderData?.delivery_charge)} tk</span>
                                 </div>
                                 <div className="flex justify-between mt-2">
                                     <span className="font-medium text-gray-700">Payment Method:</span>
                                     <span className="text-gray-800">{orderData.payment_method}</span>
+                                </div>
+                                <div className="flex justify-between mt-2">
+                                    <span className="font-medium text-gray-700">Delivery Status:</span>
+                                    <span className="text-gray-800">{orderData.payment_status}</span>
                                 </div>
                             </div>
         
@@ -56,14 +60,14 @@ const OrdersList = () => {
                                         <div>
                                             <p className="text-gray-800 font-semibold">{item.title}</p>
                                             <p className="text-gray-600 text-sm">{item.size} - {item.color}</p>
-                                            <p className="text-gray-800">{item.quantity} x ${item.price}</p>
+                                            <p className="text-gray-800">{item.quantity} x {item.price}</p>
                                         </div>
                                     </li>
                                 ))}
                             </ul>
                         </div>
                         <div className="bg-gray-100 p-4 flex justify-between items-center mt-auto">
-                            <span className="text-gray-500 text-sm">Order ID: {orderData._id}</span>
+                            <span className="text-gray-500 text-sm">Order ID: {orderData._id.slice(0,8)}</span>
                             <button className="text-indigo-600 hover:text-indigo-800 text-sm font-semibold">
                                 View Details
                             </button>

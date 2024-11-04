@@ -12,6 +12,8 @@ import Order from '@/models/Orders';
 import bcrypt from 'bcryptjs';
 import User from '@/models/User';
 import { cookies } from 'next/headers';
+import { sendPasswordResetEmail } from '@/lib/sendPasswordResetEmail';
+import { v4 as uuidv4 } from 'uuid';
 // Create the uploads directory if it doesn't exist
 const uploadsDir = path.join(process.cwd(), 'public/uploads');
 
@@ -59,147 +61,7 @@ export async function editUserAction(userId, formData) {
   // Convert the Mongoose document to a plain object before returning
   return updatedUser.toObject(); // Return the updated user object
 }
-// export const createProduct = async (formData) => {
-//   console.log('Server action: createProduct function called');
-//   console.log('Received formData:', formData);
 
-//   try {
-//     await connectMongoDB();
-//     console.log('Server action: createProduct function called');
-//     // Extract form fields from formData
-//     const title = formData.get('title');
-//     const description = formData.get('description');
-//     const price = parseFloat(formData.get('price'));
-//     const category = formData.get('category');
-//     const discount = formData.get('discount');
-//     const purchase_price = formData.get('purchase_price');
-//     const stockOnly = formData.get('stockonly');
-    
-//     const stockByVariantString = formData.get('skus');
-//     const stockByVariant = stockByVariantString ? JSON.parse(stockByVariantString) : [];
-//     // Set default stock if no SKU variants are provided
-//     const stock = stockByVariant.length > 0 ? stockByVariant : [{ sku: 'default', stock: stockOnly }]; // Default stock value (e.g., 100)
-//     // Parse sizes and colors (sent as JSON strings)
-   
-    
-//     // Handle image uploads
-//     const images = formData.getAll('images'); // Retrieve all image files from formData
-//     const imageUrls = [];
-
-//     if (images && images.length > 0) {
-//       const uploadsDir = '/path/to/uploads'; // Define your upload directory path
-
-//       for (const image of images) {
-//         const fileName = `${Date.now()}-${image.name}`; // Create a unique file name
-//         const filePath = path.join(uploadsDir, fileName); // Define the path to save the file
-
-//         const buffer = await image.arrayBuffer(); // Read the file as a buffer
-//         fs.writeFileSync(filePath, Buffer.from(buffer)); // Write the buffer to a file
-
-//         // Store the image URL (relative path)
-//         imageUrls.push(`/uploads/${fileName}`);
-//       }
-//     } else {
-//       console.log("No images provided, skipping image upload.");
-//     }
-//     // Prepare the product data
-//     const productData = {
-//       title,
-//       description,
-//       price,
-//       images: imageUrls, // Use the URLs of the saved images
-//       category,
-     
-//       discount,
-//       skus:stock,
-//       purchase_price
-//     };
-//     console.log(productData);
-//     // Create and save the product in MongoDB
-//     const newProduct = await Product.create(productData);
-//     console.log('Product created:', newProduct);
-
-//     // Convert the Mongoose document to a plain object before returning
-//     const plainProduct = newProduct.toObject(); // Convert to a plain object
-
-//     // Optionally remove any non-serializable properties, like __v or _id if needed
-//     const { __v, _id, createdAt, ...returnableProduct } = plainProduct;
-
-//     return returnableProduct; // Return the plain product object without Mongoose properties
-//   } catch (error) {
-//     console.error('Error creating product:', error);
-//     throw new Error('Error creating Product', error);
-//   }
-// };
-
-// export const createProduct = async (formData) => {
-//   console.log('Server action: createProduct function called');
-//   console.log('Received formData:', formData);
-
-//   try {
-//     await connectMongoDB();
-//     console.log('Connected to MongoDB');
-
-//     const title = formData.get('title');
-//     const description = formData.get('description');
-//     const price = parseFloat(formData.get('price'));
-//     const category = formData.get('category');
-//     const discount = formData.get('discount');
-//     const purchase_price = formData.get('purchase_price');
-//     const stockOnly = formData.get('stock');
-
-//     const stockByVariantString = formData.get('skus');
-//     const stockByVariant = stockByVariantString ? JSON.parse(stockByVariantString) : [];
-//     const stock = stockByVariant.length > 0 ? stockByVariant : [{ sku: 'default', stock: stockOnly }];
-
-//     const images = formData.getAll('images');
-//     const imageUrls = [];
-
-//     if (images && images.length > 0) {
-//       const uploadsDir = path.join(__dirname, 'uploads'); // Set a valid uploads directory path
-
-//       // Ensure the uploads directory exists
-//       if (!fs.existsSync(uploadsDir)) {
-//         fs.mkdirSync(uploadsDir, { recursive: true });
-//       }
-
-//       for (const image of images) {
-//         const fileName = `${Date.now()}-${image.name}`;
-//         const filePath = path.join(uploadsDir, fileName);
-
-//         const buffer = await image.arrayBuffer();
-//         await fs.promises.writeFile(filePath, Buffer.from(buffer));
-
-//         imageUrls.push(`/uploads/${fileName}`);
-//       }
-//     } else {
-//       console.log("No images provided, skipping image upload.");
-//     }
-
-//     const productData = {
-//       title,
-//       description,
-//       price,
-//       images: imageUrls,
-//       category,
-//       discount,
-//       skus: stock,
-//       purchase_price
-//     };
-//     console.log(productData);
-
-//     const newProduct = await Product.create(productData);
-//     console.log('Product created:', newProduct);
-
-//     const plainProduct = newProduct.toObject();
-//     const { __v, _id, createdAt, ...returnableProduct } = plainProduct;
-
-//     return returnableProduct;
-//   } catch (error) {
-//     console.error('Error creating product:', error);
-//     throw new Error('Error creating Product', error);
-//   }
-// };
 
 export const createProduct = async (formData) => {
   console.log('Server action: createProduct function called');
@@ -914,3 +776,60 @@ export const editCategory = async (id, formData) => {
     throw new Error('Error editing Category');
   }
 };
+
+// forgot password
+
+export async function forgotPasswordAction(emailOrPhone) {
+  try {
+    await connectMongoDB();
+    const user = await User.findOne({ $or: [{ email: emailOrPhone }, { phone: emailOrPhone }] });
+    if (!user) {
+      return { success: false, message: 'User not found' };
+    }
+
+    // Generate reset token and expiration
+    const resetToken = uuidv4();
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = Date.now() + 86400000; // 1 hour
+    await user.save();
+
+    // Send reset email (or SMS if using phone number)
+    await sendPasswordResetEmail(user.email, resetToken);
+
+    return { success: true, message: 'Password reset link sent' };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: 'Failed to send password reset link' };
+  }
+}
+
+export async function resetPasswordAction({ token, password }) {
+  try {
+    await connectMongoDB();
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+    
+    if (!user) {
+      console.log("Token mismatch or token expired");
+      console.log("Provided token:", token);
+      console.log("Token in database:", user?.resetPasswordToken);
+      console.log("Expiration time:", user?.resetPasswordExpires);
+      console.log("Current time:", new Date(Date.now()).toISOString());
+      return { success: false, message: 'Invalid or expired reset token' };
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    return { success: true, message: 'Password reset successful' };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: 'Failed to reset password' };
+  }
+}

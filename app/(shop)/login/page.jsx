@@ -177,6 +177,7 @@ const LoginForm = () => {
           Dont have an account?{' '}
           <Link href="/register" className="text-yellow-600 hover:underline">Register</Link>
         </p>
+        <Link href="/forgot-password" className="text-blue-600 hover:underline">Forgot Password?</Link>
       </div>
     </div>
   );

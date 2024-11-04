@@ -70,7 +70,7 @@ const SingleProduct = ({ params }) => {
       price: product.price - product?.discount,
       image: product.images[0],
       stock: product.stock,
-      quantity: 1, // set your quantity as needed
+      quantity: quantity, // set your quantity as needed
       size: selectedSize,
       color: selectedColor,
       sku: selectedSKU
