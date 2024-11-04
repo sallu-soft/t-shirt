@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { resetPasswordAction } from '@/app/(admin)/sallu_admin/actions';
 
@@ -27,24 +27,7 @@ const ResetPassword = () => {
   };
 
   return (
-    // <form onSubmit={handleSubmit}>
-    //   <label>New Password</label>
-    //   <input
-    //     type="password"
-    //     value={password}
-    //     onChange={(e) => setPassword(e.target.value)}
-    //     required
-    //   />
-    //   <label>Confirm Password</label>
-    //   <input
-    //     type="password"
-    //     value={confirmPassword}
-    //     onChange={(e) => setConfirmPassword(e.target.value)}
-    //     required
-    //   />
-    //   <button type="submit">Reset Password</button>
-    //   {error && <p className="error-message">{error}</p>}
-    // </form>
+    <Suspense fallback={<p>Loading...</p>}>
     <div className="flex items-center justify-center py-14 bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-3xl font-bold text-center text-primary_color mb-4">Reset Password</h2>
@@ -93,6 +76,7 @@ const ResetPassword = () => {
 
       </div>
     </div>
+    </Suspense>
   );
 };
 
