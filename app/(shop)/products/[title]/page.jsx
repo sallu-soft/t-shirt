@@ -15,23 +15,40 @@ const SingleProduct = ({ params }) => {
   const { products } = useContext(Context);
   const [product, setProduct] = useState({});
   const [myimg, setMyimg] = useState(product?.images?.[0]);
+  const [loading, setLoading] = useState(true);
 
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
   useEffect(() => {
     async function fetchProducts() {
+      setLoading(true);  // Start loading
       try {
         const { product } = await fetchSingleProduct(params.title);
         setProduct(product);
         setMyimg(product?.images?.[0]);
       } catch (error) {
         console.error('Failed to fetch product:', error);
+      } finally {
+        setLoading(false);  // Stop loading
       }
     }
 
     fetchProducts();
   }, [params.title]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        {/* CSS Spinner */}
+        <div className="spinner-border animate-spin inline-block w-12 h-12 border-4 border-t-primary_color border-gray-200 rounded-full" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+        {/* Text */}
+        <p className="ml-4 text-2xl text-primary_color font-semibold">Loading Product...</p>
+      </div>
+    );
+  }
 
   const availableSizes = [
     ...new Set(

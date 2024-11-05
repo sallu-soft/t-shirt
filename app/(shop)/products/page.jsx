@@ -5,6 +5,7 @@ import React from 'react'
 
 const ProductPage = async () => {
     const {products} = await fetchProduct();
+    
   return (
     <div className="text-black">
        <Shop products={products}/>

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import React, { useContext } from 'react'
 
 const ProductCard = ({product}) => {
+  
   const {addItemToCart, removeItemFromCart} = useContext(CartContext)
   const handleAddToCart = () => {
     addItemToCart({

@@ -10,7 +10,9 @@ const RecentProducts = async () => {
   // const [products, setProducts] = useState([]);
   
   const {products} = await fetch12Product()
+  
   return (
+    
     <div className="w-full items-center flex justify-center">
      
       <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-2 gap-3">

@@ -568,9 +568,26 @@ export async function fetchProduct() {
   const products = await Product.find();
   
   // Manually convert to plain objects
-  const plainProducts = products.map(product => product.toObject());
-
-  return { products: plainProducts };
+  // const plainProducts = products.map(product => product.toObject());
+  const serializedProducts = products.map((product) => ({
+    _id: product._id.toString(),
+    title: product.title,
+    description: product.description,
+    price: product.price,
+    discount: product.discount,
+    purchase_price: product.purchase_price,
+    images: product.images,
+    category: product.category,
+    createdAt: product.createdAt.toISOString(),
+    skus: product.skus.map((sku) => ({
+      color: sku.color,
+      size: sku.size,
+      sku: sku.sku,
+      stock: sku.stock,
+    })),
+    stock: product.stock,
+  }));
+  return { products: serializedProducts };
 }
 export async function fetch12Product() {
   await connectMongoDB();
@@ -580,9 +597,27 @@ export async function fetch12Product() {
     .limit(12);               // Limit to the last 12 products
   
   // Manually convert to plain objects
-  const plainProducts = products.map(product => product.toObject());
+  const serializedProducts = products.map((product) => ({
+    _id: product._id.toString(),
+    title: product.title,
+    description: product.description,
+    price: product.price,
+    discount: product.discount,
+    purchase_price: product.purchase_price,
+    images: product.images,
+    category: product.category,
+    createdAt: product.createdAt.toISOString(),
+    skus: product.skus.map((sku) => ({
+      color: sku.color,
+      size: sku.size,
+      sku: sku.sku,
+      stock: sku.stock,
+    })),
+    stock: product.stock,
+  }));
 
-  return { products: plainProducts };
+  return { products: serializedProducts };
+
 }
 export const fetchProductByCategory = async (category) => {
   await connectMongoDB();
