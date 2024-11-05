@@ -83,21 +83,17 @@
 // export default ResetPassword;
 
 'use client'
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { Suspense, useState,  } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { resetPasswordAction } from '@/app/(admin)/sallu_admin/actions';
 
-const ResetPassword = () => {
+const ResetPasswordContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [token, setToken] = useState(null); // set token state here
+  const token = searchParams.get('token'); // Safely use `useSearchParams` here
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    setToken(searchParams.get('token')); // fetch token here
-  }, [searchParams]);
 
   const handleSubmit = async () => {
     if (password !== confirmPassword) {
@@ -162,5 +158,11 @@ const ResetPassword = () => {
     </div>
   );
 };
+
+const ResetPassword = () => (
+  <Suspense fallback={<p>Loading reset password page...</p>}>
+    <ResetPasswordContent />
+  </Suspense>
+);
 
 export default ResetPassword;
