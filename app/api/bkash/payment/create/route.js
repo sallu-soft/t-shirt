@@ -40,8 +40,9 @@ const bkash_auth = async () => {
   export async function POST(req,res){
     const requestBody = await req.json();
     
-    const { name, address, mobile_no, whatsapp, totalPrice, adultSizes, childSizes, paymentMethod } = requestBody;
+    const { name, address, mobile_no, whatsapp, totalPrice, user, cart, paymentMethod,delivery_charge } = requestBody;
     global.request = requestBody;
+    console.log(requestBody)
     try {
       const { data } = await axios.post(
         process.env.NEXT_PUBLIC_BKASH_CREATE_PAYMENT_URL,
@@ -49,7 +50,7 @@ const bkash_auth = async () => {
           mode: "0011",
           payerReference: name,
           callbackURL: `${process.env.NEXT_PUBLIC_CORS}/api/bkash/payment/callback`,
-          amount: totalPrice,
+          amount: totalPrice + delivery_charge,
           currency: "BDT",
           intent: "sale",
           merchantInvoiceNumber: "Inv" + uuidv4().substring(0, 5),

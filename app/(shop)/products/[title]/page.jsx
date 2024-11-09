@@ -136,12 +136,13 @@ const SingleProduct = ({ params }) => {
           <p className="title-font my-3 text-red-700 font-bold ">
             <span className="text-3xl">৳{product && (product?.price)-(product?.discount)}</span> <span className="line-through text-md">৳{product?.price}</span>
           </p>
+          <p className={` my-2 text-md title-font w-fit py-2 rounded-xl mb-1 ${totalStock > 0 ? " text-green-700" : " text-red-700"}`}>
+            {totalStock > 0 ? "In Stock" : "Out of Stock"}
+          </p>
           <p className="text-gray-600 text-lg title-font font-medium mb-1">
             {product?.description}
           </p>
-          <p className={`font-semibold my-2 text-md title-font w-fit py-2 px-4 rounded-xl mb-1 ${totalStock > 0 ? "border-green-700 border-2 text-green-700" : "border-red-700 border-2 text-red-700"}`}>
-            {totalStock > 0 ? "In Stock" : "Out of Stock"}
-          </p>
+         
 
           {/* Render size selection only if there are available sizes */}
           {availableSizes.length > 0 && (
@@ -186,6 +187,7 @@ const SingleProduct = ({ params }) => {
           )}
 
           {/* Quantity Selector and Add to Cart Button */}
+          Quantity
           <div className="flex mt-1 gap-x-4 w-full pb-2 items-center border-b-2 border-gray-100 mb-2">
             <div className="flex flex-row h-10 rounded-lg relative bg-gray-200">
               <button
@@ -227,10 +229,7 @@ const SingleProduct = ({ params }) => {
           </div>
         </div>
       </div>
-      {/* <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      /> */}
+      
     </section>
   );
 };

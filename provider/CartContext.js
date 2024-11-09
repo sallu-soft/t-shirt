@@ -117,8 +117,8 @@
 'use client';
 import { createContext, useEffect, useState } from "react";
 
-export const CartContext = createContext();
-
+const CartContext = createContext();
+let emptyCart;
 const CartContextProvider = ({ children }) => {
   const [cart, setCart] = useState({ cartItems: [] });
 
@@ -192,11 +192,11 @@ const CartContextProvider = ({ children }) => {
     localStorage.setItem("cart", JSON.stringify({ cartItems: newCartItems }));
   };
 
-  const emptyCart = () => {
+  emptyCart = () => {
     setCart({ cartItems: [] });
     localStorage.removeItem("cart");
   };
-
+  
   return (
     <CartContext.Provider value={{ cart, increaseQty, decreaseQty, addItemToCart, deleteItemFromCart, emptyCart }}>
       {children}
@@ -205,3 +205,4 @@ const CartContextProvider = ({ children }) => {
 };
 
 export default CartContextProvider;
+export {CartContext , emptyCart}

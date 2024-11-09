@@ -5,27 +5,26 @@ import { ordersList } from '../(admin)/sallu_admin/actions'
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-const OrdersList = () => {
-    const { user } = useContext(UserContext);
-    const [orders, setOrders] = useState([]);
-    const router = useRouter();
+const OrdersList = ({orders}) => {
+    // const { user } = useContext(UserContext);
+    // const [orders, setOrders] = useState([]);
+    // const router = useRouter();
 
-    useEffect(() => {
-        const fetchedOrders = async () => {
-            if (user?._id) { // Make sure user is available
-                try {
-                    const response = await ordersList(user._id);
-                    setOrders(response.orders);
-                    console.log(response.orders)
-                } catch (error) {
-                    console.error('Error fetching orders:', error);
-                }
-            }
-        };
-
-        fetchedOrders(); // Make sure to call the async function
-    }, [user,orders]); // Only re-run when the user changes
-    if (user && user?.name){
+    // useEffect(() => {
+    //     const fetchedOrders = async () => {
+    //         if (user?._id) { // Make sure user is available
+    //             try {
+    //                 const response = await ordersList(user._id);
+    //                 setOrders(response.orders);
+    //             } catch (error) {
+    //                 console.error('Error fetching orders:', error);
+    //             }
+    //         }
+    //     };
+    
+    //     fetchedOrders(); // Make sure to call the async function
+    // }, [user?._id]); // Only re-run when the user changes
+    
     return (
         <>
         {orders?.length > 0 ? (
@@ -84,9 +83,7 @@ const OrdersList = () => {
             </div>
         )}
         </>
-    )}else{
-        router.push('/login')
-    }
+    )
 };
 
 export default OrdersList;

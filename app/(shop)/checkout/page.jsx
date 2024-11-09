@@ -104,10 +104,11 @@ const Checkout = () => {
           address: formData?.address,
           mobile_no: formData?.mobile_no,
           whatsapp: formData?.whatsapp,
-          childSizes: childSizes,
-          adultSizes: adultSizes,
+          cart: formData?.cart,
+          delivery_charge: formData?.delivery_charge,
           totalPrice: formData?.totalPrice,
-          model: formData?.model,
+          user:formData?.user,
+
           paymentMethod: formData?.paymentMethod,
         },
         { withCredentials: true }
@@ -429,7 +430,7 @@ const Checkout = () => {
             </div>
             <div className="absolute left-0 bottom-0  bg-gray-200 w-full p-4">
               <h4 className="flex flex-wrap gap-4 text-base text-[#333] font-bold">
-                Total{" "}
+                Total
                 <span className="ml-auto">৳{totalAmount + deliveryCharge}</span>
               </h4>
             </div>

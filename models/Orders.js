@@ -21,7 +21,7 @@ const orderSchema = new Schema(
         delivery_charge:Number,
         total_price:Number,
         is_paid:Boolean,
-        payment_method: { type: String, enum: ['Cash', 'Card', 'Online'], required: true },
+        payment_method: { type: String, enum: ['Cash', 'Bkash', 'Online'], required: true },
         payment_status: {
             type: String,
             enum : ['Pending','Shipped','Delivered','Cancelled'],

@@ -22,11 +22,16 @@
 // };
 
 // export default Success;
-import { Suspense } from 'react';
+import { Suspense, useContext, useEffect } from 'react';
 import { useRouter } from "next/navigation";
+import { CartContext } from '@/provider/CartContext';
 
 const Success = () => {
   const router = useRouter();
+  const {emptyCart} = useContext(CartContext);
+  useEffect(()=>{
+    emptyCart();
+  },[])
   const HandleClick = () => {
     router.push("/");
   };

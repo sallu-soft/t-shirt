@@ -147,6 +147,63 @@ export const createProduct = async (formData) => {
   }
 };
 
+// export const createOrder = async (formData) => {
+//   console.log('Server action: createOrder function called');
+//   console.log('Received formData:', formData);
+
+//   try {
+//     await connectMongoDB();
+
+    
+//     const isFormData = formData instanceof FormData;
+//     const name = isFormData ? formData.get('name') : formData?.name;
+//     const address = isFormData ? formData.get('address') : formData?.address;
+//     const mobile_no = isFormData ? formData.get('mobile_no') : formData?.mobile_no;
+//     const whatsapp = isFormData ? formData.get('whatsapp') : formData?.whatsapp;
+//     const delivery_charge = parseFloat(isFormData ? formData.get('delivery_charge') : formData?.delivery_charge);
+//     const totalPrice = parseFloat(isFormData ? formData.get('totalPrice') : formData?.totalPrice);
+//     const paymentMethod = isFormData ? formData.get('paymentMethod') : formData?.paymentMethod;
+//     const user = isFormData ? formData.get('user') : formData?.user;
+
+//     // Parse cart (sent as a JSON string)
+//     const cartString = isFormData ? formData.get('cart') : formData?.cart;
+//     const cart = cartString ? JSON.parse(cartString) : [];
+
+//     // Validate that the cart is not empty
+//     if (!cart || cart.length === 0) {
+//       throw new Error('Cart cannot be empty');
+//     }
+
+//     // Prepare the order data
+//     const orderData = {
+//       name,
+//       address,
+//       mobile_no,
+//       whatsapp,
+//       ordered_items:cart,
+//       delivery_charge,
+//       total_price:totalPrice,
+//       payment_method:paymentMethod,
+//       user
+//     };
+    
+//     // Create and save the order in MongoDB
+//     const newOrder = await Order.create(orderData);
+//     console.log('Order created:', newOrder);
+
+//     // Convert the Mongoose document to a plain object before returning
+//     const plainOrder = newOrder.toObject(); // Convert to a plain object
+
+//     // Optionally remove any non-serializable properties, like __v or _id if needed
+//     const { __v, _id, createdAt, ...returnableOrder } = plainOrder;
+
+//     return returnableOrder; // Return the plain order object without Mongoose properties
+//   } catch (error) {
+//     console.error('Error creating order:', error);
+//     throw new Error('Error creating Order');
+//   }
+// };
+
 export const createOrder = async (formData) => {
   console.log('Server action: createOrder function called');
   console.log('Received formData:', formData);
@@ -154,19 +211,22 @@ export const createOrder = async (formData) => {
   try {
     await connectMongoDB();
 
-    // Extract form fields from formData
-    const name = formData.get('name');
-    const address = formData.get('address');
-    const mobile_no = formData.get('mobile_no');
-    const whatsapp = formData.get('whatsapp');
-    const delivery_charge = parseFloat(formData.get('delivery_charge'));
-    const totalPrice = parseFloat(formData.get('totalPrice'));
-    const paymentMethod = formData.get('paymentMethod');
-    const user = formData.get('user');
-    
-    // Parse cart (sent as a JSON string)
-    const cartString = formData.get('cart');
-    const cart = cartString ? JSON.parse(cartString) : [];
+    // Check if formData is a FormData object or a plain object
+    const isFormData = formData instanceof FormData;
+
+    // Extract form fields based on whether formData is a FormData object or a plain object
+    const name = isFormData ? formData.get('name') : formData?.name;
+    const address = isFormData ? formData.get('address') : formData?.address;
+    const mobile_no = isFormData ? formData.get('mobile_no') : formData?.mobile_no;
+    const whatsapp = isFormData ? formData.get('whatsapp') : formData?.whatsapp;
+    const delivery_charge = parseFloat(isFormData ? formData.get('delivery_charge') : formData?.delivery_charge);
+    const totalPrice = parseFloat(isFormData ? formData.get('totalPrice') : formData?.totalPrice);
+    const paymentMethod = isFormData ? formData.get('paymentMethod') : formData?.paymentMethod;
+    const user = isFormData ? formData.get('user') : formData?.user;
+
+    // Get cart data and ensure it's not parsed if it's already an object
+    const cartData = isFormData ? formData.get('cart') : formData?.cart;
+    const cart = typeof cartData === 'string' ? JSON.parse(cartData) : cartData;
 
     // Validate that the cart is not empty
     if (!cart || cart.length === 0) {
@@ -179,16 +239,15 @@ export const createOrder = async (formData) => {
       address,
       mobile_no,
       whatsapp,
-      ordered_items:cart,
+      ordered_items: cart,
       delivery_charge,
-      total_price:totalPrice,
-      payment_method:paymentMethod,
-      user
+      total_price: totalPrice,
+      payment_method: paymentMethod,
+      user,
     };
-    
+
     // Create and save the order in MongoDB
     const newOrder = await Order.create(orderData);
-    console.log('Order created:', newOrder);
 
     // Convert the Mongoose document to a plain object before returning
     const plainOrder = newOrder.toObject(); // Convert to a plain object
@@ -202,7 +261,6 @@ export const createOrder = async (formData) => {
     throw new Error('Error creating Order');
   }
 };
-
 export const reduceProductStock = async (productId, skuData, quantityToSubtract) => {
   try {
     await connectMongoDB();
@@ -397,8 +455,20 @@ export const ordersList = async (userId) => {
   await connectMongoDB();
   // Fetch paginated products
   const orders = await Order.find({user:userId}).lean();
+  const serializedOrders = orders.map(order => ({
+    ...order,
+    _id: order._id.toString(),
+    createdAt: order.createdAt ? order.createdAt.toISOString() : null,
+    updatedAt: order.updatedAt ? order.updatedAt.toISOString() : null,
+    user: order.user.toString(), // Convert user ID to string if it's a reference
+    ordered_items: order.ordered_items.map(item => ({
+      ...item,
+      _id: item._id.toString(), // Serialize each item's _id if it exists
+      // Add additional transformations here if the item has other non-serializable fields
+    })),
+  }));
   
-  return { orders };
+  return { orders: serializedOrders };
 };
 export const fetchSingleUser = async (id) => {
   await connectMongoDB();
@@ -423,22 +493,38 @@ export const fetchSingleProduct = async (id) => {
   
   // Fetch paginated products
   const product = await Product.findById(id).lean()
-  console.log(product)
   
   return {product};
 };
-export const fetchProductByTitle = async (title) => {
-  await connectMongoDB();
+// export const fetchProductByTitle = async (title) => {
+//   await connectMongoDB();
+
+//   try {
+//     // Use a case-insensitive search with regex for more flexibility
+//     const products = await Product.find({ title: { $regex: title, $options: 'i' } });
+//     return { products };
+//   } catch (error) {
+//     console.error('Error fetching products by title:', error);
+//     return { products: [] }; // Return an empty array on error
+//   }
+// };
+
+
+export async function fetchProductByTitle(title3) {
+  // Avoid repeated connections in every call
+  if (!global.isMongoConnected) {
+    await connectMongoDB();
+    global.isMongoConnected = true;
+  }
 
   try {
-    // Use a case-insensitive search with regex for more flexibility
-    const products = await Product.find({ title: { $regex: title, $options: 'i' } });
+    const products = await Product.find({ title: { $regex: title3, $options: "i" } });
     return { products };
   } catch (error) {
-    console.error('Error fetching products by title:', error);
-    return { products: [] }; // Return an empty array on error
+    console.error("Error fetching products by title:", error);
+    return { products: [] };
   }
-};
+}
 export const getOrder = async (id) => {
   await connectMongoDB();
   

@@ -28,7 +28,7 @@ const CartPage = () => {
       (acc, item) => acc + item.quantity * item.price,
       0
     );
-  
+    
     const taxAmount = (amountWithoutTax * 0.15).toFixed(2);
   
     const totalAmount = (Number(amountWithoutTax)).toFixed(2);
@@ -84,6 +84,7 @@ const CartPage = () => {
                             data-action="decrement"
                             className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
                             onClick={() => decreaseQty(cartItem)}
+                            // disabled={stock < 1}
                             >
                             <span className="m-auto text-2xl font-thin">−</span>
                             </button>
@@ -98,6 +99,7 @@ const CartPage = () => {
                             data-action="increment"
                             className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
                             onClick={() => increaseQty(cartItem)}
+                            disabled={cartItem?.sku?.stock == cartItem.quantity }
                             >
                             <span className="m-auto text-2xl font-thin">+</span>
                             </button>

@@ -39,20 +39,58 @@ const Navbar = () => {
     Cookies.remove("session");
     setUser(null); // Reset the user state
   };
+  // const handleSearch = (e) => {
+  //   setSearchQuery(e.target.value);
+  // };
+
+  // useEffect(() => {
+  //   let isMounted = true;
+  //   const debounceTimeout = setTimeout(() => {
+  //     const fetchSearchedProducts = async () => {
+  //       if (!searchQuery) return;
+
+  //       setLoading(true); // Set loading to true before the request starts
+  //       try {
+  //         const { products } = await fetchProductByTitle(searchQuery);
+  //         if (isMounted) {
+  //           setFilteredProducts(products);
+  //         }
+  //       } catch (error) {
+  //         console.error("Error fetching products:", error);
+  //       } finally {
+  //         if (isMounted) {
+  //           setLoading(false); // Set loading to false after the request completes
+  //         }
+  //       }
+  //     };
+
+  //     if (searchQuery) {
+  //       fetchSearchedProducts();
+  //     } else {
+  //       setFilteredProducts([]);
+  //     }
+  //   }, 300); // Debounce delay
+
+  //   return () => {
+  //     clearTimeout(debounceTimeout);
+  //     isMounted = false;
+  //   };
+  // }, [searchQuery]);
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
-
+  
   useEffect(() => {
     let isMounted = true;
     const debounceTimeout = setTimeout(() => {
       const fetchSearchedProducts = async () => {
         if (!searchQuery) return;
-
+  
         setLoading(true); // Set loading to true before the request starts
         try {
           const { products } = await fetchProductByTitle(searchQuery);
           if (isMounted) {
+            console.log("Fetched products:", products); // Debugging log
             setFilteredProducts(products);
           }
         } catch (error) {
@@ -63,14 +101,14 @@ const Navbar = () => {
           }
         }
       };
-
+  
       if (searchQuery) {
         fetchSearchedProducts();
       } else {
         setFilteredProducts([]);
       }
     }, 300); // Debounce delay
-
+  
     return () => {
       clearTimeout(debounceTimeout);
       isMounted = false;
