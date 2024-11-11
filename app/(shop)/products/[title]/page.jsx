@@ -7,6 +7,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { CartContext } from "@/provider/CartContext";
 import { fetchProduct, fetchSingleProduct } from "@/app/(admin)/sallu_admin/actions";
 import { Context } from "@/provider/ContextProvider";
+import ReactImageMagnify from "react-image-magnify";
 
 
 const SingleProduct = ({ params }) => {
@@ -106,7 +107,26 @@ const SingleProduct = ({ params }) => {
             className="lg:w-[500px] border-primary_color border w-fit lg:h-fit h-64 object-contain object-center rounded "
             src={myimg}
           />
-
+          {/* <div className="max-w-[100%] fluid__image-container justify-center flex">
+          <ReactImageMagnify {...{
+    smallImage: {
+        alt: 'Product Image',
+        isFluidWidth: true,
+        src: myimg,
+    },
+    largeImage: {
+        src: myimg,
+        width: 800, // Adjust to control zoom level
+        height: 1200,
+    },
+    enlargedImageContainerDimensions: {
+      width: '150%',  // Adjust the width to eliminate the blank space
+      height: '100%',
+  },
+    enlargedImageContainerStyle: { transform: 'translateX(-50%)' },
+    shouldUsePositiveSpaceLens: true
+}} />
+         </div> */}
           <div className="gap-2 flex mt-2 flex-wrap items-start">
             {product?.images?.map((currImg, index) => (
               <figure key={index}>

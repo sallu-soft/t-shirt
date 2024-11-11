@@ -17,19 +17,19 @@ const ProductCard = ({product}) => {
   })
   }
   return (
-    <Link href={`/products/${product?._id}`}  className="relative md:m-4 m-1 flex w-[200px] sm:w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-secondary_color shadow-md">
+    <Link href={`/products/${product?._id}`}  className="relative md:m-4 sm:m-1 flex w-[150px] sm:w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-secondary_color shadow-md">
     
-      <Image className="object-fit h-[180px] sm:h-[280px]" src={product?.images[0]} alt="product image" width={400} height={200} />
-      <span className="absolute top-0 left-0 m-2 rounded-full bg-primary_color px-2 text-center text-sm font-medium text-white">{product.discount} tk OFF</span>
+      <Image className="object-fit h-[150px] sm:h-[280px]" src={product?.images[0]} alt="product image" width={400} height={200} />
+      <span className="absolute top-0 left-0 m-2 rounded-full bg-primary_color px-2 text-center sm:text-sm text-xs font-medium text-white">{product.discount} tk OFF</span>
    
-    <div className="mt-4 px-5 pb-5">
+    <div className="mt-4 sm:px-5 px-1">
       
-        <h5 className="text-xl tracking-tight text-secondary_color">{product.title}</h5>
+        <h5 className="sm:text-xl text-md tracking-tight text-secondary_color">{product.title}</h5>
       
       <div className="mt-2 mb-5 flex items-center justify-between">
         <p>
-          <span className="text-3xl font-bold text-primary_color">{product.price-product.discount}</span>
-          <span className="text-sm text-slate-900 line-through">{product.price }</span>
+          <span className="sm:text-3xl text-xl font-bold text-primary_color">{product.price-product.discount}</span>
+          <span className="sm:text-sm text-xs text-slate-900 line-through">{product.price }</span>
         </p>
         {/* <div className="flex items-center">
           <svg aria-hidden="true" className="h-5 w-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

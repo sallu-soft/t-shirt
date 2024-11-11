@@ -16,23 +16,34 @@ const CatCarousel = ({categories}) => {
       ]} onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset} className="w-full max-w-7xl mx-auto md:px-0 px-3 my-2">
       <CarouselContent className="-ml-1">
-        
+        <CarouselItem className="pl-1 basis-1/2 md:basis-1/4 lg:basis-1/6">
+        <Link
+                    
+                    href="/search/products"
+                    className="flex items-center justify-center gap-2 bg-orange-100 p-1 sm:p-2 rounded-lg py-[7px] cursor-pointer hover:scale-110 transition-all ease-in-out"
+                  >
+                    
+                    <h2 className="text-primary sm:text-base text-sm">All Products</h2>
+                  </Link>
+        </CarouselItem>
         {categories?.length > 0
             ? categories?.map((category, index) => {
                 return (
                   <CarouselItem key={index} className="pl-1 basis-1/2 md:basis-1/4 lg:basis-1/6">
+                  
                   <Link
                     key={index}
                     href={`/search/${category?.category_name}`}
-                    className="flex items-center justify-center gap-2 bg-orange-100 p-2 rounded-lg cursor-pointer hover:scale-110 transition-all ease-in-out"
+                    className="flex items-center justify-center gap-2 bg-orange-100 p-1 sm:p-2 rounded-lg cursor-pointer hover:scale-110 transition-all ease-in-out"
                   >
                     <Image
                       src={category?.category_image}
                       alt={"icon"}
                       width={45}
                       height={45}
+                      className="sm:w-[45px] sm:h-[45px] w-[25px] h-[25px]"
                     />
-                    <h2 className="text-primary">{category?.category_name}</h2>
+                    <h2 className="text-primary sm:text-base text-sm">{category?.category_name}</h2>
                   </Link>
                   </CarouselItem>
                 );

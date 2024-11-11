@@ -120,7 +120,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between py-3 md:py-5 md:block">
           <Link href="/">
             <h1 className="md:text-2xl text-xl font-semibold text-primary_color">
-              Sallu.com.bd
+              Sallu
             </h1>
           </Link>
           {/* <div className="md:hidden">
@@ -263,12 +263,12 @@ const Navbar = () => {
           ) : (
             <>
               <Link href={"/register"} className="relative">
-                <p className="bg-primary_color rounded-full w-fit h-6 flex items-center justify-center text-sm px-2 py-4 text-md md:p-4 text-white">
+                <p className="bg-primary_color rounded-full w-fit h-6 flex items-center justify-center text-xs px-2 py-4 sm:text-md md:p-4 text-white">
                   Register
                 </p>
               </Link>
               <Link href={"/login"} className="relative">
-                <p className=" rounded-full w-fit h-6 flex items-center justify-center px-2 py-4 text-sm md:p-4 text-white border md:border-2 border-primary_color  ">
+                <p className=" rounded-full w-fit h-6 flex items-center justify-center px-2 py-4 sm:text-sm text-xs md:p-4 text-white border md:border-2 border-primary_color">
                   Sign In
                 </p>
               </Link>
