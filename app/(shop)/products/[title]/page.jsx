@@ -7,7 +7,6 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { CartContext } from "@/provider/CartContext";
 import { fetchProduct, fetchSingleProduct } from "@/app/(admin)/sallu_admin/actions";
 import { Context } from "@/provider/ContextProvider";
-import ReactImageMagnify from "react-image-magnify";
 
 
 const SingleProduct = ({ params }) => {
