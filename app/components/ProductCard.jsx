@@ -3,9 +3,10 @@ import { CartContext } from '@/provider/CartContext'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useContext } from 'react'
-
+import useEmblaCarousel from 'embla-carousel-react';
+import Autoplay from 'embla-carousel-autoplay'
 const ProductCard = ({product}) => {
-  
+  const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
   const {addItemToCart, removeItemFromCart} = useContext(CartContext)
   const handleAddToCart = () => {
     addItemToCart({
@@ -19,7 +20,20 @@ const ProductCard = ({product}) => {
   return (
     <Link href={`/products/${product?._id}`}  className="relative md:m-4 sm:m-1 flex w-[150px] sm:w-full max-w-xs flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-secondary_color shadow-md">
     
-      <Image className="object-fit h-[150px] sm:h-[280px]" src={product?.images[0]} alt="product image" width={400} height={200} />
+      {/* <Image className="object-fit h-[150px] sm:h-[280px]" src={product?.images[0]} alt="product image" width={400} height={200} /> */}
+      <div className="overflow-hidden w-full" ref={emblaRef}>
+      <div className="flex">
+        {product?.images.map((image, index) => (
+          <div className="flex-[0_0_100%] w-full" key={index}>
+            <img
+              src={image}
+              alt={`Product image ${index + 1}`}
+              className="object-cover h-[150px] sm:h-[280px] w-full"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
       <span className="absolute top-0 left-0 m-2 rounded-full bg-primary_color px-2 text-center sm:text-sm text-xs font-medium text-white">{product.discount} tk OFF</span>
    
     <div className="mt-4 sm:px-5 px-1">

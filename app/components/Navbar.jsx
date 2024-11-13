@@ -23,6 +23,7 @@ import { UserContext } from "@/provider/UsersContext";
 import { Context } from "@/provider/ContextProvider";
 import SearchProducts from "./SearchProducts";
 import { fetchProductByTitle } from "../(admin)/sallu_admin/actions";
+import Image from "next/image";
 
 const Navbar = () => {
   const [state, setState] = useState(false);
@@ -115,13 +116,11 @@ const Navbar = () => {
     };
   }, [searchQuery]);
   return (
-    <nav className="bg-secondary_color w-full border-b md:border-0 shadow-lg sticky top-0 z-50 transition-all">
+    <nav className="bg-gray-800 w-full border-b md:border-0 shadow-lg sticky top-0 z-50 transition-all py-1">
       <div className="items-center px-4 max-w-screen-2xl mx-auto flex md:px-8 justify-between">
-        <div className="flex items-center justify-between py-3 md:py-5 md:block">
+        <div className="flex items-center justify-between md:block">
           <Link href="/">
-            <h1 className="md:text-2xl text-xl font-semibold text-primary_color">
-              Sallu
-            </h1>
+            <Image src={'/sallu_1.png'} className="w-[180px]" width={180} height={10} />
           </Link>
           {/* <div className="md:hidden">
             <button
