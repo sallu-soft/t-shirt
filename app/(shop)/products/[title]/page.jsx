@@ -24,9 +24,9 @@ export async function generateMetadata({ params }) {
       description: product.description || "Check out this amazing product!",
       images: [
         {
-          url: product.images?.[0] || "/fallback-image.jpg",
-          width: 800,
-          height: 600,
+          url: product?.images?.[0] || "/fallback-image.jpg",
+          width: 500,
+          height: 350,
           alt: product.title,
         },
       ],
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }) {
       card: "summary_large_image",
       title: product.title,
       description: product.description || "Check out this amazing product!",
-      images: [product.images?.[0] || "/fallback-image.jpg"],
+      images: [product?.images?.[0] || "/fallback-image.jpg"],
     },
   };
 }
