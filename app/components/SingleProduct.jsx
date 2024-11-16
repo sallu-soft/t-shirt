@@ -1,193 +1,229 @@
-// import Image from 'next/image'
-// import React from 'react'
+'use client'
+import { CartContext } from '@/provider/CartContext';
+import { Context } from '@/provider/ContextProvider';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import React, { useContext, useState } from 'react'
 
-// const SingleProduct = () => {
-//   return (
-//     <section className="text-gray-600 body-font overflow-hidden">
-//     <div className="container px-5 py-24 mx-auto">
-//       <div className="lg:w-4/5 mx-auto flex flex-wrap">
-//         <Image
-//             height={400}
-//             width={400}
-//             alt="ecommerce"
-//             className="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded"
-//             src="/1dinerKoshai.jpg"
-//         />
-//         <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-//           <h2 className="text-md title-font font-semibold text-orange-700 tracking-widest pb-2">
-//             সাল্লু গার্মেন্টস 
-//           </h2>
-//           <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
-//             এক দিনের কসাই টি শার্ট । Ek Diner kosai T-shirt
-//           </h1>
-//           <span className="title-font text-2xl my-2 font-semibold text-gray-900">
-//               ৳২০০.০০
-//             </span>
-//           <div className="flex mb-4">
-//             <span className="flex items-center">
-//               <svg
-//                 fill="currentColor"
-//                 stroke="currentColor"
-//                 strokeLinecap="round"
-//                 strokeLinejoin="round"
-//                 strokeWidth="2"
-//                 className="w-4 h-4 text-indigo-500"
-//                 viewBox="0 0 24 24"
-//               >
-//                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-//               </svg>
-//               <svg
-//                 fill="currentColor"
-//                 stroke="currentColor"
-//                 strokeLinecap="round"
-//                 strokeLinejoin="round"
-//                 strokeWidth="2"
-//                 className="w-4 h-4 text-indigo-500"
-//                 viewBox="0 0 24 24"
-//               >
-//                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-//               </svg>
-//               <svg
-//                 fill="currentColor"
-//                 stroke="currentColor"
-//                 strokeLinecap="round"
-//                 strokeLinejoin="round"
-//                 strokeWidth="2"
-//                 className="w-4 h-4 text-indigo-500"
-//                 viewBox="0 0 24 24"
-//               >
-//                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-//               </svg>
-//               <svg
-//                 fill="currentColor"
-//                 stroke="currentColor"
-//                 strokeLinecap="round"
-//                 strokeLinejoin="round"
-//                 strokeWidth="2"
-//                 className="w-4 h-4 text-indigo-500"
-//                 viewBox="0 0 24 24"
-//               >
-//                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-//               </svg>
-//               <svg
-//                 fill="none"
-//                 stroke="currentColor"
-//                 strokeLinecap="round"
-//                 strokeLinejoin="round"
-//                 strokeWidth="2"
-//                 className="w-4 h-4 text-indigo-500"
-//                 viewBox="0 0 24 24"
-//               >
-//                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-//               </svg>
-//               <span className="text-gray-600 ml-3">4 Reviews</span>
-//             </span>
-//             <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2s">
-//               <a className="text-gray-500">
-//                 <svg
-//                   fill="currentColor"
-//                   strokeLinecap="round"
-//                   strokeLinejoin="round"
-//                   strokeWidth="2"
-//                   className="w-5 h-5"
-//                   viewBox="0 0 24 24"
-//                 >
-//                   <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
-//                 </svg>
-//               </a>
-//               <a className="text-gray-500">
-//                 <svg
-//                   fill="currentColor"
-//                   strokeLinecap="round"
-//                   strokeLinejoin="round"
-//                   strokeWidth="2"
-//                   className="w-5 h-5"
-//                   viewBox="0 0 24 24"
-//                 >
-//                   <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
-//                 </svg>
-//               </a>
-//               <a className="text-gray-500">
-//                 <svg
-//                   fill="currentColor"
-//                   strokeLinecap="round"
-//                   strokeLinejoin="round"
-//                   strokeWidth="2"
-//                   className="w-5 h-5"
-//                   viewBox="0 0 24 24"
-//                 >
-//                   <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
-//                 </svg>
-//               </a>
-//             </span>
-//           </div>
-//           <p className="leading-relaxed">
-//             এই ঈদ উল আযহায় সাচ্ছন্দে ঈদ উৎযাপনে ও আপনার পছন্দের পশু কুরবানী করতে বেছে নিন আমাদের স্টাইলিশ ও গরমে আরামদায়ক একদিনের কসাই টিশার্ট টি। । এটি প্রফেশনাল ও আধুনিক লুকের জন্য একটি অবিচ্ছিন্ন পছন্দ। এই টি শার্ট প্রধানত আপনার দৈনন্দিন জীবনের সকল অবস্থায় আপনার স্টাইল ও আরামের জন্য অত্যন্ত উপযোগী।
-//           </p>
-//           <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
-//             <div className="flex">
-//               <span className="mr-3">Color</span>
-//               <button className="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none"></button>
-//               <button className="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none"></button>
-//               <button className="border-2 border-gray-300 ml-1 bg-indigo-500 rounded-full w-6 h-6 focus:outline-none"></button>
-//             </div>
-//             <div className="flex ml-6 items-center">
-//               <span className="mr-3">Size</span>
-//               <div className="relative">
-//                 <select className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10">
-//                   <option>SM</option>
-//                   <option>M</option>
-//                   <option>L</option>
-//                   <option>XL</option>
-//                 </select>
-//                 <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
-//                   <svg
-//                     fill="none"
-//                     stroke="currentColor"
-//                     strokeLinecap="round"
-//                     strokeLinejoin="round"
-//                     strokeWidth="2"
-//                     className="w-4 h-4"
-//                     viewBox="0 0 24 24"
-//                   >
-//                     <path d="M6 9l6 6 6-6"></path>
-//                   </svg>
-//                 </span>
-//               </div>
-//             </div>
-//             <div className="flex ml-6 items-center">
-//               <span className="mr-3">QTY</span>
-//               <div className="relative">
-//                 <input className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base w-[150px] pl-3 pr-3" type="number"/>
-                
-//               </div>
-//             </div>
-//           </div>
-//           <div className="flex">
-//             <span className="title-font font-medium text-2xl text-gray-900">
-//               ৳২০০.০০
-//             </span>
-//             <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
-//               অর্ডার করুন
-//             </button>
-//             <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
-//               <svg
-//                 fill="currentColor"
-//                 strokeLinecap="round"
-//                 strokeLinejoin="round"
-//                 strokeWidth="2"
-//                 className="w-5 h-5"
-//                 viewBox="0 0 24 24"
-//               >
-//                 <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
-//               </svg>
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   </section>
-//   )
-// }
+const SingleProduct = ({product}) => {
+    const router = useRouter();
+    const { addItemToCart } = useContext(CartContext);
+    const { products } = useContext(Context);
+    // const [product, setProduct] = useState({});
+    const [myimg, setMyimg] = useState(product?.images?.[0]);
+    const [loading, setLoading] = useState(true);
+  
+    const [selectedSize, setSelectedSize] = useState("");
+    const [selectedColor, setSelectedColor] = useState("");
+    const [quantity, setQuantity] = useState(1);
+    
+  const availableSizes = [
+    ...new Set(
+      product.skus
+        ?.filter((sku) => sku.stock > 0 && sku.size)
+        .map((sku) => sku.size)
+    ),
+  ];
 
-// export default SingleProduct
+  const availableColors = [
+    ...new Set(
+      product.skus
+        ?.filter((sku) => sku.stock > 0 && sku.color)
+        .map((sku) => sku.color)
+    ),
+  ];
+  const selectedSKU = product.skus?.find(
+    (sku) => sku.size === selectedSize && sku.color === selectedColor
+  );
+
+  const stock = selectedSKU ? selectedSKU.stock : 0;
+  const totalStock = product?.skus?.reduce((acc, sku) => acc + sku.stock, 0) || 0;
+
+  const handleSize = (size) => {
+    setSelectedSize(size);
+  };
+
+  const handleColor = (color) => {
+    setSelectedColor(color);
+  };
+
+  const handleAddToCart = () => {
+    addItemToCart({
+      product: product._id,
+      title: product.title,
+      price: product.price - product?.discount,
+      image: product.images[0],
+      stock: product.stock,
+      quantity: quantity, // set your quantity as needed
+      size: selectedSize,
+      color: selectedColor,
+      sku: selectedSKU
+    });
+    router.push("/cart");
+  };
+   
+  
+    
+  
+    return (
+      <>
+      
+      <section className="text-gray-600 body-font overflow-hidden">
+        <div className="container flex flex-wrap px-5 py-5 md:py-10 mx-auto">
+          <div className="relative md:w-1/2 w-2/2 gap-x-2 md:mx-0 mx-auto justify-center items-center flex flex-col">
+            <Image
+              height={400}
+              width={400}
+              alt={product?.title}
+              className="lg:w-[500px] border-primary_color border w-fit lg:h-fit h-64 object-contain object-center rounded "
+              src={myimg}
+            />
+            {/* <div className="max-w-[100%] fluid__image-container justify-center flex">
+            <ReactImageMagnify {...{
+      smallImage: {
+          alt: 'Product Image',
+          isFluidWidth: true,
+          src: myimg,
+      },
+      largeImage: {
+          src: myimg,
+          width: 800, // Adjust to control zoom level
+          height: 1200,
+      },
+      enlargedImageContainerDimensions: {
+        width: '150%',  // Adjust the width to eliminate the blank space
+        height: '100%',
+    },
+      enlargedImageContainerStyle: { transform: 'translateX(-50%)' },
+      shouldUsePositiveSpaceLens: true
+  }} />
+           </div> */}
+            <div className="gap-2 flex mt-2 flex-wrap items-start">
+              {product?.images?.map((currImg, index) => (
+                <figure key={index}>
+                  <Image
+                    onClick={() => setMyimg(currImg)}
+                    src={currImg}
+                    alt={"sonot"}
+                    className={`md:w-[110px] w-20 md:h-[110px] h-20 object-cover object-center rounded border-primary_color border ${
+                      product?.stock < 1 ? "cursor-not-allowed" : ""
+                    }`}
+                    height={400}
+                    width={400}
+                  />
+                </figure>
+              ))}
+            </div>
+          </div>
+  
+          <div className="md:w-1/2 w-2/2 xl:pl-5 md:pl-2 lg:py-6 mt-6 lg:mt-0">
+            <h2 className="text-md title-font font-semibold text-orange-700 tracking-widest pb-2">
+              {product?.category}
+            </h2>
+            <h1 className="text-secondary_color text-3xl title-font font-medium mb-1">
+              {product?.title}
+            </h1>
+  
+            <p className="title-font my-3 text-red-700 font-bold ">
+              <span className="text-3xl">৳{product && (product?.price)-(product?.discount)}</span> <span className="line-through text-md">৳{product?.price}</span>
+            </p>
+            <p className={` my-2 text-md title-font w-fit py-2 rounded-xl mb-1 ${totalStock > 0 ? " text-green-700" : " text-red-700"}`}>
+              {totalStock > 0 ? "In Stock" : "Out of Stock"}
+            </p>
+            <p className="text-gray-600 text-lg title-font font-medium mb-1">
+              {product?.description}
+            </p>
+           
+  
+            {/* Render size selection only if there are available sizes */}
+            {availableSizes.length > 0 && (
+              <div className="my-2">
+                <span className="my-2">Sizes:</span>
+                <div className="flex gap-2 flex-wrap">
+                  {availableSizes.map((size) => (
+                    <div
+                      key={size}
+                      onClick={() => handleSize(size)}
+                      className={`rounded border appearance-none w-fit border-gray-300 py-2 text-base px-3 flex cursor-pointer ${
+                        selectedSize === size ? "bg-primary_color text-white" : "bg-white text-black"
+                      } ${stock < 1 ? "cursor-not-allowed opacity-50" : ""}`}
+                      disabled={stock < 1}
+                    >
+                      <p>{size?.toUpperCase()}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+  
+            {/* Render color selection only if there are available colors */}
+            {availableColors.length > 0 && (
+              <div className="my-2">
+                <span className="my-2">Colors:</span>
+                <div className="flex gap-2 flex-wrap my-2">
+                  {availableColors.map((color) => (
+                    <div
+                      key={color}
+                      onClick={() => handleColor(color)}
+                      className={`rounded border w-fit appearance-none border-gray-300 py-2 text-base px-3 flex cursor-pointer ${
+                        selectedColor === color ? "bg-primary_color text-white" : "bg-white text-black"
+                      } ${stock < 1 ? "cursor-not-allowed opacity-50" : ""}`}
+                      disabled={stock < 1}
+                    >
+                      <p>{color?.toUpperCase()}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+  
+            {/* Quantity Selector and Add to Cart Button */}
+            Quantity
+            <div className="flex mt-1 gap-x-4 w-full pb-2 items-center border-b-2 border-gray-100 mb-2">
+              <div className="flex flex-row h-10 rounded-lg relative bg-gray-200">
+                <button
+                  className="text-gray-900 hover:text-gray-700 h-full w-20 rounded-l cursor-pointer outline-none"
+                  onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+                  disabled={stock < 1}
+                >
+                  <span className="text-2xl font-bold">−</span>
+                </button>
+                <input
+                  type="number"
+                  className="outline-none w-[40px] h-[40px] focus:outline-none font-semibold text-md pl-2 bg-primary_color hover:text-black focus:text-black md:text-base cursor-default text-white flex justify-center items-center text-center custom-input-number"
+                  name="custom-input-number"
+                  value={quantity}
+                  readOnly
+                  disabled={stock < 1}
+                />
+                <button
+                  className="text-gray-900 hover:text-gray-700 h-full w-20 rounded-r cursor-pointer"
+                  onClick={() => setQuantity((prev) => Math.min(stock, prev + 1))}
+                  disabled={stock < 1}
+                >
+                  <span className="m-auto text-2xl font-bold">+</span>
+                </button>
+              </div>
+            </div>
+  
+            <p>Stock: {stock}</p>
+  
+            {/* Add to Cart Button */}
+            <div className="flex mt-3">
+              <button
+                className={`text-white py-3 px-5 rounded ${stock > 0 ? "bg-primary_color" : "bg-orange-200 cursor-not-allowed"}`}
+                disabled={stock < 1}
+                onClick={() => handleAddToCart()}
+              >
+                ADD TO CART
+              </button>
+            </div>
+          </div>
+        </div>
+        
+      </section>
+      </>
+    );
+  };
+
+export default SingleProduct
