@@ -23,7 +23,7 @@ const CatCarousel = ({categories}) => {
                     className="flex items-center justify-center gap-2 bg-orange-100 p-1 sm:p-2 rounded-lg py-[7px] cursor-pointer hover:scale-110 transition-all ease-in-out"
                   >
                     
-                    <h2 className="text-primary sm:text-base text-sm">All Products</h2>
+                    <h2 className="text-primary sm:text-base text-sm md:py-2.5 py-0">All Products</h2>
                   </Link>
         </CarouselItem>
         {categories?.length > 0

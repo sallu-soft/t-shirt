@@ -7,6 +7,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { CartContext } from "@/provider/CartContext";
 import { fetchProduct, fetchSingleProduct } from "@/app/(admin)/sallu_admin/actions";
 import { Context } from "@/provider/ContextProvider";
+import Head from "next/head";
 
 
 const SingleProduct = ({ params }) => {
@@ -96,6 +97,16 @@ const SingleProduct = ({ params }) => {
   };
 
   return (
+    <>
+    <Head>
+        <title>{product?.title || "Product Details"}</title>
+        <meta name="description" content={product?.description || "Product Details"} />
+        <meta property="og:title" content={product?.title || "Product Details"} />
+        <meta property="og:description" content={product?.description || "Product Details"} />
+        <meta property="og:image" content={myimg} />
+        <meta property="og:url" content={`https://sallu.com.bd/products/${product.title}`} />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Head>
     <section className="text-gray-600 body-font overflow-hidden">
       <div className="container flex flex-wrap px-5 py-5 md:py-10 mx-auto">
         <div className="relative md:w-1/2 w-2/2 gap-x-2 md:mx-0 mx-auto justify-center items-center flex flex-col">
@@ -250,6 +261,7 @@ const SingleProduct = ({ params }) => {
       </div>
       
     </section>
+    </>
   );
 };
 
