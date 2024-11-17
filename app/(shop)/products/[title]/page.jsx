@@ -25,8 +25,8 @@ export async function generateMetadata({ params }) {
       images: [
         {
           url: product?.images?.[0] || "/fallback-image.jpg",
-          width: 500,
-          height: 350,
+          width: 1200,
+          height: 630,
           alt: product.title,
         },
       ],
