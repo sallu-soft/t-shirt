@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
       description: product.description || "Check out this amazing product!",
       images: [
         {
-          url: product?.images?.[0] || "/fallback-image.jpg",
+          url: product?.images?.[0] || "/sallu_1.png",
           width: 1200,
           height: 630,
           alt: product.title,
