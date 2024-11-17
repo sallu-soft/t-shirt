@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from 'react-icons/fa';
 
@@ -9,19 +10,20 @@ const Footer = () => {
         
         {/* About Us Section */}
         <div>
-          <h3 className="text-white font-bold mb-4">ABOUT US</h3>
+         
+          <Image src={"/sallu_1.png"} alt={"logo"} width="200" height="120"/>
           <p className="text-sm leading-6 mb-4">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.
+          Sallu.com.bd is a dynamic e-commerce platform in Bangladesh, offering a wide range of products to cater to diverse customer needs.
           </p>
           <ul>
             <li className="flex items-center mb-2">
-              <FaMapMarkerAlt className="mr-2" /> 1734 Stonecoal Road
+              <FaMapMarkerAlt className="mr-2" /> 291, Jomidar Palace, Fakirapool, Dhaka-1000
             </li>
             <li className="flex items-center mb-2">
-              <FaPhoneAlt className="mr-2" /> +021-95-51-84
+              <FaPhoneAlt className="mr-2" /> 01776105863
             </li>
             <li className="flex items-center">
-              <FaEnvelope className="mr-2" /> email@email.com
+              <FaEnvelope className="mr-2" /> contact.sallusoft@gmail.com
             </li>
           </ul>
         </div>
@@ -54,10 +56,10 @@ const Footer = () => {
         <div>
           <h3 className="text-white font-bold mb-4">SERVICE</h3>
           <ul>
-            <li className="mb-2"><a href="#" className="hover:text-white">My Account</a></li>
-            <li className="mb-2"><a href="#" className="hover:text-white">View Cart</a></li>
-            <li className="mb-2"><a href="#" className="hover:text-white">Wishlist</a></li>
-            <li className="mb-2"><a href="#" className="hover:text-white">Track My Order</a></li>
+            
+            <li className="mb-2"><a href="/cart" className="hover:text-white">View Cart</a></li>
+            
+            <li className="mb-2"><a href="/my_orders" className="hover:text-white">Track My Order</a></li>
             <li><a href="#" className="hover:text-white">Help</a></li>
           </ul>
         </div>

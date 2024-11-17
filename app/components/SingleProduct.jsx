@@ -38,7 +38,14 @@ const SingleProduct = ({product}) => {
 
   const stock = selectedSKU ? selectedSKU.stock : 0;
   const totalStock = product?.skus?.reduce((acc, sku) => acc + sku.stock, 0) || 0;
+  const [showFullDescription, setShowFullDescription] = useState(false);
 
+  const toggleDescription = () => {
+    setShowFullDescription((prev) => !prev);
+  };
+
+  const maxCharacters = 400; // Maximum characters to display initially
+  const description = product?.description || "";
   const handleSize = (size) => {
     setSelectedSize(size);
   };
@@ -124,15 +131,25 @@ const SingleProduct = ({product}) => {
               {product?.title}
             </h1>
   
-            <p className="title-font my-3 text-red-700 font-bold ">
+            <p className="title-font my-3 text-red-700  ">
               <span className="text-3xl">৳{product && (product?.price)-(product?.discount)}</span> <span className="line-through text-md">৳{product?.price}</span>
             </p>
             <p className={` my-2 text-md title-font w-fit py-2 rounded-xl mb-1 ${totalStock > 0 ? " text-green-700" : " text-red-700"}`}>
               {totalStock > 0 ? "In Stock" : "Out of Stock"}
             </p>
             <p className="text-gray-600 text-lg title-font font-medium mb-1">
-              {product?.description}
-            </p>
+        {showFullDescription
+          ? description
+          : description.slice(0, maxCharacters) + (description.length > maxCharacters ? "..." : "")}{description.length > maxCharacters && (
+            <button
+              onClick={toggleDescription}
+              className="text-blue-500 hover:underline focus:outline-none"
+            >
+              {showFullDescription ? "See Less" : "See More"}
+            </button>
+          )}
+      </p>
+      
            
   
             {/* Render size selection only if there are available sizes */}
