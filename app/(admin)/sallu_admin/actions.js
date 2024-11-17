@@ -707,7 +707,6 @@ export async function fetch12Product() {
 }
 export const fetchProductByCategory = async (category) => {
   await connectMongoDB();
-  
   // Fetch all products from the database
   const productsByCat = await Product.find({category}).lean();
   

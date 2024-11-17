@@ -1,8 +1,11 @@
 import { fetchSingleProduct } from "@/app/(admin)/sallu_admin/actions";
+import RelatedCatProduct from "@/app/components/RelatedCatProduct";
 
 import SingleProduct from "@/app/components/SingleProduct";
 
 export async function generateMetadata({ params }) {
+  const siteBaseUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+
   // Fetch product details based on the `params.title`
   const { product } = await fetchSingleProduct(params.title);
 
@@ -10,21 +13,20 @@ export async function generateMetadata({ params }) {
     return {
       title: "Product Not Found",
       description: "The product you are looking for does not exist.",
-      metadataBase: new URL(
-        process.env.FRONTEND_URL || "http://localhost:3000"
-      ),
+      metadataBase: new URL(siteBaseUrl),
     };
   }
 
   return {
     title: product.title,
     description: product.description || "Check out this amazing product!",
+    metadataBase: new URL(siteBaseUrl),
     openGraph: {
       title: product.title,
       description: product.description || "Check out this amazing product!",
       images: [
         {
-          url: product?.images?.[0] || "/sallu_1.png",
+          url: new URL(product?.images?.[0] || "/sallu_1.png", siteBaseUrl),
           width: 1200,
           height: 630,
           alt: product.title,
@@ -35,7 +37,9 @@ export async function generateMetadata({ params }) {
       card: "summary_large_image",
       title: product.title,
       description: product.description || "Check out this amazing product!",
-      images: [product?.images?.[0] || "/fallback-image.jpg"],
+      images: [
+        new URL(product?.images?.[0] || "/sallu_1.png", siteBaseUrl),
+      ],
     },
   };
 }
@@ -63,6 +67,10 @@ const SingleProductPage = async ({ params }) => {
   return (
     <>
       <SingleProduct product={product} />
+      <div className="xl:w-[70%] lg:w-[90%] w-[95%] mx-auto">
+        <h2 className="text-primary_color font-semibold text-xl">Related Products</h2>
+        <RelatedCatProduct product={product} />
+      </div>
     </>
   );
 };
