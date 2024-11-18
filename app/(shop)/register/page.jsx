@@ -9,7 +9,7 @@ import { z } from 'zod';
 // Define the Zod schema for form validation
 const registerSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name must be less than 100 characters'),
-  email: z.string().email('Invalid email address'),
+  // email: z.string().email('Invalid email address').optional(),
   phone: z.string().min(11, 'Phone number must be at least 11 digits').max(11, 'Phone number is too long').regex(/^\d+$/, 'Phone number must contain only digits'),
   address: z.string().min(5, 'Address must be at least 5 characters long'),
   password: z.string().min(6, 'Password must be at least 6 characters long').regex(/\d/, 'Password must contain at least one number'),
@@ -23,6 +23,7 @@ const RegisterForm = () => {
     password: '',
     address: '',
     phone: '',
+    role: 'user',
   });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState(''); // State for storing errors
@@ -43,6 +44,7 @@ const RegisterForm = () => {
     formDataToSubmit.append('phone', formData.phone);
     formDataToSubmit.append('address', formData.address);
     formDataToSubmit.append('password', formData.password);
+    formDataToSubmit.append('role', formData.role);
   
     // Client-side Zod validation
     const userData = Object.fromEntries(formDataToSubmit.entries()); // Convert FormData to an object for validation
@@ -65,6 +67,7 @@ const RegisterForm = () => {
           password: '',
           address: '',
           phone: '',
+          role: '',
         });
   
         toast({
@@ -85,11 +88,11 @@ const RegisterForm = () => {
   return (
     <div className="flex items-center justify-center py-14 bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-3xl font-bold text-center text-primary_color mb-4">Create my account</h2>
-        <p className="text-center font-semibold text-gray-600 mb-4">Please fill in the information below:</p>
+        <h2 className="text-3xl font-bold text-center text-primary_color mb-4">নতুন অ্যাকাউন্ট</h2>
+        <p className="text-center font-semibold text-gray-600 mb-4">নিচের তথ্যগুলো পুরন করুন</p>
         <form action={handleSubmit} autoComplete="off" className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">আপনার নাম লিখুন</label>
             <input
               type="text"
               name="name"
@@ -97,13 +100,13 @@ const RegisterForm = () => {
               required
               autoComplete="off"
               className={`mt-1 block w-full p-2 border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-primary_color focus:border-primary_color sm:text-sm`}
-              placeholder="Name"
+              placeholder="নাম"
               value={formData.name}
               onChange={handleChange}
             />
             {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name._errors[0]}</p>}
           </div>
-          <div>
+          {/* <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
             <input
               type="email"
@@ -116,9 +119,9 @@ const RegisterForm = () => {
               onChange={handleChange}
             />
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email._errors[0]}</p>}
-          </div>
+          </div> */}
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">আপনার মোবাইল নাম্বার</label>
             <input
               type="text"
               name="phone"
@@ -126,14 +129,14 @@ const RegisterForm = () => {
               required
               autoComplete="off"
               className={`mt-1 block w-full p-2 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-primary_color focus:border-primary_color sm:text-sm`}
-              placeholder="Phone No"
+              placeholder="মোবাইল নাম্বার"
               value={formData.phone}
               onChange={handleChange}
             />
             {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone._errors[0]}</p>}
           </div>
           <div>
-            <label htmlFor="address" className="block text-sm font-medium text-gray-700">Full Address</label>
+            <label htmlFor="address" className="block text-sm font-medium text-gray-700">আপনার সম্পুর্ন ঠিকানা</label>
             <input
               type="text"
               name="address"
@@ -141,14 +144,14 @@ const RegisterForm = () => {
               required
               autoComplete="off"
               className={`mt-1 block w-full p-2 border ${errors.address ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-primary_color focus:border-primary_color sm:text-sm`}
-              placeholder="Type Address"
+              placeholder="(বাড়ী/বাসা নং, গ্রাম/রাস্তা, উপজেলা/থানা, জেলা)"
               value={formData.address}
               onChange={handleChange}
             />
             {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address._errors[0]}</p>}
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">পাসওয়ার্ড</label>
             <input
               type="password"
               name="password"
@@ -156,7 +159,7 @@ const RegisterForm = () => {
               autoComplete="off"
               required
               className={`mt-1 block w-full p-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-primary_color focus:border-primary_color sm:text-sm`}
-              placeholder="Password"
+              placeholder="পাসওয়ার্ড"
               value={formData.password}
               onChange={handleChange}
             />

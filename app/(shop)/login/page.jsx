@@ -89,7 +89,7 @@ const LoginForm = () => {
       try {
         // Call the server action for login
         const response = await loginUserAction(userData);
-        
+        console.log(response)
         // Check if login was successful and user data exists
         if (response.success && response.user) {
           // Store user data in localStorage
@@ -129,12 +129,12 @@ const LoginForm = () => {
   return (
     <div className="flex items-center justify-center py-14 bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-3xl font-bold text-center text-primary_color mb-4">Sign in my account</h2>
-        <p className="text-center font-semibold text-gray-600 mb-4">Please fill in the information below:</p>
+        <h2 className="text-3xl font-bold text-center text-primary_color mb-4">লগইন করুন</h2>
+        <p className="text-center font-semibold text-gray-600 mb-4">নিচের তথ্যগুলো পুরন করুন :</p>
         <form action={handleSubmit} autoComplete="off" className="space-y-4">
           
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">মোবাইল নাম্বার</label>
             <input
               type="text"
               name="phone"
@@ -142,7 +142,7 @@ const LoginForm = () => {
               required
               autoComplete="off"
               className={`mt-1 block w-full p-2 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-primary_color focus:border-primary_color sm:text-sm`}
-              placeholder="Phone No"
+              placeholder="01XXXXXXXXX"
               value={formData.phone}
               onChange={handleChange}
             />
@@ -150,7 +150,7 @@ const LoginForm = () => {
           </div>
          
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">পাসওয়ার্ড</label>
             <input
               type="password"
               name="password"
@@ -158,7 +158,7 @@ const LoginForm = () => {
               autoComplete="off"
               required
               className={`mt-1 block w-full p-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-primary_color focus:border-primary_color sm:text-sm`}
-              placeholder="Password"
+              placeholder="........"
               value={formData.password}
               onChange={handleChange}
             />
@@ -177,7 +177,7 @@ const LoginForm = () => {
           Dont have an account?{' '}
           <Link href="/register" className="text-yellow-600 hover:underline">Register</Link>
         </p>
-        <Link href="/forgot-password" className="text-blue-600 hover:underline">Forgot Password?</Link>
+        {/* <Link href="/forgot-password" className="text-blue-600 hover:underline">Forgot Password?</Link> */}
       </div>
     </div>
   );

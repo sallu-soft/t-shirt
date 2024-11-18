@@ -120,7 +120,7 @@ const Navbar = () => {
       <div className="items-center px-4 max-w-screen-2xl mx-auto flex md:px-8 justify-between">
         <div className="flex items-center justify-between md:block">
           <Link href="/">
-            <Image src={'/sallu_1.png'} className="w-[180px]" width={180} height={10} />
+            <Image src={'/sallu_1.png'} alt="logo" className="w-[180px]" width={180} height={10} />
           </Link>
           {/* <div className="md:hidden">
             <button

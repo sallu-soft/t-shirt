@@ -8,7 +8,7 @@ const userSchema = new Schema({
   },
   email: {
     type: String,
-    required: true, // Email is required
+    required: false, // Email is required
     unique: true, // Each email must be unique
     trim: true,
     lowercase: true, // Converts email to lowercase
