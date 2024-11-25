@@ -24,8 +24,16 @@ import { Context } from "@/provider/ContextProvider";
 import SearchProducts from "./SearchProducts";
 import { fetchProductByTitle } from "../(admin)/sallu_admin/actions";
 import Image from "next/image";
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
-
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 
 const Navbar = () => {
   const [state, setState] = useState(false);
@@ -34,6 +42,12 @@ const Navbar = () => {
   const [searchVisible, setSearchVisible] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  // Function to close the drawer
+  const closeDrawer = () => {
+    setOpen(false);
+  };
   const { user, setUser } = useContext(UserContext);
   const { products } = useContext(Context);
   const menus = [{ title: "Products", path: "/search/products" }];
@@ -82,13 +96,13 @@ const Navbar = () => {
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
-  
+
   useEffect(() => {
     let isMounted = true;
     const debounceTimeout = setTimeout(() => {
       const fetchSearchedProducts = async () => {
         if (!searchQuery) return;
-  
+
         setLoading(true); // Set loading to true before the request starts
         try {
           const { products } = await fetchProductByTitle(searchQuery);
@@ -104,14 +118,14 @@ const Navbar = () => {
           }
         }
       };
-  
+
       if (searchQuery) {
         fetchSearchedProducts();
       } else {
         setFilteredProducts([]);
       }
     }, 300); // Debounce delay
-  
+
     return () => {
       clearTimeout(debounceTimeout);
       isMounted = false;
@@ -122,7 +136,13 @@ const Navbar = () => {
       <div className="items-center px-4 max-w-screen-2xl mx-auto flex md:px-8 justify-between">
         <div className="flex items-center justify-between md:block">
           <Link href="/">
-            <Image src={'/sallu_1.png'} alt="logo" className="w-[180px]" width={180} height={10} />
+            <Image
+              src={"/sallu_1.png"}
+              alt="logo"
+              className="w-[180px]"
+              width={180}
+              height={10}
+            />
           </Link>
           {/* <div className="md:hidden">
             <button
@@ -133,7 +153,7 @@ const Navbar = () => {
             </button>
           </div> */}
         </div>
-       
+
         <div className="bg-white rounded-md w-[40%] h-10 hidden md:inline-flex items-center justify-between relative">
           <input
             onChange={handleSearch}
@@ -145,13 +165,12 @@ const Navbar = () => {
           <span className="text-2xl bg-amazon_yellow flex justify-center items-center text-black w-12 h-full absolute right-0 rounded-tr-md rounded-br-md">
             <HiOutlineSearch />
           </span>
-          
+
           {searchQuery && (
             <div className="absolute left-0 top-12 w-full mx-auto max-h-96 bg-gray-200 rounded-lg overflow-y-scroll cursor-pointer text-black">
               {loading ? ( // Check if loading is true
                 <div className="flex items-center justify-center py-10">
                   <p className="text-xl font-semibold">Loading products...</p>
-                
                 </div>
               ) : filteredProducts?.length > 0 ? (
                 <>
@@ -175,67 +194,78 @@ const Navbar = () => {
               )}
             </div>
           )}
-         
         </div>
-        <Drawer>
-  <DrawerTrigger className="md:hidden flex"><HiOutlineSearch className="text-white text-2xl ml-6"/></DrawerTrigger>
-  <DrawerContent className="fixed top-0 left-0 w-full max-h-[50vh] rounded-b-lg shadow-lg bg-white animate-slide-down"
-        style={{ transition: "transform 0.3s ease" }}>
-    <div className="bg-white rounded-md w-[95%] h-10 flex border-primary_color mx-auto border-2 items-center justify-between relative">
-          <input
-            onChange={handleSearch}
-            value={searchQuery}
-            className="h-full w-[80%] rounded-md placeholder:text-sm text-base px-2 text-black border-[3px] border-transparent outline-none focus-visible:border-amazon_yellow "
-            type="text"
-            placeholder="Search your products"
-          />
-          <span className="text-2xl bg-amazon_yellow flex justify-center items-center text-black w-12 h-full absolute right-0 rounded-tr-md rounded-br-md">
-            <HiOutlineSearch />
-          </span>
-          
-          {searchQuery && (
-            <div className="absolute left-0 top-12 w-full mx-auto max-h-96 bg-gray-200 rounded-lg overflow-y-scroll cursor-pointer text-black">
-              {loading ? ( // Check if loading is true
-                <div className="flex items-center justify-center py-10">
-                  <p className="text-xl font-semibold">Loading products...</p>
-                
-                </div>
-              ) : filteredProducts?.length > 0 ? (
-                <>
-                  {filteredProducts.map((item) => (
-                    <Link
-                      key={item._id}
-                      className="w-full border-b-[1px] border-b-gray-400 flex items-center gap-4"
-                      href={`/products/${item._id}`}
-                      onClick={() => setSearchQuery("")}
-                    >
-                      <SearchProducts item={item} />
-                    </Link>
-                  ))}
-                </>
-              ) : (
-                <div className="bg-gray-50 flex items-center justify-center py-10 rounded-lg shadow-lg">
-                  <p className="text-xl font-semibold animate-bounce">
-                    Nothing matches your search keywords. Please try again!
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-         
-        </div>
-    <DrawerFooter>
-      
-      <DrawerClose>
-        <Button variant="outline">Cancel</Button>
-      </DrawerClose>
-    </DrawerFooter>
-  </DrawerContent>
-</Drawer>
         
+
         <div
           className={`w-full items-center text-primary_color md:w-3/12 md:flex justify-end gap-2 md:gap-4 flex`}
         >
+          <Drawer open={open} onOpenChange={setOpen}>
+          <DrawerTrigger
+            onClick={() => setOpen(true)}
+            className="md:hidden flex"
+          >
+            <HiOutlineSearch className="text-white text-2xl ml-6" />
+          </DrawerTrigger>
+          <DrawerContent
+            className="fixed top-0 left-0 w-full rounded-b-lg shadow-lg bg-white animate-slide-down"
+            style={{ transition: "transform 0.3s ease" }}
+          >
+            <div className="bg-white rounded-md w-[95%] h-10 flex border-primary_color mx-auto border-2 items-center justify-between relative">
+              <input
+                onChange={handleSearch}
+                value={searchQuery}
+                className="h-full w-[80%] rounded-md placeholder:text-sm text-base px-2 text-black border-[3px] border-transparent outline-none focus-visible:border-amazon_yellow "
+                type="text"
+                placeholder="Search your products"
+              />
+              <span className="text-2xl bg-amazon_yellow flex justify-center items-center text-black w-12 h-full absolute right-0 rounded-tr-md rounded-br-md">
+                <HiOutlineSearch />
+              </span>
+
+              {searchQuery && (
+                <div className="absolute left-0 top-12 w-full mx-auto max-h-96 bg-gray-200 rounded-lg overflow-y-scroll cursor-pointer text-black">
+                  {loading ? ( // Check if loading is true
+                    <div className="flex items-center justify-center py-10">
+                      <p className="text-xl font-semibold">
+                        Loading products...
+                      </p>
+                    </div>
+                  ) : filteredProducts?.length > 0 ? (
+                    <>
+                      {filteredProducts.map((item) => (
+                        <Link
+                          key={item._id}
+                          className="w-full border-b-[1px] border-b-gray-400 flex items-center gap-4"
+                          href={`/products/${item._id}`}
+                          onClick={() => {
+                            setSearchQuery("");
+                            closeDrawer();
+                          }}
+                        >
+                          <SearchProducts item={item} />
+                        </Link>
+                      ))}
+                    </>
+                  ) : (
+                    <div className="bg-gray-50 flex items-center justify-center py-10 rounded-lg shadow-lg">
+                      <p className="text-xl font-semibold animate-bounce">
+                        Nothing matches your search keywords. Please try again!
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            <DrawerFooter>
+              <DrawerClose>
+                <Button onClick={closeDrawer} variant="outline">
+                  Cancel
+                </Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
           <Link href={"/cart"} className="relative">
             <ShoppingCart className="font-semibold relative text-xl md:text-3xl cursor-pointer md:mr-3 mr-1" />
             <p className="bg-primary_color rounded-full w-fit h-6 flex items-center justify-center p-2 absolute bottom-3 text-sm left-3 text-white">
@@ -287,8 +317,6 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
-  
   );
 };
 export default Navbar;
-
