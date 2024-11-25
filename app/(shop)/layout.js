@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
           <GlobalProvider>
-          <h3 className="text-center bg-primary_color text-white py-2 text-sm">আমাদের যে কোন পণ্য অর্ডার করতে কল বা WhatsApp করুন:  +8801776105863 </h3>
+          <h3 className="text-center bg-primary_color text-white py-2 text-sm">আমাদের যে কোন পণ্য অর্ডার করতে কল বা WhatsApp করুন:  +8801645316275 </h3>
           <Navbar/>
           <div className="min-h-[60vh]">
           {children}

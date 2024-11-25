@@ -79,10 +79,10 @@ const SingleProduct = ({product}) => {
         <div className="container flex flex-wrap px-5 py-5 md:py-10 mx-auto">
           <div className="relative md:w-1/2 w-2/2 gap-x-2 md:mx-0 mx-auto justify-center items-center flex flex-col">
             <Image
-              height={400}
-              width={400}
+              height={500}
+              width={500}
               alt={product?.title}
-              className="lg:w-[500px] border-primary_color border w-fit lg:h-fit h-64 object-contain object-center rounded "
+              className="w-[500px] border-primary_color border lg:h-fit object-contain object-center rounded "
               src={myimg}
             />
             {/* <div className="max-w-[100%] fluid__image-container justify-center flex">
@@ -112,11 +112,11 @@ const SingleProduct = ({product}) => {
                     onClick={() => setMyimg(currImg)}
                     src={currImg}
                     alt={"sonot"}
-                    className={`md:w-[110px] w-20 md:h-[110px] h-20 object-cover object-center rounded border-primary_color border ${
+                    className={`md:w-[90px] w-20 md:h-[90px] h-20 object-cover object-center rounded border-primary_color border ${
                       product?.stock < 1 ? "cursor-not-allowed" : ""
                     }`}
-                    height={400}
-                    width={400}
+                    height={200}
+                    width={200}
                   />
                 </figure>
               ))}
