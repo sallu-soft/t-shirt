@@ -11,9 +11,10 @@ import RecentProducts from "../components/RecentProducts";
 export default async function Home() {
   return (
     <>
+      
       <Banner/>
       <CategoryList/>
-      <div className="xl:w-[70%] lg:w-[90%] w-[95%] mx-auto" >
+      <div className="2xl:w-[80%] xl:w-[90%] md:w-[95%] mx-auto" >
       <h2 className="text-center font-semibold text-2xl my-3 text-primary_color">Our Latest Products</h2>
       <RecentProducts />
       <div className="flex items-center justify-center">

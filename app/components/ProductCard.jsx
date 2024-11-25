@@ -38,11 +38,11 @@ const ProductCard = ({product}) => {
    
     <div className="mt-4 sm:px-5 px-1">
       
-        <h5 className="sm:text-xl text-md tracking-tight text-secondary_color">{product.title}</h5>
+        <h5 className="sm:text-lg text-md tracking-tight text-secondary_color">{product.title}</h5>
       
       <div className="mt-2 mb-5 flex items-center justify-between">
         <p>
-          <span className="sm:text-3xl text-xl text-primary_color">{product.price-product.discount}</span>
+          <span className="sm:text-2xl text-xl text-primary_color">{product.price-product.discount}</span>
           <span className="sm:text-sm text-xs text-slate-900 line-through">{product.price }</span>
         </p>
         {/* <div className="flex items-center">

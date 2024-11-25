@@ -20,7 +20,7 @@ export default async function ProductsPage({ searchParams }) {
     } else {
       return (
         <div className="w-full flex justify-center items-center mt-2 flex-col">
-           <div className="grid items-center lg:grid-cols-4 md:grid-cols-3 gap-3 sm:grid-cols-2 grid-cols-2 justify-center">
+           <div className="grid items-center xl:grid-cols-4 md:grid-cols-3 gap-3 sm:grid-cols-2 grid-cols-2 justify-center">
          {products?.map((product, ind) => (
            <ProductCard key={product._id} product={product} /> 
          ))}
