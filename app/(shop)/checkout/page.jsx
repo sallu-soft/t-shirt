@@ -16,7 +16,7 @@ const Checkout = () => {
     (acc, item) => acc + item.quantity * item.price,
     0
   );
-  const [deliveryCharge, setDeliveryCharge] = useState(80);
+  const [deliveryCharge, setDeliveryCharge] = useState(0);
   const { toast } = useToast();
   const { form } = useContext(Context);
   const router = useRouter();
@@ -218,8 +218,9 @@ const Checkout = () => {
               <h2 className="text-center text-lg font-bold text-yellow-600 mb-4">
                 Shipping Method
               </h2>
-              <div className="border border-gray-300 rounded-lg">
-                {/* Inside Dhaka */}
+              One Month Free Delivery For Grand Opening
+              {/* <div className="border border-gray-300 rounded-lg">
+                
                 <label
                   className={`flex items-center justify-between p-4 border-b border-gray-300 ${
                     selectedOption === "inside_dhaka" ? "bg-gray-100" : ""
@@ -249,8 +250,6 @@ const Checkout = () => {
                   </div>
                   <div className="font-semibold text-gray-700">৳80.00</div>
                 </label>
-
-                {/* Outside Dhaka */}
                 <label
                   className={`flex items-center justify-between p-4 ${
                     selectedOption === "outside_dhaka" ? "bg-gray-100" : ""
@@ -307,7 +306,7 @@ const Checkout = () => {
                   </div>
                   <div className="font-semibold text-gray-700">৳50.00</div>
                 </label>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

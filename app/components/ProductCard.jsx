@@ -34,16 +34,16 @@ const ProductCard = ({product}) => {
         ))}
       </div>
     </div>
-      <span className="absolute top-0 left-0 m-2 rounded-full bg-primary_color px-2 text-center sm:text-sm text-xs font-medium text-white">{product.discount} tk OFF</span>
+      {product.discount?<span className="absolute top-0 left-0 m-2 rounded-full bg-primary_color px-2 text-center sm:text-sm text-xs font-medium text-white">{product.discount} tk OFF</span>:""}
    
     <div className="mt-4 sm:px-5 px-1">
       
-        <h5 className="sm:text-lg text-md tracking-tight text-secondary_color">{product.title}</h5>
+        <h5 className="sm:text-lg text-md tracking-tight text-secondary_color">{product?.title}</h5>
       
       <div className="mt-2 mb-5 flex items-center justify-between">
         <p>
           <span className="sm:text-2xl text-xl text-primary_color">{product.price-product.discount}</span>
-          <span className="sm:text-sm text-xs text-slate-900 line-through">{product.price }</span>
+          {(product?.discount)?<span className="sm:text-sm text-xs text-slate-900 line-through">{product.price }</span>:""}
         </p>
         {/* <div className="flex items-center">
           <svg aria-hidden="true" className="h-5 w-5 text-yellow-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

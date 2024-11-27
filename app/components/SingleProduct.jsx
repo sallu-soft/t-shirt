@@ -1,3 +1,4 @@
+
 'use client'
 import { CartContext } from '@/provider/CartContext';
 import { Context } from '@/provider/ContextProvider';
@@ -132,7 +133,7 @@ const SingleProduct = ({product}) => {
             </h1>
   
             <p className="title-font my-3 text-red-700  ">
-              <span className="text-3xl">৳{product && (product?.price)-(product?.discount)}</span> <span className="line-through text-md">৳{product?.price}</span>
+              <span className="text-3xl">৳{product && (product?.price)-(product?.discount)}</span> {product?.discount? <span className="line-through text-md">৳{product?.price}</span>:""}
             </p>
             <p className={` my-2 text-md title-font w-fit py-2 rounded-xl mb-1 ${totalStock > 0 ? " text-green-700" : " text-red-700"}`}>
               {totalStock > 0 ? "In Stock" : "Out of Stock"}
@@ -207,7 +208,7 @@ const SingleProduct = ({product}) => {
                 </button>
                 <input
                   type="number"
-                  className="outline-none w-[40px] h-[40px] focus:outline-none font-semibold text-md pl-2 bg-primary_color hover:text-black focus:text-black md:text-base cursor-default text-white flex justify-center items-center text-center custom-input-number"
+                  className="outline-none w-[60px] h-[40px] focus:outline-none font-semibold text-md pl-2 bg-primary_color hover:text-black focus:text-black md:text-base cursor-default text-white flex justify-center items-center text-center custom-input-number"
                   name="custom-input-number"
                   value={quantity}
                   readOnly
@@ -223,8 +224,8 @@ const SingleProduct = ({product}) => {
               </div>
             </div>
   
-            <p>Stock: {stock}</p>
-  
+            
+            <p className={stock>=1?"text-green-600" : "text-red-600"}>{stock>=1?"" : "Has Not Enough Stock With This Size and Color"}</p>
             {/* Add to Cart Button */}
             <div className="flex mt-3">
               <button
