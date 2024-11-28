@@ -36,11 +36,11 @@ const ProductCard = ({product}) => {
     </div>
       {product.discount?<span className="absolute top-0 left-0 m-2 rounded-full bg-primary_color px-2 text-center sm:text-sm text-xs font-medium text-white">{product.discount} tk OFF</span>:""}
    
-    <div className="mt-4 sm:px-5 px-1">
+    <div className="mt-4 ">
       
-        <h5 className="sm:text-lg text-md tracking-tight text-secondary_color">{product?.title}</h5>
+        <h5 className="sm:text-lg text-md tracking-tight sm:px-4 px-2 text-secondary_color">{product?.title}</h5>
       
-      <div className="mt-2 mb-5 flex items-center justify-between">
+      <div className="mt-2 mb-2 flex sm:px-4 px-2 pt-2 items-center justify-between border-t border-primary_color">
         <p>
           <span className="sm:text-2xl text-xl text-primary_color">{product.price-product.discount}</span>
           {(product?.discount)?<span className="sm:text-sm text-xs text-slate-900 line-through">{product.price }</span>:""}

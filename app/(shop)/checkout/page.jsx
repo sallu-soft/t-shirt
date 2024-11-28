@@ -121,12 +121,13 @@ const Checkout = () => {
   };
   if(user?.name){
   return (
-    <div className="md:w-[70%] w-[95%] mx-auto mt-3 md:mt-10">
+    <div className="md:w-[70%] w-[95%] mx-auto mt-2 md:mt-5 shadow-lg p-3 rounded-xl border-gray-300 border">
+      <h4 className="text-4xl font-bold text-primary_color border-b-gray-400 border-dashed py-3 mb-3 text-center border-b-4">অর্ডার টি সম্পন্ন করতে আপনার নাম, মোবাইল নাম্বার ও ঠিকানা নিচে লিখুন</h4>
       <div className="flex flex-wrap gap-x-5">
         <div className="w-[100%] md:w-[48%] flex flex-col gap-y-2">
-          <div className=" shadow-xl border border-primary_color p-6 rounded-lg">
-            <h2 className="text-center text-lg font-bold text-yellow-600 mb-4">
-              Delivery Information
+          <div className=" p-6">
+            <h2 className="border-b-gray-600 border-dashed border-b-2 w-fit text-lg font-bold text-black mb-4">
+              বিলিং ডিটেইল
             </h2>
             <div className="mt-4 grid grid-cols-1 gap-x-3 gap-y-4 sm:grid-cols-1">
               <div class="sm:col-span-1">
@@ -213,10 +214,10 @@ const Checkout = () => {
               </div>
             </div>
           </div>
-          <div className=" shadow-xl border border-primary_color p-6 rounded-lg">
+          <div className="px-6 rounded-lg">
             <div className="">
-              <h2 className="text-center text-lg font-bold text-yellow-600 mb-4">
-                Shipping Method
+              <h2 className="border-b-gray-600 border-dashed border-b-2 w-fit text-lg font-bold text-black mb-4">
+                শিপিং মেথড
               </h2>
               One Month Free Delivery For Grand Opening
               {/* <div className="border border-gray-300 rounded-lg">
@@ -310,10 +311,10 @@ const Checkout = () => {
             </div>
           </div>
         </div>
-        <div className="mt-4 grid grid-cols-1 gap-x-3 gap-y-4 sm:grid-cols-1 w-[100%] md:w-[48%] h-fit shadow-2xl">
+        <div className="mt-4 grid grid-cols-1 gap-x-3 gap-y-4 sm:grid-cols-1 w-[100%] md:w-[48%] h-fit">
           <div className="relative h-full">
             <div className="px-3 py-4  max-lg:mb-8">
-              <h2 className="text-xl font-semibold py-2">Order Summary</h2>
+              <h2 className="border-b-gray-600 border-dashed border-b-2 w-fit text-lg font-bold text-black mb-4">প্রোডাক্ট ডিটেইল</h2>
               {/* <div className="space-y-6 mt-10">
                 <div className="grid sm:grid-cols-2 items-start gap-6">
                   <div className="max-w-[190px] px-4 py-6 shrink-0 bg-gray-200 rounded-md">
@@ -374,10 +375,13 @@ const Checkout = () => {
                   </div>
                 </div>
               </div> */}
-              
+                <div className="flex justify-between items-center border-b-gray-600 border-dashed border-b font-medium text-sm px-3">
+                  <p>প্রোডাক্টের নাম</p>
+                  <p>বিক্রয় মুল্য</p>
+                </div>
                 {cart?.cartItems?.map((cartItem) => (
                   <div>
-                    <div className="flex flex-wrap justify-between lg:flex-row gap-5  mb-4">
+                    <div className="flex flex-wrap justify-between shadow-lg rounded-md p-1 lg:flex-row gap-5  mb-4">
                       <div className="w-full lg:w-2/5 xl:w-2/4">
                         <figure className="flex leading-5">
                           <div>
@@ -415,22 +419,22 @@ const Checkout = () => {
                      
                     </div>
 
-                    <hr className="my-4" />
+                    <hr className="" />
                   </div>
                 ))}
               
             </div>
 
-            <div className="mb-10 w-full px-4 pb-9">
-              <h4 className="flex flex-wrap gap-4 text-base text-[#333] font-bold">
-                Delivery Charge
-                <span className="ml-auto">৳{deliveryCharge}</span>
+            <div className="mb-10 w-full px-0 pb-9">
+              <h4 className="flex flex-wrap gap-4 text-base mx-4 text-[#333] font-bold">
+                ডেলিভারি চার্জ
+                <span className="ml-auto">TK {deliveryCharge}</span>
               </h4>
             </div>
-            <div className="absolute left-0 bottom-0  bg-gray-200 w-full p-4">
+            <div className="absolute mx-4 left-0 bottom-0 border-gray-400 border-y-2 border-dashed w-full py-2">
               <h4 className="flex flex-wrap gap-4 text-base text-[#333] font-bold">
-                Total
-                <span className="ml-auto">৳{totalAmount + deliveryCharge}</span>
+                টোটাল 
+                <span className="ml-auto">TK {totalAmount + deliveryCharge}</span>
               </h4>
             </div>
           </div>

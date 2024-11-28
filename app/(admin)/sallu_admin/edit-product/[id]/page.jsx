@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { RxCross2 } from 'react-icons/rx'
@@ -7,11 +7,13 @@ import { toast } from '@/components/ui/use-toast'
 // import { createProduct, getCategories } from '../actions'
 import { editProduct, fetchSingleProduct, getCategories } from '../../actions'
 import Image from 'next/image'
+import JoditEditor from 'jodit-react'
 
 const EditProduct = ({params}) => {
   const [formData, setFormData] = useState([])
   const [categories, setCategories] = useState([]);
   const [imagesToRemove, setImagesToRemove] = useState([]);
+  const editor = useRef(null);
   useEffect(() => {
     async function fetchCategories() {
       try {
@@ -42,6 +44,13 @@ const EditProduct = ({params}) => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }))
+  }
+  const DescriptionChange = (value) => {
+    
+    setFormData((prev) => ({
+      ...prev,
+      description: value,
     }))
   }
 
@@ -266,7 +275,7 @@ const handleRemoveImage = (index) => {
       {/* Product Stock */}
      
       {/* Product Description */}
-      <div>
+      {/* <div>
         <label htmlFor="description" className="block text-sm font-medium text-gray-700">
           Product Description
         </label>
@@ -280,7 +289,7 @@ const handleRemoveImage = (index) => {
           rows={2}
           required
         ></textarea>
-      </div>
+      </div> */}
       {/* Product Images */}
       <div>
   <label htmlFor="images" className="block text-sm font-medium text-gray-700">
@@ -350,11 +359,23 @@ const handleRemoveImage = (index) => {
   ))}
 </div>
       </div>
+      <div>
+        <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+          Product Description
+       </label>
+        <JoditEditor
+           ref={editor}
+          value={formData?.description}
+          onChange={DescriptionChange}
+           
+        />
+       </div>
+
 
       {/* Submit Button */}
       <div className="w-full flex items-center justify-center">
         <Button type="submit" className="w-fit bg-primary_color text-white">
-          Add Product
+          Edit Product
         </Button>
       </div>
     </form>
@@ -362,3 +383,4 @@ const handleRemoveImage = (index) => {
 }
 
 export default EditProduct
+

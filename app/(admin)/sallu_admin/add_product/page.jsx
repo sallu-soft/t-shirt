@@ -1,10 +1,11 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { RxCross2 } from 'react-icons/rx'
 import { toast } from '@/components/ui/use-toast'
 import { createProduct, getCategories } from '../actions'
+import JoditEditor from 'jodit-react'
 
 const AddProduct = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +20,7 @@ const AddProduct = () => {
     skus: [],
   })
   const [categories, setCategories] = useState([]);
+  const editor = useRef(null);
   useEffect(() => {
     async function fetchCategories() {
       try {
@@ -37,6 +39,13 @@ const AddProduct = () => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }))
+  }
+  const DescriptionChange = (value) => {
+    
+    setFormData((prev) => ({
+      ...prev,
+      description: value,
     }))
   }
 
@@ -70,7 +79,7 @@ const AddProduct = () => {
       console.log("beforeSubmit")
         // Initialize a new FormData object
     const formDataToSubmit = new FormData();
-
+    
     // Append scalar form fields
     formDataToSubmit.append("title", formData.title);
     formDataToSubmit.append("description", formData.description);
@@ -249,7 +258,9 @@ const AddProduct = () => {
       {/* Product Stock */}
       
       {/* Product Description */}
-      <div>
+      
+     
+      {/* <div>
         <label htmlFor="description" className="block text-sm font-medium text-gray-700">
           Product Description
         </label>
@@ -261,9 +272,8 @@ const AddProduct = () => {
           onChange={handleChange}
           className="mt-1 block w-full rounded-md p-2 border-gray-200 border"
           rows={2}
-          required
         ></textarea>
-      </div>
+      </div> */}
       {/* Product Images */}
       <div>
         <label htmlFor="images" className="block text-sm font-medium text-gray-700">
@@ -330,7 +340,18 @@ const AddProduct = () => {
           ))}
         </div>
       </div>
-
+      <div>
+        <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+          Product Description
+        </label>
+        <JoditEditor
+			ref={editor}
+			value={formData.description}
+			tabIndex={1} // tabIndex of textarea
+			
+			onChange={DescriptionChange}
+		/>
+      </div>
       {/* Submit Button */}
       <div className="w-full flex items-center justify-center">
         <Button type="submit" className="w-fit bg-primary_color text-white">
