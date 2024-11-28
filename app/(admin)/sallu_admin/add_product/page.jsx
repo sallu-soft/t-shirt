@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button'
 import { RxCross2 } from 'react-icons/rx'
 import { toast } from '@/components/ui/use-toast'
 import { createProduct, getCategories } from '../actions'
-import JoditEditor from 'jodit-react'
+import dynamic from 'next/dynamic'
+const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
 
 const AddProduct = () => {
   const [formData, setFormData] = useState({

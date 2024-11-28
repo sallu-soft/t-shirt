@@ -7,8 +7,9 @@ import { toast } from '@/components/ui/use-toast'
 // import { createProduct, getCategories } from '../actions'
 import { editProduct, fetchSingleProduct, getCategories } from '../../actions'
 import Image from 'next/image'
-import JoditEditor from 'jodit-react'
+import dynamic from 'next/dynamic'
 
+const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
 const EditProduct = ({params}) => {
   const [formData, setFormData] = useState([])
   const [categories, setCategories] = useState([]);
