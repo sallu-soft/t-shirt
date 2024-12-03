@@ -602,51 +602,92 @@ export async function loginUserAction(formData) {
     return { success: false, message: 'An error occurred during login' };
   }
 }
-export async function createUserAction(formData) {
-  await connectMongoDB(); // Ensure the database is connected
+// export async function createUserAction(formData) {
+//   await connectMongoDB(); 
 
-  // Extract user fields from formData
+  
+//   const name = formData.get('name');
+//   const email = formData.get('email');
+//   const password = formData.get('password');
+//   const phone = formData.get('phone');
+//   const address = formData.get('address');
+//   const role = formData.get('role');
+//   const avatar = formData.get('avatar'); 
+
+  
+//   const existingUser = await User.findOne({ phone:phone, name});
+//   if (existingUser) {
+//     throw new Error('User with this Phone already exists');
+//   }
+
+  
+//   const hashedPassword = await bcrypt.hash(password, 10);
+
+  
+//   const newUser = new User({
+//     name,
+//     password: hashedPassword,
+//     phone,
+//     address,
+//     role,
+//     avatar,
+//   });
+
+ 
+//   const savedUser = await newUser.save();
+//   revalidatePath("/sallu_admin/users_list")
+  
+//   return savedUser.toObject(); 
+// }
+
+export async function createUserAction(formData) {
+  await connectMongoDB();
+
   const name = formData.get('name');
-  const email = formData.get('email');
+  let email = formData.get('email') || null;  // If no email, set to null
   const password = formData.get('password');
   const phone = formData.get('phone');
   const address = formData.get('address');
   const role = formData.get('role');
-  const avatar = formData.get('avatar'); // Optional avatar field
+  const avatar = formData.get('avatar');
 
-  // Check if the user with the email already exists
-  const existingUser = await User.findOne({ phone });
+  // Ensure no duplicate entry based on phone or name
+  const existingUser = await User.findOne({ phone: phone, name });
   if (existingUser) {
     throw new Error('User with this Phone already exists');
+  }
+
+  // If email is provided (non-empty), check for uniqueness
+  if (email && email !== "") {
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      throw new Error('User with this email already exists');
+    }
   }
 
   // Hash the password before saving
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Create a new user document
+  // Create a new user with email set to null if no email is provided
   const newUser = new User({
     name,
     password: hashedPassword,
     phone,
     address,
     role,
-    avatar, // If the user has an avatar URL
+    avatar,
   });
 
-  // Save the user to the database
+  // Save the new user to the database
   const savedUser = await newUser.save();
-  revalidatePath("/sallu_admin/users_list")
-  // Convert the Mongoose document to a plain object before returning
-  return savedUser.toObject(); // Return the plain user object
+  
+  // Trigger page revalidation
+  revalidatePath("/sallu_admin/users_list");
+
+  return savedUser.toObject(); 
 }
-// export const fetchProduct = async () => {
-//   await connectMongoDB();
-  
-  
-//   const products = await Product.find().lean();
-  
-//   return { products };
-// };
+
+
 export async function fetchProduct() {
   await connectMongoDB();
   

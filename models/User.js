@@ -8,9 +8,9 @@ const userSchema = new Schema({
   },
   email: {
     type: String,
-    required: false, // Email is required
-    unique: true, // Each email must be unique
+    required: false, // Each email must be unique
     trim: true,
+    default:null,
     lowercase: true, // Converts email to lowercase
   },
   password: {
@@ -55,7 +55,6 @@ userSchema.pre('save', function(next) {
   this.updatedAt = Date.now();
   next();
 });
-
 // Export User model
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
