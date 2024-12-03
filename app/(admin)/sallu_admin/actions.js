@@ -615,9 +615,9 @@ export async function createUserAction(formData) {
   const avatar = formData.get('avatar'); // Optional avatar field
 
   // Check if the user with the email already exists
-  const existingUser = await User.findOne({ email });
+  const existingUser = await User.findOne({ phone });
   if (existingUser) {
-    throw new Error('User with this email already exists');
+    throw new Error('User with this Phone already exists');
   }
 
   // Hash the password before saving
@@ -626,7 +626,6 @@ export async function createUserAction(formData) {
   // Create a new user document
   const newUser = new User({
     name,
-    email,
     password: hashedPassword,
     phone,
     address,

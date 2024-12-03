@@ -226,7 +226,7 @@ const SingleProduct = ({ product }) => {
             {/* Add to Cart Button */}
             <div className="flex justify-between gap-x-3 mt-3">
               <button
-                className={`text-white w-2/2 md:w-1/2 py-1 md:py-3 md:text-md text-sm px-2 md:px-5 rounded ${stock > 0
+                className={`text-white w-2/2 md:w-1/2 py-1 md:py-3 md:text-md text-lg px-2 md:px-5 rounded ${stock > 0
                     ? "bg-primary_color"
                     : "bg-orange-200 cursor-not-allowed"
                   }`}
@@ -238,7 +238,7 @@ const SingleProduct = ({ product }) => {
               <Link
                 href="https://wa.link/rhqw2d"
                 target="_blank"
-                className={'py-3 px-2 w-2/2 md:w-1/2 md:px-5 rounded bg-transparent text-orange-700 border-primary_color border flex items-center gap-3'}
+                className={'py-3 font-bold justify-center text-xl px-2 w-2/2 md:w-1/2 md:px-5 rounded bg-transparent text-orange-700 border-primary_color border flex items-center gap-3'}
                 disabled={stock < 1}
                 
               >
