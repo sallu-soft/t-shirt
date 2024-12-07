@@ -10,8 +10,6 @@ import { SlCallOut } from "react-icons/sl";
 const SingleProduct = ({ product }) => {
   const router = useRouter();
   const { addItemToCart } = useContext(CartContext);
-  const { products } = useContext(Context);
-  // const [product, setProduct] = useState({});
   const [myimg, setMyimg] = useState(product?.images?.[0]);
   const [loading, setLoading] = useState(true);
 
@@ -121,10 +119,10 @@ const SingleProduct = ({ product }) => {
               )}
             </p>
             <p
-              className={` my-2 text-lg font-semibold title-font w-fit rounded-xl ${totalStock > 0 ? " text-green-700" : " text-red-700"
+              className={` my-2 text-md font-semibold title-font w-fit rounded-xl ${totalStock > 0 ? " text-green-700" : " text-red-700"
                 }`}
             > 
-              <span className="text-black font-semibold text-lg"> Status : </span>
+              <span className="text-black font-semibold text-md"> Status : </span>
               {totalStock > 0 ? "Stock In" : "Out of Stock"}
             </p>
             {/* <p className="text-black text-md title-font font-medium text-justify  mb-1">

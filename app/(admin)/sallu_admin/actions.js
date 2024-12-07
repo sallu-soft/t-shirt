@@ -488,14 +488,39 @@ export const getCategoryById = async (id) => {
   
   return {category};
 };
+
+// export const fetchSingleProduct = async (id) => {
+//   await connectMongoDB();
+  
+//   // Fetch paginated products
+//   const product = await Product.findById(id).lean()
+  
+//   return {product};
+// };
+
 export const fetchSingleProduct = async (id) => {
   await connectMongoDB();
-  
-  // Fetch paginated products
-  const product = await Product.findById(id).lean()
-  
-  return {product};
+
+  // Fetch the product and convert it to a plain JavaScript object
+  const product = await Product.findById(id).lean();
+
+  if (!product) return { product: null };
+
+  // Serialize the product object
+  const serializedProduct = {
+    ...product,
+    _id: product._id.toString(), // Convert ObjectId to string
+    skus: product.skus.map((sku) => ({
+      ...sku,
+      _id: sku._id.toString(), // Convert nested ObjectId to string
+    })),
+    createdAt: product.createdAt.toISOString(), // Convert Date to string
+    updatedAt: product.updatedAt?.toISOString() || null, // Handle optional date fields
+  };
+
+  return { product: serializedProduct };
 };
+
 // export const fetchProductByTitle = async (title) => {
 //   await connectMongoDB();
 

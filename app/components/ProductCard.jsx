@@ -42,7 +42,7 @@ const ProductCard = ({product}) => {
       
       <div className="mt-2 mb-2 flex sm:px-4 px-2 pt-2 items-center justify-between border-t border-primary_color">
         <p>
-          <span className="sm:text-2xl text-xl text-primary_color">{product.price-product.discount}</span>
+          <span className="sm:text-2xl text-xl text-primary_color">TK {product.price-product.discount}</span>
           {(product?.discount)?<span className="sm:text-sm text-xs text-slate-900 line-through">{product.price }</span>:""}
         </p>
         {/* <div className="flex items-center">
