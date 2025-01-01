@@ -1,3 +1,4 @@
+import PendingOrder from "@/models/PendingOrder";
 import axios from "axios";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
@@ -41,26 +42,31 @@ const bkash_auth = async () => {
     const requestBody = await req.json();
     
     const { name, address, mobile_no, whatsapp, totalPrice, user, cart, paymentMethod,delivery_charge } = requestBody;
-    global.request = requestBody;
+    console.log(cart)
+    
+    // global.request = requestBody;
     console.log(requestBody)
     try {
+      const referenceID = uuidv4();
+      console.log(referenceID);
+      await PendingOrder.create({ referenceID, ...requestBody });
       const { data } = await axios.post(
         process.env.NEXT_PUBLIC_BKASH_CREATE_PAYMENT_URL,
         {
           mode: "0011",
           payerReference: name,
-          callbackURL: `${process.env.NEXT_PUBLIC_CORS}/api/bkash/payment/callback`,
+          callbackURL: `${process.env.NEXT_PUBLIC_CORS}/api/bkash/payment/callback?referenceID=${referenceID}`,
           amount: totalPrice + delivery_charge,
           currency: "BDT",
           intent: "sale",
-          merchantInvoiceNumber: "Inv" + uuidv4().substring(0, 5),
+          merchantInvoiceNumber: "Inv" + referenceID.substring(0, 5),
         },
         {
           headers: await bkash_headers(),
         }
       );
     //   return res.status(200).json({ bkashURL: data.bkashURL, email: email });
-      return NextResponse.json({ bkashURL: data.bkashURL},{rex:requestBody},{status: 201});
+      return NextResponse.json({ bkashURL: data.bkashURL},{referenceID},{status: 201});
     } catch (error) {
       return NextResponse.json({ error: error.message });
     }

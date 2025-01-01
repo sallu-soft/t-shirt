@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectMongoDB from "@/db";
 import { createOrder, reduceProductStock } from "@/app/(admin)/sallu_admin/actions";
 import { emptyCart } from "@/provider/CartContext";
+import PendingOrder from "@/models/PendingOrder";
 
 const bkash_auth = async () => {
   try {
@@ -45,6 +46,8 @@ export async function GET(req, res) {
   const urlParams = new URLSearchParams(url.split("?")[1]);
   const paymentID = urlParams?.get("paymentID");
   const status = urlParams?.get("status");
+  const referenceID = urlParams?.get("referenceID");
+  console.log(referenceID)
   if (status === "cancel" || status === "failure") {
     return NextResponse.redirect(
       `${process.env.NEXT_PUBLIC_CORS}/bkash_message/error?message=${status}`
@@ -62,21 +65,24 @@ export async function GET(req, res) {
         }
       );
       console.log("hellow world from Exicute api" + data);
-      if (data && data.statusCode === "0000") {
+      if (data && data.statusCode === "0000" && data.transactionStatus === "Completed") {
         // const data = getSharedRequest(); // retrieve the requestBody from the shared request object
 
         // const { name, address, mobile_no, whatsapp, childSizes, adultSizes, totalPrice, model } = requestBody;
 
-        const globalData = global.request;
-        console.log(globalData);
+        // const globalData = global.request;
+        // console.log(globalData);
         try {
           // Connect to MongoDB and create the order
           await connectMongoDB();
-          await createOrder(globalData);
+          const pendingOrder = await PendingOrder.findOne({ referenceID });
+          console.log(pendingOrder)
+        if (!pendingOrder) throw new Error("Pending order not found");
+          await createOrder(pendingOrder.toObject());
           console.log("Order created successfully");
       
           // Reduce the product stock for each item in the cart
-          for (const item of globalData?.cart) {
+          for (const item of pendingOrder?.cart) {
             await reduceProductStock(item.product, item.sku, item.quantity);
           }
       
@@ -84,7 +90,7 @@ export async function GET(req, res) {
           
       
           console.log("Product stock reduced and cart emptied");
-      
+          await PendingOrder.deleteOne({ referenceID });
           // Redirect to the success page
           return NextResponse.redirect(`${process.env.NEXT_PUBLIC_CORS}/bkash_message/success`);
         } catch (error) {
